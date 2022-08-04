@@ -2,7 +2,7 @@
 {
 	public  interface ILexiconRequestFactory
 	{
-		ILexiconRequest CreateLexiconRequest();
-		ILexiconRequest CreateLexiconRequest(string name);
+		ILexiconRequest CreateRequest();
+		ILexiconRequest CreateRequest(string name);
 	}
 }

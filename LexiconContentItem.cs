@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EllipticBit.Lexicon.Client
 {
-	internal class LexiconContentItem
+	public sealed class LexiconContentItem
 	{
 		public HttpContentScheme Scheme { get; }
 		public object Content { get; }
@@ -23,8 +23,15 @@ namespace EllipticBit.Lexicon.Client
 			Name = name;
 		}
 
+		public LexiconContentItem(HttpContent content, string name = null) {
+			Content = content;
+			Name = name;
+		}
+
 		public async Task<HttpContent> Build(LexiconRequestOptions options)
 		{
+			if(this.Content is HttpContent content) return content;
+
 			if (Scheme == HttpContentScheme.Binary)
 			{
 				return new ByteArrayContent((byte[])Content) { Headers = { ContentType = new MediaTypeHeaderValue(ContentType ?? Scheme.ToString()) } };

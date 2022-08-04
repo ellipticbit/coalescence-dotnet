@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 
 namespace EllipticBit.Lexicon.Client
 {
 	public interface ILexiconMultipartContentBuilder
 	{
-		ILexiconMultipartContentBuilder Part<T>(T content, HttpContentScheme scheme, string fileName = null);
-		ILexiconMultipartContentBuilder Part(byte[] content, string fileName = null, string contentType = null);
-		ILexiconMultipartContentBuilder Part(Stream content, string fileName = null, string contentType = null);
-		ILexiconMultipartContentBuilder Part(string content, string fileName = null, string contentType = null);
-		ILexiconMultipartContentBuilder Part(Dictionary<string, string> content, string fileName = null);
+		ILexiconMultipartContentBuilder Serialized<T>(T content, string name, HttpContentScheme scheme);
+		ILexiconMultipartContentBuilder File(byte[] content, string name, string fileName = null, string contentType = null);
+		ILexiconMultipartContentBuilder File(Stream content, string name, string fileName = null, string contentType = null);
+		ILexiconMultipartContentBuilder Text(string content, string name, string contentType = null);
+		ILexiconMultipartContentBuilder UrlEncoded(Dictionary<string, string> content, string name);
+		ILexiconMultipartContentBuilder Content(HttpContent content, string name);
+		ILexiconMultipartContentBuilder Subtype(string subtype);
+		ILexiconMultipartContentBuilder Boundary(string boundary);
 		ILexiconRequestBuilder Compile();
 	}
 }

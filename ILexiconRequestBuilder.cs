@@ -24,17 +24,20 @@ namespace EllipticBit.Lexicon.Client
 		ILexiconRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : struct, IConvertible;
 		ILexiconRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible;
 
-		ILexiconRequestBuilder SerializeContent<T>(T content, HttpContentScheme scheme);
-		ILexiconRequestBuilder ByteArrayContent(byte[] content, string contentType = null);
-		ILexiconRequestBuilder StreamContent(Stream content, string contentType = null);
-		ILexiconRequestBuilder TextContent(string content, string contentType = null);
-		ILexiconRequestBuilder FormUrlContent(Dictionary<string, string> content);
+		ILexiconRequestBuilder Serialized<T>(T content, HttpContentScheme scheme);
+		ILexiconRequestBuilder ByteArray(byte[] content, string contentType = null);
+		ILexiconRequestBuilder Stream(Stream content, string contentType = null);
+		ILexiconRequestBuilder Text(string content, string contentType = null);
+		ILexiconRequestBuilder FormUrlEncoded(Dictionary<string, string> content);
+		ILexiconRequestBuilder Content(HttpContent content);
+		ILexiconMultipartContentBuilder Multipart();
+		ILexiconMultipartContentBuilder MultipartForm();
 
-		ILexiconMultipartContentBuilder MultipartContent();
-		ILexiconMultipartContentBuilder MultipartFormContent();
+		ILexiconRequestBuilder BasicAuthentication(string tenantId = null);
+		ILexiconRequestBuilder BearerAuthentication(string tenantId = null);
+		ILexiconRequestBuilder CustomAuthentication(string scheme, string tenantId = null);
 
-		ILexiconRequestBuilder Authenticate(string scheme = null);
-
+		ILexiconRequestBuilder Timeout(TimeSpan timeout);
 		ILexiconRequestBuilder SuppressHttpResultExceptions();
 
 		Task<HttpResponseMessage> Send();

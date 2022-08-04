@@ -19,6 +19,8 @@ namespace EllipticBit.Lexicon.Client
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
 		private string authenticationScheme = null;
+		private string authenticationTenant = null;
+		private TimeSpan? timeout = null;
 		private bool suppressHttpErrorExceptions = false;
 
 		private LexiconContentItem content;
@@ -95,50 +97,77 @@ namespace EllipticBit.Lexicon.Client
 			return this;
 		}
 
-		public ILexiconRequestBuilder SerializeContent<T>(T content, HttpContentScheme scheme)
+		public ILexiconRequestBuilder Serialized<T>(T content, HttpContentScheme scheme)
 		{
 			this.content = new LexiconContentItem(scheme ?? HttpContentScheme.Json, content, (scheme ?? HttpContentScheme.Json).ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder ByteArrayContent(byte[] content, string contentType = null)
+		public ILexiconRequestBuilder ByteArray(byte[] content, string contentType = null)
 		{
 			this.content = new LexiconContentItem(HttpContentScheme.Binary, content, contentType ?? HttpContentScheme.Binary.ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder StreamContent(Stream content, string contentType = null)
+		public ILexiconRequestBuilder Stream(Stream content, string contentType = null)
 		{
 			this.content = new LexiconContentItem(HttpContentScheme.Stream, content, contentType ?? HttpContentScheme.Stream.ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder TextContent(string content, string contentType = null)
+		public ILexiconRequestBuilder Text(string content, string contentType = null)
 		{
 			this.content = new LexiconContentItem(HttpContentScheme.Text, content, contentType ?? HttpContentScheme.Text.ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder FormUrlContent(Dictionary<string, string> content)
+		public ILexiconRequestBuilder FormUrlEncoded(Dictionary<string, string> content)
 		{
 			this.content = new LexiconContentItem(HttpContentScheme.FormUrlEncoded, content, HttpContentScheme.FormUrlEncoded.ToString());
 			return this;
 		}
 
-		public ILexiconMultipartContentBuilder MultipartContent()
+		public ILexiconRequestBuilder Content(HttpContent content) {
+			this.content = new LexiconContentItem(content);
+			return this;
+		}
+
+		public ILexiconMultipartContentBuilder Multipart()
 		{
 			this.multipartContentBuilder = new LexiconMultipartContentBuilder(false, this, options);
 			return this.multipartContentBuilder;
 		}
 
-		public ILexiconMultipartContentBuilder MultipartFormContent()
+		public ILexiconMultipartContentBuilder MultipartForm()
 		{
 			this.multipartContentBuilder = new LexiconMultipartContentBuilder(true, this, options);
 			return this.multipartContentBuilder;
 		}
 
-		public ILexiconRequestBuilder Authenticate(string scheme = null) {
-			this.authenticationScheme = scheme;
+		public ILexiconRequestBuilder BasicAuthentication(string tenantId = null) {
+			this.authenticationScheme = "Basic".ToLowerInvariant();
+			this.authenticationTenant = tenantId;
+			return this;
+		}
+
+		public ILexiconRequestBuilder BearerAuthentication(string tenantId = null) {
+			this.authenticationScheme = "Bearer".ToLowerInvariant();
+			this.authenticationTenant = tenantId;
+			return this;
+		}
+
+		public ILexiconRequestBuilder CustomAuthentication(string scheme, string tenantId = null) {
+			if (scheme.Equals("Basic", StringComparison.OrdinalIgnoreCase) ||
+				scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase))
+				throw new ArgumentException($"Authentication scheme '{scheme}' is not a valid custom scheme.");
+
+			this.authenticationScheme = scheme.ToLowerInvariant();
+			this.authenticationTenant = tenantId;
+			return this;
+		}
+
+		public ILexiconRequestBuilder Timeout(TimeSpan timeout) {
+			this.timeout = timeout;
 			return this;
 		}
 
@@ -150,6 +179,8 @@ namespace EllipticBit.Lexicon.Client
 		public async Task<HttpResponseMessage> Send() {
 			using var rm = await BuildRequest();
 			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? this.httpClientFactory.CreateClient() : this.httpClientFactory.CreateClient(options.HttpClientId);
+			http.Timeout = timeout ?? TimeSpan.FromSeconds(100);
+
 			var response = await http.SendAsync(rm, HttpCompletionOption.ResponseContentRead);
 
 			if (suppressHttpErrorExceptions || response.IsSuccessStatusCode) return response;
@@ -164,6 +195,8 @@ namespace EllipticBit.Lexicon.Client
 		public async Task<T> Send<T>() {
 			using var rm = await BuildRequest();
 			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? this.httpClientFactory.CreateClient() : this.httpClientFactory.CreateClient(options.HttpClientId);
+			http.Timeout = timeout ?? TimeSpan.FromSeconds(100);
+
 			var response = await http.SendAsync(rm, HttpCompletionOption.ResponseContentRead);
 
 			if (suppressHttpErrorExceptions || response.IsSuccessStatusCode) return await response.Content.ReadAsAsync<T>();
@@ -199,7 +232,7 @@ namespace EllipticBit.Lexicon.Client
 				}
 			}
 
-			if (!string.IsNullOrWhiteSpace(authenticationScheme)) rm.Headers.Authorization = new AuthenticationHeaderValue(authenticationScheme, await options.GetAuthentication(authenticationScheme));
+			rm.Headers.Authorization = await GetAuthenticationHeader();
 
 			//Get multipart content from builder if any.
 			if (multipartContentBuilder != null)
@@ -212,6 +245,20 @@ namespace EllipticBit.Lexicon.Client
 			}
 
 			return rm;
+		}
+
+		private async Task<AuthenticationHeaderValue> GetAuthenticationHeader() {
+			if (authenticationScheme.Equals("Basic", StringComparison.OrdinalIgnoreCase))
+			{
+				var basic = await options.AuthenticationHandler.Basic(authenticationTenant);
+				return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{basic.username}:{basic.password}")));
+			}
+			else if (authenticationScheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase)) {
+				return new AuthenticationHeaderValue(authenticationScheme, await options.AuthenticationHandler.Bearer(authenticationTenant));
+			}
+			else {
+				return new AuthenticationHeaderValue(authenticationScheme, await options.AuthenticationHandler.Custom(authenticationScheme, authenticationTenant));
+			}
 		}
 	}
 }

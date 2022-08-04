@@ -6,9 +6,17 @@ namespace EllipticBit.Lexicon.Client
 {
 	public class LexiconRequestOptions
 	{
-		public JsonSerializerOptions JsonSerializerOptions { get; set; }
-		public XmlSerializerOptions XmlSerializerOptions { get; set; }
-		public Func<string, Task<string>> GetAuthentication { get; set; }
-		public string HttpClientId { get; set; }
+		public JsonSerializerOptions JsonSerializerOptions { get; }
+		public XmlSerializerOptions XmlSerializerOptions { get; }
+		public ILexiconAuthenticationHandler AuthenticationHandler { get; }
+		public string HttpClientId { get; }
+
+		public LexiconRequestOptions(ILexiconAuthenticationHandler authenticationHandler, string httpClientId = null)
+		{
+			JsonSerializerOptions = new JsonSerializerOptions();
+			XmlSerializerOptions = new XmlSerializerOptions();
+			AuthenticationHandler = authenticationHandler;
+			HttpClientId = httpClientId;
+		}
 	}
 }

@@ -15,11 +15,11 @@ namespace EllipticBit.Lexicon.Client
 			this._httpClientFactory = httpClientFactory;
 		}
 
-		public ILexiconRequest CreateLexiconRequest() {
+		public ILexiconRequest CreateRequest() {
 			return new LexiconRequest(_httpClientFactory, _defaultOptions);
 		}
 
-		public ILexiconRequest CreateLexiconRequest(string name) {
+		public ILexiconRequest CreateRequest(string name) {
 			if (_options.TryGetValue(name, out LexiconRequestOptions result)) {
 				return new LexiconRequest(_httpClientFactory, result);
 			}

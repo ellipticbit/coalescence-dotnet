@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EllipticBit.Lexicon.Client
 {
-	internal sealed class LexiconMultipartContentBuilder : ILexiconMultipartContentBuilder
+	public sealed class LexiconMultipartContentBuilder : ILexiconMultipartContentBuilder
 	{
 		private readonly ILexiconRequestBuilder _builder;
 		private readonly HttpContentScheme _scheme;
@@ -25,42 +25,48 @@ namespace EllipticBit.Lexicon.Client
 			_builder = builder;
 		}
 
-		public ILexiconMultipartContentBuilder Part<T>(T content, HttpContentScheme scheme, string name = null)
+		public ILexiconMultipartContentBuilder Serialized<T>(T content, string name, HttpContentScheme scheme)
 		{
 			if (_scheme == HttpContentScheme.MultipartForm && string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Must specify a name for Multipart Form Data content items.");
 			_content.Add(new LexiconContentItem(scheme ?? this._scheme, content, (scheme ?? this._scheme).ToString(), name));
 			return this;
 		}
 
-		public ILexiconMultipartContentBuilder Part(byte[] content, string name = null, string contentType = null) {
+		public ILexiconMultipartContentBuilder File(byte[] content, string name, string fileName = null, string contentType = null) {
 			if (_scheme == HttpContentScheme.MultipartForm && string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Must specify a name for Multipart Form Data content items.");
 			_content.Add(new LexiconContentItem(HttpContentScheme.Binary, content, contentType ?? HttpContentScheme.Binary.ToString(), name));
 			return this;
 		}
 
-		public ILexiconMultipartContentBuilder Part(Stream content, string name = null, string contentType = null)
+		public ILexiconMultipartContentBuilder File(Stream content, string name, string fileName = null, string contentType = null)
 		{
 			if (_scheme == HttpContentScheme.MultipartForm && string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Must specify a name for Multipart Form Data content items.");
 			_content.Add(new LexiconContentItem(HttpContentScheme.Stream, content, contentType ?? HttpContentScheme.Stream.ToString(), name));
 			return this;
 		}
 
-		public ILexiconMultipartContentBuilder Part(string content, string name = null, string contentType = null) {
+		public ILexiconMultipartContentBuilder Text(string content, string name, string contentType = null) {
 			if (_scheme == HttpContentScheme.MultipartForm && string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Must specify a name for Multipart Form Data content items.");
 			_content.Add(new LexiconContentItem(HttpContentScheme.Text, content, contentType ?? HttpContentScheme.Text.ToString(), name));
 			return this;
 		}
 
-		public ILexiconMultipartContentBuilder Part(Dictionary<string, string> content, string name = null)
+		public ILexiconMultipartContentBuilder UrlEncoded(Dictionary<string, string> content, string name)
 		{
 			if (_scheme == HttpContentScheme.MultipartForm && string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Must specify a name for Multipart Form Data content items.");
 			_content.Add(new LexiconContentItem(HttpContentScheme.FormUrlEncoded, content, HttpContentScheme.FormUrlEncoded.ToString(), name));
 			return this;
 		}
 
+		public ILexiconMultipartContentBuilder Content(HttpContent content, string name) {
+			if (_scheme == HttpContentScheme.MultipartForm && string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Must specify a name for Multipart Form Data content items.");
+			_content.Add(new LexiconContentItem(content, name));
+			return this;
+		}
+
 		public ILexiconMultipartContentBuilder Subtype(string subtype)
 		{
-			if (string.IsNullOrWhiteSpace(subtype)) throw new ArgumentException("Boundary cannot be null or whitespace.", nameof(subtype));
+			if (string.IsNullOrWhiteSpace(subtype)) throw new ArgumentException("Subtype cannot be null or whitespace.", nameof(subtype));
 			this._subtype = subtype;
 			return this;
 		}
