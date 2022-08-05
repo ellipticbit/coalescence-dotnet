@@ -2,7 +2,7 @@
 
 namespace EllipticBit.Lexicon.Client
 {
-	internal sealed class LexiconRequest :ILexiconRequest
+	internal sealed class LexiconRequest : ILexiconRequest
 	{
 		private readonly IHttpClientFactory httpClientFactory;
 		private readonly LexiconRequestOptions options;

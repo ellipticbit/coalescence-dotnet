@@ -33,6 +33,10 @@ namespace EllipticBit.Lexicon.Client
 			return this;
 		}
 
+		public Dictionary<string, string[]> AsHeaders() {
+			return response.Headers.ToDictionary(k => k.Key, v => v.Value.ToArray());
+		}
+
 		public Task<HttpContent> AsContent() {
 			return Task.FromResult(response.Content);
 		}

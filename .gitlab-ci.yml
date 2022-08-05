@@ -14,7 +14,7 @@ Test Deployment:
 
   script:
     - "dotnet restore NetCore.csproj"
-    - "powershell.exe -file \"..\\ReplaceVersion.ps1\""
+    - "pwsh -f \"..\\ReplaceVersion.ps1\""
     - "dotnet pack -c Debug -o .\\"
 
 Production Deployment:
@@ -27,6 +27,6 @@ Production Deployment:
 
   script:
     - "dotnet restore NetCore.csproj"
-    - "powershell.exe -file \"..\\ReplaceVersion.ps1\""
+    - "pwsh -f \"..\\ReplaceVersion.ps1\""
     - "dotnet pack -c Release -o .\\"
     - "dotnet nuget push *.nupkg -k %NUGET_API_KEY% -s \"https://www.nuget.org\""

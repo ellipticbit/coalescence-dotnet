@@ -7,6 +7,10 @@ namespace EllipticBit.Lexicon.Client
 {
 	public interface ILexiconResponse
 	{
+		ILexiconResponse ThrowOnFailureResponse();
+		ILexiconResponse GetResponseError(out LexiconResponseError error);
+
+		Dictionary<string, string[]> AsHeaders();
 		Task<HttpContent> AsContent();
 		Task<T> AsObject<T>();
 		Task<byte[]> AsByteArray();
