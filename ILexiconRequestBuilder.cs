@@ -38,9 +38,7 @@ namespace EllipticBit.Lexicon.Client
 		ILexiconRequestBuilder CustomAuthentication(string scheme, string tenantId = null);
 
 		ILexiconRequestBuilder Timeout(TimeSpan timeout);
-		ILexiconRequestBuilder SuppressHttpResultExceptions();
 
-		Task<HttpResponseMessage> Send();
-		Task<T> Send<T>();
+		Task<ILexiconResponse> Send();
 	}
 }

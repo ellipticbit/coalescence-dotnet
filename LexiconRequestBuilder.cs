@@ -21,7 +21,6 @@ namespace EllipticBit.Lexicon.Client
 		private string authenticationScheme = null;
 		private string authenticationTenant = null;
 		private TimeSpan? timeout = null;
-		private bool suppressHttpErrorExceptions = false;
 
 		private LexiconContentItem content;
 		private LexiconMultipartContentBuilder multipartContentBuilder = null;
@@ -171,41 +170,14 @@ namespace EllipticBit.Lexicon.Client
 			return this;
 		}
 
-		public ILexiconRequestBuilder SuppressHttpResultExceptions() {
-			suppressHttpErrorExceptions = true;
-			return this;
-		}
-
-		public async Task<HttpResponseMessage> Send() {
+		public async Task<ILexiconResponse> Send() {
 			using var rm = await BuildRequest();
 			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? this.httpClientFactory.CreateClient() : this.httpClientFactory.CreateClient(options.HttpClientId);
 			http.Timeout = timeout ?? TimeSpan.FromSeconds(100);
 
 			var response = await http.SendAsync(rm, HttpCompletionOption.ResponseContentRead);
 
-			if (suppressHttpErrorExceptions || response.IsSuccessStatusCode) return response;
-
-			var nex = new HttpRequestException();
-			nex.Data.Add("StatusCode", response.StatusCode);
-			nex.Data.Add("ReasonPhrase", response.ReasonPhrase);
-			nex.Data.Add("Content", await response.Content.ReadAsStringAsync());
-			throw nex;
-		}
-
-		public async Task<T> Send<T>() {
-			using var rm = await BuildRequest();
-			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? this.httpClientFactory.CreateClient() : this.httpClientFactory.CreateClient(options.HttpClientId);
-			http.Timeout = timeout ?? TimeSpan.FromSeconds(100);
-
-			var response = await http.SendAsync(rm, HttpCompletionOption.ResponseContentRead);
-
-			if (suppressHttpErrorExceptions || response.IsSuccessStatusCode) return await response.Content.ReadAsAsync<T>();
-
-			var nex = new HttpRequestException();
-			nex.Data.Add("StatusCode", response.StatusCode);
-			nex.Data.Add("ReasonPhrase", response.ReasonPhrase);
-			nex.Data.Add("Content", await response.Content.ReadAsStringAsync());
-			throw nex;
+			return new LexiconResponse(response, options);
 		}
 
 		private async Task<HttpRequestMessage> BuildRequest() {
