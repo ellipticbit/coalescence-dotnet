@@ -13,7 +13,7 @@ Test Deployment:
     - master
 
   script:
-    - "dotnet restore NetCore.csproj"
+    - "dotnet restore ./NetCore/NetCore.csproj"
     - "pwsh -f \"./ReplaceVersion.ps1\""
     - "dotnet pack -c Debug -o ./NetCore/NetCore.csproj"
 
@@ -26,7 +26,7 @@ Production Deployment:
     - master
 
   script:
-    - "dotnet restore NetCore.csproj"
+    - "dotnet restore ./NetCore/NetCore.csproj"
     - "pwsh -f \"./ReplaceVersion.ps1\""
     - "dotnet pack -c Release -o ./NetCore/NetCore.csproj"
     - "dotnet nuget push *.nupkg -k %NUGET_API_KEY% -s \"https://www.nuget.org\""
