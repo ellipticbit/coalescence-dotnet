@@ -4,7 +4,7 @@ namespace EllipticBit.Lexicon.Client
 {
 	public interface ILexiconAuthenticationHandler
 	{
-		Task Failed(string scheme);
+		Task<bool> Failed(string scheme, string tenantId);
 
 		Task<string> Custom(string scheme, string tenantId);
 		Task<(string username, string password)> Basic(string tenantId);

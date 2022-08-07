@@ -28,13 +28,13 @@ namespace EllipticBit.Lexicon.Client
 		}
 
 		public ILexiconRequestFactoryBuilder AddLexiconRequestFactory(string name, LexiconRequestOptions options) {
-			LexiconRequestFactory._options = LexiconRequestFactory._options.Add(name, options);
+			_options = _options.Add(name, options);
 			return this;
 		}
 
 		internal static void SetDefaultOptions(LexiconRequestOptions defaultOptions) {
-			if (LexiconRequestFactory._defaultOptions != null) throw new IndexOutOfRangeException("Default options have already been set.");
-			LexiconRequestFactory._defaultOptions = defaultOptions;
+			if (_defaultOptions != null) throw new IndexOutOfRangeException("Default options have already been set.");
+			_defaultOptions = defaultOptions;
 		}
 	}
 }

@@ -33,11 +33,13 @@ namespace EllipticBit.Lexicon.Client
 		ILexiconMultipartContentBuilder Multipart();
 		ILexiconMultipartContentBuilder MultipartForm();
 
-		ILexiconRequestBuilder BasicAuthentication(string tenantId = null);
-		ILexiconRequestBuilder BearerAuthentication(string tenantId = null);
-		ILexiconRequestBuilder CustomAuthentication(string scheme, string tenantId = null);
+		ILexiconRequestBuilder BasicAuthentication();
+		ILexiconRequestBuilder BearerAuthentication();
+		ILexiconRequestBuilder CustomAuthentication(string scheme);
 
+		ILexiconRequestBuilder NoRetry();
 		ILexiconRequestBuilder Timeout(TimeSpan timeout);
+		ILexiconRequestBuilder Tenant(string tenantId);
 
 		Task<ILexiconResponse> Send();
 	}

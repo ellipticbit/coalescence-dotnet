@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -21,9 +22,11 @@ namespace EllipticBit.Lexicon.Client
 		private string authenticationScheme = null;
 		private string authenticationTenant = null;
 		private TimeSpan? timeout = null;
+		private bool noRetry = false;
 
 		private LexiconContentItem content;
 		private LexiconMultipartContentBuilder multipartContentBuilder = null;
+		private HttpContent cachedContent = null;
 
 		public LexiconRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, LexiconRequestOptions options) {
 			this.httpClientFactory = httpClientFactory;
@@ -143,24 +146,31 @@ namespace EllipticBit.Lexicon.Client
 			return this.multipartContentBuilder;
 		}
 
-		public ILexiconRequestBuilder BasicAuthentication(string tenantId = null) {
+		public ILexiconRequestBuilder BasicAuthentication() {
 			this.authenticationScheme = "Basic".ToLowerInvariant();
-			this.authenticationTenant = tenantId;
 			return this;
 		}
 
-		public ILexiconRequestBuilder BearerAuthentication(string tenantId = null) {
+		public ILexiconRequestBuilder BearerAuthentication() {
 			this.authenticationScheme = "Bearer".ToLowerInvariant();
-			this.authenticationTenant = tenantId;
 			return this;
 		}
 
-		public ILexiconRequestBuilder CustomAuthentication(string scheme, string tenantId = null) {
+		public ILexiconRequestBuilder CustomAuthentication(string scheme) {
 			if (scheme.Equals("Basic", StringComparison.OrdinalIgnoreCase) ||
 				scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase))
 				throw new ArgumentException($"Authentication scheme '{scheme}' is not a valid custom scheme.");
 
 			this.authenticationScheme = scheme.ToLowerInvariant();
+			return this;
+		}
+
+		public ILexiconRequestBuilder NoRetry() {
+			this.noRetry = true;
+			return this;
+		}
+
+		public ILexiconRequestBuilder Tenant(string tenantId) {
 			this.authenticationTenant = tenantId;
 			return this;
 		}
@@ -171,11 +181,18 @@ namespace EllipticBit.Lexicon.Client
 		}
 
 		public async Task<ILexiconResponse> Send() {
-			using var rm = await BuildRequest();
-			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? this.httpClientFactory.CreateClient() : this.httpClientFactory.CreateClient(options.HttpClientId);
+			int retries = 0;
+			HttpResponseMessage response = null;
+			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
 			http.Timeout = timeout ?? TimeSpan.FromSeconds(100);
 
-			var response = await http.SendAsync(rm, HttpCompletionOption.ResponseContentRead);
+			while ((!noRetry && retries > 1) || retries > options.MaxRetryCount) {
+				using var rm = await BuildRequest();
+				response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
+				if (response.StatusCode == HttpStatusCode.Unauthorized && await options.AuthenticationHandler.Failed(authenticationScheme, authenticationTenant) == false) break;
+				if ((int)response.StatusCode == 429) break; // Add 429 handling here
+				retries++;
+			}
 
 			return new LexiconResponse(response, options);
 		}
@@ -207,13 +224,16 @@ namespace EllipticBit.Lexicon.Client
 			rm.Headers.Authorization = await GetAuthenticationHeader();
 
 			//Get multipart content from builder if any.
-			if (multipartContentBuilder != null)
-			{
-				rm.Content = await multipartContentBuilder.Build();
+			if (this.cachedContent == null) {
+				if (multipartContentBuilder != null) {
+					this.cachedContent = rm.Content = await multipartContentBuilder.Build();
+				}
+				else if (content != null) {
+					this.cachedContent = rm.Content = await content.Build(options);
+				}
 			}
-			else if (content != null)
-			{
-				rm.Content = await content.Build(options);
+			else {
+				rm.Content = this.cachedContent;
 			}
 
 			return rm;
