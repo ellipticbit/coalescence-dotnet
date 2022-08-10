@@ -21,7 +21,7 @@ namespace EllipticBit.Lexicon.Client
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
 		private string authenticationScheme = null;
 		private string authenticationTenant = null;
-		private TimeSpan? timeout = null;
+		private TimeSpan timeout = TimeSpan.FromSeconds(100);
 		private bool noRetry = false;
 
 		private LexiconContentItem content;
@@ -184,13 +184,14 @@ namespace EllipticBit.Lexicon.Client
 			int retries = 0;
 			HttpResponseMessage response = null;
 			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
-			http.Timeout = timeout ?? TimeSpan.FromSeconds(100);
+			http.Timeout = timeout;
 
 			while ((!noRetry && retries > 1) || retries > options.MaxRetryCount) {
 				using var rm = await BuildRequest();
 				response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
-				if (response.StatusCode == HttpStatusCode.Unauthorized && await options.AuthenticationHandler.Failed(authenticationScheme, authenticationTenant) == false) break;
 				if ((int)response.StatusCode == 429) break; // Add 429 handling here
+				if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
+				if (response.StatusCode == HttpStatusCode.Unauthorized && await options.AuthenticationHandler.CanContinue(authenticationScheme, authenticationTenant) == false) break; // Cancel or continue the request as indicated by the failure handler.
 				retries++;
 			}
 
@@ -221,7 +222,7 @@ namespace EllipticBit.Lexicon.Client
 				}
 			}
 
-			rm.Headers.Authorization = await GetAuthenticationHeader();
+			if (!string.IsNullOrWhiteSpace(authenticationScheme)) rm.Headers.Authorization = await GetAuthenticationHeader();
 
 			//Get multipart content from builder if any.
 			if (this.cachedContent == null) {
