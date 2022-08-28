@@ -6,12 +6,12 @@ namespace EllipticBit.Lexicon.Client
 {
 	public interface ILexiconMultipartContentBuilder
 	{
-		ILexiconMultipartContentBuilder Serialized<T>(T content, string name, HttpContentScheme scheme);
-		ILexiconMultipartContentBuilder File(byte[] content, string name, string fileName = null, string contentType = null);
-		ILexiconMultipartContentBuilder File(Stream content, string name, string fileName = null, string contentType = null);
-		ILexiconMultipartContentBuilder Text(string content, string name, string contentType = null);
-		ILexiconMultipartContentBuilder UrlEncoded(Dictionary<string, string> content, string name);
-		ILexiconMultipartContentBuilder Content(HttpContent content, string name);
+		ILexiconMultipartContentBuilder Serialized<T>(MultipartContentItem<T> content);
+		ILexiconMultipartContentBuilder File(MultipartContentItem<byte[]> content);
+		ILexiconMultipartContentBuilder File(MultipartContentItem<Stream> content);
+		ILexiconMultipartContentBuilder Text(MultipartContentItem<string> content);
+		ILexiconMultipartContentBuilder UrlEncoded(MultipartContentItem<Dictionary<string, string>> content);
+		ILexiconMultipartContentBuilder Content(MultipartContentItem<HttpContent> content);
 		ILexiconMultipartContentBuilder Subtype(string subtype);
 		ILexiconMultipartContentBuilder Boundary(string boundary);
 		ILexiconRequestBuilder Compile();

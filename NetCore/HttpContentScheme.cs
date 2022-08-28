@@ -1,4 +1,7 @@
-﻿namespace EllipticBit.Lexicon.Client
+﻿using System;
+using Newtonsoft.Json;
+
+namespace EllipticBit.Lexicon.Client
 {
 	public class HttpContentScheme
 	{
@@ -8,13 +11,15 @@
 			this._value = value;
 		}
 
+		public static HttpContentScheme Unknown => new HttpContentScheme(-1);
+		public static HttpContentScheme Content => new HttpContentScheme(0);
 		public static HttpContentScheme Json => new HttpContentScheme(1);
 		public static HttpContentScheme Xml => new HttpContentScheme(2);
 		public static HttpContentScheme Text => new HttpContentScheme(3);
 		public static HttpContentScheme Binary => new HttpContentScheme(4);
 		public static HttpContentScheme Stream => new HttpContentScheme(5);
 		public static HttpContentScheme FormUrlEncoded => new HttpContentScheme(6);
-		public static HttpContentScheme Mutltipart => new HttpContentScheme(7);
+		public static HttpContentScheme Multipart => new HttpContentScheme(7);
 		public static HttpContentScheme MultipartForm => new HttpContentScheme(8);
 
 		public override bool Equals(object obj) {
@@ -64,6 +69,17 @@
 				case 8: return "multipart/form-data";
 				default: return "application/octet-stream";
 			}
+		}
+
+		public static HttpContentScheme Parse(string contentType) {
+			if (contentType.Equals("application/json", StringComparison.InvariantCultureIgnoreCase)) return Json;
+			if (contentType.Equals("application/xml", StringComparison.InvariantCultureIgnoreCase)) return Xml;
+			if (contentType.Equals("text/plain", StringComparison.InvariantCultureIgnoreCase)) return Text;
+			if (contentType.Equals("application/octet-stream", StringComparison.InvariantCultureIgnoreCase)) return Binary;
+			if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.InvariantCultureIgnoreCase)) return FormUrlEncoded;
+			if (contentType.Equals("multipart/*", StringComparison.InvariantCultureIgnoreCase)) return Multipart;
+			if (contentType.Equals("multipart/form-data", StringComparison.InvariantCultureIgnoreCase)) return MultipartForm;
+			return Unknown;
 		}
 	}
 }

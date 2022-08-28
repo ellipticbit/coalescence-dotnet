@@ -8,24 +8,28 @@ using System.Threading.Tasks;
 
 namespace EllipticBit.Lexicon.Client
 {
-	public sealed class LexiconContentItem
+	internal sealed class LexiconContentItem
 	{
 		public HttpContentScheme Scheme { get; }
 		public object Content { get; }
 		public string ContentType { get; }
 		public string Name { get; }
+		public string FileName { get; }
 
-		public LexiconContentItem(HttpContentScheme scheme, object content, string contentType, string name = null)
+		public LexiconContentItem(HttpContentScheme scheme, object content, string contentType, string name = null, string fileName = null)
 		{
 			Scheme = scheme;
 			Content = content;
 			ContentType = contentType;
 			Name = name;
+			FileName = fileName;
 		}
 
-		public LexiconContentItem(HttpContent content, string name = null) {
+		public LexiconContentItem(HttpContent content, string name = null, string fileName = null) {
+			Scheme = HttpContentScheme.Content;
 			Content = content;
 			Name = name;
+			FileName = fileName;
 		}
 
 		public async Task<HttpContent> Build(LexiconRequestOptions options)
