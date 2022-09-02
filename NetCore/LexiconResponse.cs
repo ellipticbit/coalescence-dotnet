@@ -75,5 +75,18 @@ namespace EllipticBit.Lexicon.Client
 			var results = await fuec.ReadAsFormDataAsync();
 			return results.AllKeys.ToDictionary(k => k, k => results[k]);
 		}
+
+		public async Task<string> AsMultipartString(string name) {
+			if (response.Content.IsMimeMultipartContent()) throw new InvalidOperationException("Response content is not valid multi-part content");
+			if (response.Content is MultipartFormDataContent formContent)
+			{
+				formContent.
+			} else if (response.Content is MultipartContent content) {
+				var cl = content.ToList();
+			}
+			else {
+				throw new InvalidOperationException("Response content is not valid multi-part content");
+			}
+		}
 	}
 }
