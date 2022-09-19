@@ -1,6 +1,6 @@
 ﻿namespace EllipticBit.Hotwire.Shared
 {
-	internal class HttpContentScheme
+	public class HttpContentScheme
 	{
 		private readonly int _value;
 
