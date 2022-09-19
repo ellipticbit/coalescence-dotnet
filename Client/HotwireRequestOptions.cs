@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace EllipticBit.Lexicon.Client
+namespace EllipticBit.Hotwire.Client
 {
-	public sealed class LexiconRequestOptions
+	public sealed class HotwireRequestOptions
 	{
-		public JsonSerializerOptions JsonSerializerOptions { get; }
-		public XmlSerializerOptions XmlSerializerOptions { get; }
-		public ILexiconAuthenticationHandler AuthenticationHandler { get; }
+		public JsonSerializerOptions JsonSerializerOptions { get; set; }
+		public XmlSerializerOptions XmlSerializerOptions { get; set; }
+		public IHotwireAuthenticationHandler AuthenticationHandler { get; }
 		public string HttpClientId { get; }
 		public int MaxRetryCount { get; set; } = 3;
 
-		public LexiconRequestOptions(ILexiconAuthenticationHandler authenticationHandler, string httpClientId = null)
+		public HotwireRequestOptions(IHotwireAuthenticationHandler authenticationHandler, string httpClientId = null)
 		{
 			JsonSerializerOptions = new JsonSerializerOptions();
 			XmlSerializerOptions = new XmlSerializerOptions();

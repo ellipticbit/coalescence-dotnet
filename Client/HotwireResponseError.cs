@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Net;
 
-namespace EllipticBit.Lexicon.Client
+namespace EllipticBit.Hotwire.Client
 {
-	public sealed class LexiconResponseError : Exception
+	public sealed class HotwireResponseError : Exception
 	{
 		public HttpStatusCode StatusCode { get; }
 		public string Content { get; }
 
-		internal LexiconResponseError(HttpStatusCode statusCode, string message, string content) : base(message)
+		internal HotwireResponseError(HttpStatusCode statusCode, string message, string content) : base(message)
 		{
 			StatusCode = statusCode;
 			Content = content;

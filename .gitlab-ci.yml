@@ -4,29 +4,36 @@ before_script:
   - "git submodule foreach --recursive git reset --hard"
   - "git submodule update --init --recursive"
 
-Test Deployment:
+Shared Test Deployment:
   tags:
     - linux
     - dotnet
 
   except:
-    - master
+    refs:
+      - master
+  only:
+      changes:
+      - ./Shared/**
 
   script:
-    - "dotnet restore ./NetCore/NetCore.csproj"
-    - "pwsh -f \"./ReplaceVersion.ps1\""
-    - "dotnet pack -c Debug -o ./ ./NetCore/NetCore.csproj"
+    - "dotnet restore ./Shared/Shared.csproj"
+    - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
+    - "dotnet pack -c Debug -o ./ ./Shared/Shared.csproj"
 
-Production Deployment:
+Shared Production Deployment:
   tags:
-    - windows
+    - linux
     - dotnet
 
   only:
-    - master
+    refs:
+      - master
+    changes:
+      - ./Shared/**
 
   script:
-    - "dotnet restore ./NetCore/NetCore.csproj"
-    - "pwsh -f \"./ReplaceVersion.ps1\""
-    - "dotnet pack -c Release -o ./ ./NetCore/NetCore.csproj"
+    - "dotnet restore ./Shared/Shared.csproj"
+    - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
+    - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj"
     - "dotnet nuget push *.nupkg -k %NUGET_API_KEY% -s \"https://www.nuget.org\""

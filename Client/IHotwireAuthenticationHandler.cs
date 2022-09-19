@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace EllipticBit.Lexicon.Client
+namespace EllipticBit.Hotwire.Client
 {
-	public interface ILexiconAuthenticationHandler
+	public interface IHotwireAuthenticationHandler
 	{
 		Task<bool> CanContinue(string currentScheme, string tenantId);
 

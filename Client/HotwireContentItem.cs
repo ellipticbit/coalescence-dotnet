@@ -6,9 +6,9 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace EllipticBit.Lexicon.Client
+namespace EllipticBit.Hotwire.Client
 {
-	internal sealed class LexiconContentItem
+	internal sealed class HotwireContentItem
 	{
 		public HttpContentScheme Scheme { get; }
 		public object Content { get; }
@@ -16,7 +16,7 @@ namespace EllipticBit.Lexicon.Client
 		public string Name { get; }
 		public string FileName { get; }
 
-		public LexiconContentItem(HttpContentScheme scheme, object content, string contentType, string name = null, string fileName = null)
+		public HotwireContentItem(HttpContentScheme scheme, object content, string contentType, string name = null, string fileName = null)
 		{
 			Scheme = scheme;
 			Content = content;
@@ -25,14 +25,14 @@ namespace EllipticBit.Lexicon.Client
 			FileName = fileName;
 		}
 
-		public LexiconContentItem(HttpContent content, string name = null, string fileName = null) {
+		public HotwireContentItem(HttpContent content, string name = null, string fileName = null) {
 			Scheme = HttpContentScheme.Content;
 			Content = content;
 			Name = name;
 			FileName = fileName;
 		}
 
-		public async Task<HttpContent> Build(LexiconRequestOptions options)
+		public async Task<HttpContent> Build(HotwireRequestOptions options)
 		{
 			if(this.Content is HttpContent content) return content;
 

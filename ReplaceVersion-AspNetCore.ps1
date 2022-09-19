@@ -6,13 +6,13 @@ param (
 $year = [System.DateTime]::Now.Year
 $BuildMajor = ([int]$env:BUILD_MAJOR)
 $BuildMinor = ([int]$env:BUILD_MINOR)
-$BuildNumber = ([int]$env:BUILD_NUMBER) + 1
-Invoke-WebRequest "https://gitlab.com/api/v4/projects/$($env:CI_PROJECT_ID)/variables/BUILD_NUMBER" -Headers @{"PRIVATE-TOKEN"=$env:CI_API_TOKEN} -Body @{value=$BuildNumber} -ContentType "application/x-www-form-urlencoded" -Method "PUT" -UseBasicParsing
+$BuildNumber = ([int]$env:BUILD_NUMBER_ASPNETCORE) + 1
+Invoke-WebRequest "https://gitlab.com/api/v4/projects/$($env:CI_PROJECT_ID)/variables/BUILD_NUMBER_ASPNETCORE" -Headers @{"PRIVATE-TOKEN"=$env:CI_API_TOKEN} -Body @{value=$BuildNumber} -ContentType "application/x-www-form-urlencoded" -Method "PUT" -UseBasicParsing
 
 $appVer = '{0}.{1}.{2}' -f $BuildMajor, $BuildMinor, $BuildNumber
 $copyright = 'Copyright © EllipticBit, LLC. {0}, All Rights Reserved.' -f $year
 
-Get-ChildItem -Path .\ -Filter *.csproj -Recurse -File | ForEach-Object {
+Get-ChildItem -Path .\AspNetCore\ -Filter *.csproj -Recurse -File | ForEach-Object {
     [string]$filename = $_.FullName
     [xml]$filexml = Get-Content -Path $_.FullName -Encoding UTF8
 

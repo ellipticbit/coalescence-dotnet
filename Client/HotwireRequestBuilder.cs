@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace EllipticBit.Lexicon.Client
+namespace EllipticBit.Hotwire.Client
 {
-	internal sealed class LexiconRequestBuilder : ILexiconRequestBuilder
+	internal sealed class HotwireRequestBuilder : IHotwireRequestBuilder
 	{
 		private readonly IHttpClientFactory httpClientFactory;
-		private readonly LexiconRequestOptions options;
+		private readonly HotwireRequestOptions options;
 		private readonly HttpMethod method;
 		private readonly List<string> path = new();
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
@@ -24,139 +24,139 @@ namespace EllipticBit.Lexicon.Client
 		private TimeSpan timeout = TimeSpan.FromSeconds(100);
 		private bool noRetry = false;
 
-		private LexiconContentItem content;
-		private LexiconMultipartContentBuilder multipartContentBuilder = null;
+		private HotwireContentItem content;
+		private HotwireMultipartContentBuilder multipartContentBuilder = null;
 		private HttpContent cachedContent = null;
 
-		public LexiconRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, LexiconRequestOptions options) {
+		public HotwireRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, HotwireRequestOptions options) {
 			this.httpClientFactory = httpClientFactory;
 			this.options = options;
 			this.method = method;
 		}
 
-		public ILexiconRequestBuilder Path(params string[] parameter) {
+		public IHotwireRequestBuilder Path(params string[] parameter) {
 			path.AddRange(parameter.Select(a => a.Trim().Trim('/', '&')));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Path(string parameter) {
+		public IHotwireRequestBuilder Path(string parameter) {
 			path.Add(parameter.Trim().Trim('/', '&'));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Path(byte[] parameter) {
+		public IHotwireRequestBuilder Path(byte[] parameter) {
 			path.Add(WebEncoders.Base64UrlEncode(parameter));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Path<T>(T parameter) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Path<T>(T parameter) where T : struct, IConvertible {
 			path.Add(Convert.ToString(parameter));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Path<T>(T? parameter) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Path<T>(T? parameter) where T : struct, IConvertible {
 			path.Add(parameter == null ? "null" : Convert.ToString(parameter));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Query(string key, IEnumerable<string> values) {
+		public IHotwireRequestBuilder Query(string key, IEnumerable<string> values) {
 			query.Add(key, values.Select(a => a.Trim()));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Query(string key, IEnumerable<byte[]> values) {
+		public IHotwireRequestBuilder Query(string key, IEnumerable<byte[]> values) {
 			query.Add(key, values.Select(WebEncoders.Base64UrlEncode));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : struct, IConvertible {
 			query.Add(key, values.Select(a => Convert.ToString(a)));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible {
 			query.Add(key, values.Select(a => a == null ? "null" : Convert.ToString(a)));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Header(string key, IEnumerable<string> values) {
+		public IHotwireRequestBuilder Header(string key, IEnumerable<string> values) {
 			headers.Add(key, values.Select(a => a.Trim()));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Header(string key, IEnumerable<byte[]> values) {
+		public IHotwireRequestBuilder Header(string key, IEnumerable<byte[]> values) {
 			headers.Add(key, values.Select(Convert.ToBase64String));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : struct, IConvertible {
 			headers.Add(key, values.Select(a => Convert.ToString(a)));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible {
 			headers.Add(key, values.Select(a => a == null ? "null" : Convert.ToString(a)));
 			return this;
 		}
 
-		public ILexiconRequestBuilder Serialized<T>(T content, HttpContentScheme scheme)
+		public IHotwireRequestBuilder Serialized<T>(T content, HttpContentScheme scheme)
 		{
-			this.content = new LexiconContentItem(scheme ?? HttpContentScheme.Json, content, (scheme ?? HttpContentScheme.Json).ToString());
+			this.content = new HotwireContentItem(scheme ?? HttpContentScheme.Json, content, (scheme ?? HttpContentScheme.Json).ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder ByteArray(byte[] content, string contentType = null)
+		public IHotwireRequestBuilder ByteArray(byte[] content, string contentType = null)
 		{
-			this.content = new LexiconContentItem(HttpContentScheme.Binary, content, contentType ?? HttpContentScheme.Binary.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.Binary, content, contentType ?? HttpContentScheme.Binary.ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder Stream(Stream content, string contentType = null)
+		public IHotwireRequestBuilder Stream(Stream content, string contentType = null)
 		{
-			this.content = new LexiconContentItem(HttpContentScheme.Stream, content, contentType ?? HttpContentScheme.Stream.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.Stream, content, contentType ?? HttpContentScheme.Stream.ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder Text(string content, string contentType = null)
+		public IHotwireRequestBuilder Text(string content, string contentType = null)
 		{
-			this.content = new LexiconContentItem(HttpContentScheme.Text, content, contentType ?? HttpContentScheme.Text.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.Text, content, contentType ?? HttpContentScheme.Text.ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder FormUrlEncoded(Dictionary<string, string> content)
+		public IHotwireRequestBuilder FormUrlEncoded(Dictionary<string, string> content)
 		{
-			this.content = new LexiconContentItem(HttpContentScheme.FormUrlEncoded, content, HttpContentScheme.FormUrlEncoded.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.FormUrlEncoded, content, HttpContentScheme.FormUrlEncoded.ToString());
 			return this;
 		}
 
-		public ILexiconRequestBuilder Content(HttpContent content) {
-			this.content = new LexiconContentItem(content);
+		public IHotwireRequestBuilder Content(HttpContent content) {
+			this.content = new HotwireContentItem(content);
 			return this;
 		}
 
-		public ILexiconMultipartContentBuilder Multipart()
+		public IHotwireMultipartContentBuilder Multipart()
 		{
-			this.multipartContentBuilder = new LexiconMultipartContentBuilder(false, this, options);
+			this.multipartContentBuilder = new HotwireMultipartContentBuilder(false, this, options);
 			return this.multipartContentBuilder;
 		}
 
-		public ILexiconMultipartContentBuilder MultipartForm()
+		public IHotwireMultipartContentBuilder MultipartForm()
 		{
-			this.multipartContentBuilder = new LexiconMultipartContentBuilder(true, this, options);
+			this.multipartContentBuilder = new HotwireMultipartContentBuilder(true, this, options);
 			return this.multipartContentBuilder;
 		}
 
-		public ILexiconRequestBuilder BasicAuthentication() {
+		public IHotwireRequestBuilder BasicAuthentication() {
 			this.authenticationScheme = "Basic".ToLowerInvariant();
 			return this;
 		}
 
-		public ILexiconRequestBuilder BearerAuthentication() {
+		public IHotwireRequestBuilder BearerAuthentication() {
 			this.authenticationScheme = "Bearer".ToLowerInvariant();
 			return this;
 		}
 
-		public ILexiconRequestBuilder CustomAuthentication(string scheme) {
+		public IHotwireRequestBuilder CustomAuthentication(string scheme) {
 			if (scheme.Equals("Basic", StringComparison.OrdinalIgnoreCase) ||
 				scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase))
 				throw new ArgumentException($"Authentication scheme '{scheme}' is not a valid custom scheme.");
@@ -165,22 +165,22 @@ namespace EllipticBit.Lexicon.Client
 			return this;
 		}
 
-		public ILexiconRequestBuilder NoRetry() {
+		public IHotwireRequestBuilder NoRetry() {
 			this.noRetry = true;
 			return this;
 		}
 
-		public ILexiconRequestBuilder Tenant(string tenantId) {
+		public IHotwireRequestBuilder Tenant(string tenantId) {
 			this.authenticationTenant = tenantId;
 			return this;
 		}
 
-		public ILexiconRequestBuilder Timeout(TimeSpan timeout) {
+		public IHotwireRequestBuilder Timeout(TimeSpan timeout) {
 			this.timeout = timeout;
 			return this;
 		}
 
-		public async Task<ILexiconResponse> Send() {
+		public async Task<IHotwireResponse> Send() {
 			int retries = 0;
 			HttpResponseMessage response = null;
 			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
@@ -195,7 +195,7 @@ namespace EllipticBit.Lexicon.Client
 				retries++;
 			}
 
-			return new LexiconResponse(response, options);
+			return new HotwireResponse(response, options);
 		}
 
 		private async Task<HttpRequestMessage> BuildRequest() {

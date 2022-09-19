@@ -7,28 +7,28 @@ using System.Net.Http.Formatting;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace EllipticBit.Lexicon.Client
+namespace EllipticBit.Hotwire.Client
 {
-	internal sealed class LexiconResponse : ILexiconResponse
+	internal sealed class HotwireResponse : IHotwireResponse
 	{
 		private readonly HttpResponseMessage response;
-		private readonly LexiconRequestOptions options;
+		private readonly HotwireRequestOptions options;
 
-		public LexiconResponse(HttpResponseMessage response, LexiconRequestOptions options) {
+		public HotwireResponse(HttpResponseMessage response, HotwireRequestOptions options) {
 			this.response = response;
 			this.options = options;
 		}
 
-		public ILexiconResponse ThrowOnFailureResponse() {
+		public IHotwireResponse ThrowOnFailureResponse() {
 			if (response.IsSuccessStatusCode) return this;
 
-			throw new LexiconResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
+			throw new HotwireResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
 		}
 
-		public ILexiconResponse GetResponseError(out LexiconResponseError error) {
+		public IHotwireResponse GetResponseError(out HotwireResponseError error) {
 			if (response.IsSuccessStatusCode) error = null;
 
-			error = new LexiconResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
+			error = new HotwireResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
 
 			return this;
 		}
@@ -76,17 +76,16 @@ namespace EllipticBit.Lexicon.Client
 			return results.AllKeys.ToDictionary(k => k, k => results[k]);
 		}
 
-		public async Task<string> AsMultipartString(string name) {
-			if (response.Content.IsMimeMultipartContent()) throw new InvalidOperationException("Response content is not valid multi-part content");
-			if (response.Content is MultipartFormDataContent formContent)
-			{
-				formContent.
-			} else if (response.Content is MultipartContent content) {
-				var cl = content.ToList();
-			}
-			else {
-				throw new InvalidOperationException("Response content is not valid multi-part content");
-			}
-		}
+		//public async Task<string> AsMultipartString(string name) {
+		//	if (response.Content.IsMimeMultipartContent()) throw new InvalidOperationException("Response content is not valid multi-part content");
+		//	if (response.Content is MultipartFormDataContent formContent)
+		//	{
+		//	} else if (response.Content is MultipartContent content) {
+		//		var cl = content.ToList();
+		//	}
+		//	else {
+		//		throw new InvalidOperationException("Response content is not valid multi-part content");
+		//	}
+		//}
 	}
 }

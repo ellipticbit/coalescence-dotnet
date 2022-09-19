@@ -3,12 +3,12 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace EllipticBit.Lexicon.Client
+namespace EllipticBit.Hotwire.Client
 {
-	public interface ILexiconResponse
+	public interface IHotwireResponse
 	{
-		ILexiconResponse ThrowOnFailureResponse();
-		ILexiconResponse GetResponseError(out LexiconResponseError error);
+		IHotwireResponse ThrowOnFailureResponse();
+		IHotwireResponse GetResponseError(out HotwireResponseError error);
 
 		Dictionary<string, string[]> AsHeaders();
 		Task<HttpContent> AsContent();
