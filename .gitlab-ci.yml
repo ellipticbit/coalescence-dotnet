@@ -13,8 +13,8 @@ Shared Test Deployment:
     refs:
       - master
   only:
-      changes:
-      - ./Shared/**
+    changes:
+      - Shared/**/*
 
   script:
     - "dotnet restore ./Shared/Shared.csproj"
@@ -30,7 +30,7 @@ Shared Production Deployment:
     refs:
       - master
     changes:
-      - ./Shared/**
+      - Shared/**/*
 
   script:
     - "dotnet restore ./Shared/Shared.csproj"
