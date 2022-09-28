@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using EllipticBit.Hotwire.Shared;
+
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 

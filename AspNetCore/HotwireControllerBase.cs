@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+
+using EllipticBit.Hotwire.Shared;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EllipticBit.Hotwire.AspNetCore

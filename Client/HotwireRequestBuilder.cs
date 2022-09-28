@@ -5,8 +5,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+
+using EllipticBit.Hotwire.Shared;
+
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace EllipticBit.Hotwire.Client
@@ -16,6 +20,8 @@ namespace EllipticBit.Hotwire.Client
 		private readonly IHttpClientFactory httpClientFactory;
 		private readonly HotwireRequestOptions options;
 		private readonly HttpMethod method;
+		private readonly IEnumerable<IHotwireSerializer> serializers;
+
 		private readonly List<string> path = new();
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
@@ -28,10 +34,11 @@ namespace EllipticBit.Hotwire.Client
 		private HotwireMultipartContentBuilder multipartContentBuilder = null;
 		private HttpContent cachedContent = null;
 
-		public HotwireRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, HotwireRequestOptions options) {
+		public HotwireRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, HotwireRequestOptions options, IEnumerable<IHotwireSerializer> serializers) {
 			this.httpClientFactory = httpClientFactory;
 			this.options = options;
 			this.method = method;
+			this.serializers = serializers;
 		}
 
 		public IHotwireRequestBuilder Path(params string[] parameter) {
@@ -99,33 +106,33 @@ namespace EllipticBit.Hotwire.Client
 			return this;
 		}
 
-		public IHotwireRequestBuilder Serialized<T>(T content, HttpContentScheme scheme)
+		public IHotwireRequestBuilder Serialized<T>(T content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(scheme ?? HttpContentScheme.Json, content, (scheme ?? HttpContentScheme.Json).ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.Serialized, content, contentType);
 			return this;
 		}
 
 		public IHotwireRequestBuilder ByteArray(byte[] content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.Binary, content, contentType ?? HttpContentScheme.Binary.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.Binary, content, contentType);
 			return this;
 		}
 
 		public IHotwireRequestBuilder Stream(Stream content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.Stream, content, contentType ?? HttpContentScheme.Stream.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.Stream, content, contentType);
 			return this;
 		}
 
 		public IHotwireRequestBuilder Text(string content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.Text, content, contentType ?? HttpContentScheme.Text.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.Text, content, contentType);
 			return this;
 		}
 
 		public IHotwireRequestBuilder FormUrlEncoded(Dictionary<string, string> content)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.FormUrlEncoded, content, HttpContentScheme.FormUrlEncoded.ToString());
+			this.content = new HotwireContentItem(HttpContentScheme.FormUrlEncoded, content, "application/x-www-form-urlencoded");
 			return this;
 		}
 
@@ -136,13 +143,13 @@ namespace EllipticBit.Hotwire.Client
 
 		public IHotwireMultipartContentBuilder Multipart()
 		{
-			this.multipartContentBuilder = new HotwireMultipartContentBuilder(false, this, options);
+			this.multipartContentBuilder = new HotwireMultipartContentBuilder(false, this, options, serializers);
 			return this.multipartContentBuilder;
 		}
 
 		public IHotwireMultipartContentBuilder MultipartForm()
 		{
-			this.multipartContentBuilder = new HotwireMultipartContentBuilder(true, this, options);
+			this.multipartContentBuilder = new HotwireMultipartContentBuilder(true, this, options, serializers);
 			return this.multipartContentBuilder;
 		}
 
@@ -230,7 +237,7 @@ namespace EllipticBit.Hotwire.Client
 					this.cachedContent = rm.Content = await multipartContentBuilder.Build();
 				}
 				else if (content != null) {
-					this.cachedContent = rm.Content = await content.Build(options);
+					this.cachedContent = rm.Content = await Build(content);
 				}
 			}
 			else {
@@ -252,6 +259,34 @@ namespace EllipticBit.Hotwire.Client
 			else {
 				return new AuthenticationHeaderValue(authenticationScheme, await options.AuthenticationHandler.Custom(authenticationScheme, authenticationTenant));
 			}
+		}
+
+		private async Task<HttpContent> Build(HotwireContentItem contentItem)
+		{
+			if (contentItem.Content is HttpContent content) return content;
+
+			if (contentItem.Scheme == HttpContentScheme.Binary)
+			{
+				return new ByteArrayContent((byte[])contentItem.Content) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.ContentType ?? "application/octet-stream") } };
+			}
+			else if (contentItem.Scheme == HttpContentScheme.Stream)
+			{
+				return new StreamContent((Stream)contentItem.Content) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.ContentType ?? "application/octet-stream") } };
+			}
+			else if (contentItem.Scheme == HttpContentScheme.Text)
+			{
+				return new StringContent((string)contentItem.Content) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.ContentType ?? "text/plain") } };
+			}
+			else if (contentItem.Scheme == HttpContentScheme.Serialized)
+			{
+				return new StringContent(await sr.ReadToEndAsync()) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.Scheme.ToString()) } };
+			}
+			else if (contentItem.Scheme == HttpContentScheme.FormUrlEncoded)
+			{
+				return new FormUrlEncodedContent((Dictionary<string, string>)contentItem.Content);
+			}
+
+			return null;
 		}
 	}
 }

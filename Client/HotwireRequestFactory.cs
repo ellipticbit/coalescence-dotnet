@@ -1,4 +1,7 @@
-﻿using System;
+﻿using EllipticBit.Hotwire.Shared;
+
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Net.Http;
 
@@ -10,18 +13,19 @@ namespace EllipticBit.Hotwire.Client
 		private static ImmutableDictionary<string, HotwireRequestOptions> _options = ImmutableDictionary<string, HotwireRequestOptions>.Empty;
 
 		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly IEnumerable<IHotwireSerializer> _serializers;
 
-		public HotwireRequestFactory(IHttpClientFactory httpClientFactory) {
+		public HotwireRequestFactory(IHttpClientFactory httpClientFactory, IEnumerable<IHotwireSerializer> serializers) {
 			this._httpClientFactory = httpClientFactory;
 		}
 
 		public IHotwireRequest CreateRequest() {
-			return new HotwireRequest(_httpClientFactory, _defaultOptions);
+			return new HotwireRequest(_httpClientFactory, _defaultOptions, _serializers);
 		}
 
 		public IHotwireRequest CreateRequest(string name) {
 			if (_options.TryGetValue(name, out HotwireRequestOptions result)) {
-				return new HotwireRequest(_httpClientFactory, result);
+				return new HotwireRequest(_httpClientFactory, result, _serializers);
 			}
 
 			throw new IndexOutOfRangeException($"No request available for name: {name}");

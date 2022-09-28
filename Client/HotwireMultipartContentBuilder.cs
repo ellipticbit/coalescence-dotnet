@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EllipticBit.Hotwire.Shared;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,21 +9,23 @@ using System.Threading.Tasks;
 
 namespace EllipticBit.Hotwire.Client
 {
-	public sealed class HotwireMultipartContentBuilder : IHotwireMultipartContentBuilder
+	internal sealed class HotwireMultipartContentBuilder : IHotwireMultipartContentBuilder
 	{
 		private readonly IHotwireRequestBuilder _builder;
 		private readonly HttpContentScheme _scheme;
 		private readonly List<HotwireContentItem> _content;
 		private readonly HotwireRequestOptions _options;
+		private readonly IEnumerable<IHotwireSerializer> _serializers;
 
 		private string _subtype = null;
 		private string _boundary = null;
 
-		public HotwireMultipartContentBuilder(bool useForm, IHotwireRequestBuilder builder, HotwireRequestOptions options)
+		public HotwireMultipartContentBuilder(bool useForm, IHotwireRequestBuilder builder, HotwireRequestOptions options, IEnumerable<IHotwireSerializer> serializers)
 		{
 			this._scheme = useForm ? HttpContentScheme.MultipartForm : HttpContentScheme.Multipart;
 			this._content = new List<HotwireContentItem>();
 			this._options = options;
+			this._serializers = serializers;
 			_builder = builder;
 		}
 

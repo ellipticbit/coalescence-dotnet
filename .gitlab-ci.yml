@@ -43,3 +43,43 @@ Shared Production Deployment:
     - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
     - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj"
     - "dotnet nuget push *.nupkg -k $NUGET_API_KEY -s \"https://www.nuget.org\""
+
+Client Test Deployment:
+  stage: library
+  needs: ["Shared Test Deployment"]
+  tags:
+    - linux
+    - dotnet
+
+  except:
+    refs:
+      - master
+  only:
+    changes:
+      - Client/**/*
+
+  script:
+    - "dotnet restore ./Client/Client.csproj"
+    - "pwsh -f \"./ReplaceVersion-Client.ps1\""
+    - "dotnet add ./Client/Client.csproj package EllipticBit.Hotwire.Shared"
+    - "dotnet pack -c Debug -o ./ ./Client/Client.csproj"
+
+Client Production Deployment:
+  stage: library
+  needs: ["Shared Production Deployment"]
+  tags:
+    - linux
+    - dotnet
+
+  only:
+    refs:
+      - master
+    changes:
+      - Client/**/*
+
+  script:
+    - "dotnet restore ./Client/Client.csproj"
+    - "pwsh -f \"./ReplaceVersion-Client.ps1\""
+    - "dotnet add ./Client/Client.csproj package EllipticBit.Hotwire.Shared"
+    - "dotnet pack -c Release -o ./ ./Client/Client.csproj"
+    - "dotnet nuget push *.nupkg -k $NUGET_API_KEY -s \"https://www.nuget.org\""

@@ -10,9 +10,14 @@ namespace EllipticBit.Hotwire.Shared
 	{
 		private readonly XmlSerializationOptions settings;
 
-		public HotwireXmlSerializer(XmlSerializationOptions settings) {
+		public HotwireXmlSerializer(XmlSerializationOptions settings, bool isDefault) {
+			this.IsDefault = isDefault;
 			this.settings = settings;
 		}
+
+		public string[] ContentTypes => new string[] { "text/xml", "application/xml"};
+
+		public bool IsDefault { get; }
 
 		public Task<T> Deserialize<T>(string input) {
 			if (!settings.UseXmlSerializer) {

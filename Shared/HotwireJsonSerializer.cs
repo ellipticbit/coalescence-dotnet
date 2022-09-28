@@ -9,9 +9,14 @@ namespace EllipticBit.Hotwire.Shared
 	{
 		private readonly JsonSerializerOptions settings;
 
-		public HotwireJsonSerializer(JsonSerializerOptions settings) {
+		public HotwireJsonSerializer(JsonSerializerOptions settings, bool isDefault) {
+			this.IsDefault = isDefault;
 			this.settings = settings;
 		}
+
+		public string[] ContentTypes => new string[1] { "application/json" };
+
+		public bool IsDefault { get; }
 
 		public Task<T> Deserialize<T>(string input) {
 			using var ms = new MemoryStream(Encoding.UTF8.GetBytes(input));
