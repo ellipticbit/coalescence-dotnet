@@ -20,6 +20,7 @@
 		<PackageTags>netcore;netstandard;code-generation,web-api;aspnet-core</PackageTags>
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>latest</LangVersion>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

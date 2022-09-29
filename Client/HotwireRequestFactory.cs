@@ -14,18 +14,21 @@ namespace EllipticBit.Hotwire.Client
 
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IEnumerable<IHotwireSerializer> _serializers;
+		private readonly IEnumerable<IHotwireAuthentication> _authenticators;
 
-		public HotwireRequestFactory(IHttpClientFactory httpClientFactory, IEnumerable<IHotwireSerializer> serializers) {
+		public HotwireRequestFactory(IHttpClientFactory httpClientFactory, IEnumerable<IHotwireSerializer> serializers, IEnumerable<IHotwireAuthentication> authenticators) {
 			this._httpClientFactory = httpClientFactory;
+			this._serializers = serializers;
+			this._authenticators = authenticators;
 		}
 
 		public IHotwireRequest CreateRequest() {
-			return new HotwireRequest(_httpClientFactory, _defaultOptions, _serializers);
+			return new HotwireRequest(_httpClientFactory, _defaultOptions, _serializers, _authenticators);
 		}
 
 		public IHotwireRequest CreateRequest(string name) {
 			if (_options.TryGetValue(name, out HotwireRequestOptions result)) {
-				return new HotwireRequest(_httpClientFactory, result, _serializers);
+				return new HotwireRequest(_httpClientFactory, result, _serializers, _authenticators);
 			}
 
 			throw new IndexOutOfRangeException($"No request available for name: {name}");

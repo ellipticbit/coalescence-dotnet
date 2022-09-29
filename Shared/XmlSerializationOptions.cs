@@ -7,6 +7,7 @@ using System.Xml.Schema;
 
 namespace EllipticBit.Hotwire.Shared
 {
+#pragma warning disable CS1591
 	public class XmlSerializationOptions
 	{
 		//DataContractSerializer options
@@ -85,4 +86,5 @@ namespace EllipticBit.Hotwire.Shared
 			};
 		}
 	}
+#pragma warning restore CS1591
 }

@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace EllipticBit.Hotwire.Shared
 {
-	public class HotwireXmlSerializer : IHotwireSerializer
+	internal class HotwireXmlSerializer : IHotwireSerializer
 	{
 		private readonly XmlSerializationOptions settings;
 

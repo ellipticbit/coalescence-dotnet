@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EllipticBit.Hotwire.Shared
 {
-	public class HotwireJsonSerializer : IHotwireSerializer
+	internal class HotwireJsonSerializer : IHotwireSerializer
 	{
 		private readonly JsonSerializerOptions settings;
 

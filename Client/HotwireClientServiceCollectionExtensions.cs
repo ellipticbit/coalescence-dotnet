@@ -8,7 +8,7 @@ namespace EllipticBit.Hotwire.Client
 		public static IHotwireRequestFactoryBuilder AddHotwireClientServices(this IServiceCollection service, HotwireRequestOptions defaultOptions) {
 			service.TryAddTransient<IHotwireRequestFactory, HotwireRequestFactory>();
 			HotwireRequestFactory.SetDefaultOptions(defaultOptions);
-			return new HotwireRequestFactory(null, null);
+			return new HotwireRequestFactory(null, null, null);
 		}
 	}
 }

@@ -23,7 +23,6 @@ Shared Test Deployment:
 
   script:
     - "dotnet restore ./Shared/Shared.csproj"
-    - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
     - "dotnet pack -c Debug -o ./ ./Shared/Shared.csproj"
 
 Shared Production Deployment:
@@ -60,7 +59,6 @@ Client Test Deployment:
 
   script:
     - "dotnet restore ./Client/Client.csproj"
-    - "pwsh -f \"./ReplaceVersion-Client.ps1\""
     - "dotnet add ./Client/Client.csproj package EllipticBit.Hotwire.Shared"
     - "dotnet pack -c Debug -o ./ ./Client/Client.csproj"
 

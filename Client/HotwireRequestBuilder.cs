@@ -21,6 +21,7 @@ namespace EllipticBit.Hotwire.Client
 		private readonly HotwireRequestOptions options;
 		private readonly HttpMethod method;
 		private readonly IEnumerable<IHotwireSerializer> serializers;
+		private readonly IEnumerable<IHotwireAuthentication> authenticators;
 
 		private readonly List<string> path = new();
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
@@ -34,11 +35,12 @@ namespace EllipticBit.Hotwire.Client
 		private HotwireMultipartContentBuilder multipartContentBuilder = null;
 		private HttpContent cachedContent = null;
 
-		public HotwireRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, HotwireRequestOptions options, IEnumerable<IHotwireSerializer> serializers) {
+		public HotwireRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, HotwireRequestOptions options, IEnumerable<IHotwireSerializer> serializers, IEnumerable<IHotwireAuthentication> authenticators) {
 			this.httpClientFactory = httpClientFactory;
 			this.options = options;
 			this.method = method;
 			this.serializers = serializers;
+			this.authenticators = authenticators;
 		}
 
 		public IHotwireRequestBuilder Path(params string[] parameter) {

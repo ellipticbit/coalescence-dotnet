@@ -1,5 +1,6 @@
 ﻿namespace EllipticBit.Hotwire.Shared
 {
+#pragma warning disable CS1591
 	public class HttpContentScheme
 	{
 		private readonly int _value;
@@ -52,4 +53,5 @@
 			return !(a == b);
 		}
 	}
+#pragma warning restore CS1591
 }

@@ -1,5 +1,6 @@
 ﻿namespace EllipticBit.Hotwire.Shared
 {
+#pragma warning disable CS1591
 	public readonly struct MultipartContentItem<T>
 	{
 		public readonly T Content;
@@ -15,4 +16,5 @@
 			this.ContentType = contentType;
 		}
 	};
+#pragma warning restore CS1591
 }

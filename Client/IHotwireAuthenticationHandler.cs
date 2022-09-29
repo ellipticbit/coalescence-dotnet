@@ -12,17 +12,4 @@ namespace EllipticBit.Hotwire.Client
 		//Task<DigestAuthenticationParameters> Digest();
 		//Task<ScramAuthenticationParameters> Scram();
 	}
-	/*
-		NOTE: Skip esoteric forms of auth for now.
-
-		public sealed class DigestAuthenticationParameters
-		{
-			public bool UseMD5 { get; } = false;
-		}
-
-		public sealed class ScramAuthenticationParameters
-		{
-			public bool UseSHA1 { get; } = false;
-		}
-	*/
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+// ReSharper disable InconsistentNaming
 
 namespace EllipticBit.Hotwire.Shared
 {
+#pragma warning disable CS1591
 	public static class IEnumerableExtensions
 	{
 		public static IHotwireSerializer GetDefaultHotwireSerializer(this IEnumerable<IHotwireSerializer> serializers)
@@ -25,4 +27,5 @@ namespace EllipticBit.Hotwire.Shared
 			return auth;
 		}
 	}
+#pragma warning restore CS1591
 }
