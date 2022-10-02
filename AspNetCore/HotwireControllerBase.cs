@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,11 +13,15 @@ namespace EllipticBit.Hotwire.AspNetCore
 {
 	public abstract class HotwireControllerBase : ControllerBase
 	{
-		private readonly HotwireControllerOptions _options;
+		private readonly HotwireControllerOptions options;
+		private readonly IEnumerable<IHotwireSerializer> serializers;
+		private readonly IEnumerable<IHotwireAuthentication> authenticators;
 
-		protected HotwireControllerBase(HotwireControllerOptions options)
+		protected HotwireControllerBase(HotwireControllerOptions options, IEnumerable<IHotwireSerializer> serializers, IEnumerable<IHotwireAuthentication> authenticators)
 		{
-			_options = options;
+			this.options = options;
+			this.serializers = serializers;
+			this.authenticators = authenticators;
 		}
 
 		protected async Task<T> MultipartAsSerialized<T>(string name)
@@ -24,7 +29,7 @@ namespace EllipticBit.Hotwire.AspNetCore
 			var file = this.Request.Form.Files.GetFile(name);
 			if (file == null) throw new ArgumentOutOfRangeException(nameof(name), $"Unable to locate multipart content item with name: {name}");
 
-			var serializer = this._options.GetSerializer(file.ContentType);
+			var serializer = serializers.GetHotwireSerializer(file.ContentType);
 
 			await using var stream = file.OpenReadStream();
 			using var reader = new StreamReader(stream, Encoding.UTF8, true);

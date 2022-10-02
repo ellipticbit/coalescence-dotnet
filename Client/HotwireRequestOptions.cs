@@ -2,13 +2,11 @@
 {
 	public sealed class HotwireRequestOptions
 	{
-		public string DefaultSerializerContentType { get; }
 		public string HttpClientId { get; }
 		public int MaxRetryCount { get; set; } = 3;
 
-		public HotwireRequestOptions(string httpClientId = null, string defaultSerializationContentType = null)
+		public HotwireRequestOptions(string httpClientId = null)
 		{
-			DefaultSerializerContentType = defaultSerializationContentType;
 			HttpClientId = httpClientId;
 		}
 	}

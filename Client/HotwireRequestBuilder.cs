@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,8 +25,9 @@ namespace EllipticBit.Hotwire.Client
 		private readonly List<string> path = new();
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
-		private string authenticationScheme = null;
-		private string authenticationTenant = null;
+		private IHotwireAuthentication authentication = null;
+		private string tenantId = null;
+		private string userId = null;
 		private TimeSpan timeout = TimeSpan.FromSeconds(100);
 		private bool noRetry = false;
 
@@ -155,32 +155,23 @@ namespace EllipticBit.Hotwire.Client
 			return this.multipartContentBuilder;
 		}
 
-		public IHotwireRequestBuilder BasicAuthentication() {
-			this.authenticationScheme = "Basic".ToLowerInvariant();
+		public IHotwireRequestBuilder Authentication(string scheme) {
+			this.authentication = string.IsNullOrWhiteSpace(scheme) ? null : authenticators.GetHotwireAuthentication(scheme);
 			return this;
 		}
 
-		public IHotwireRequestBuilder BearerAuthentication() {
-			this.authenticationScheme = "Bearer".ToLowerInvariant();
+		public IHotwireRequestBuilder User(string userId) {
+			this.userId = userId;
 			return this;
 		}
 
-		public IHotwireRequestBuilder CustomAuthentication(string scheme) {
-			if (scheme.Equals("Basic", StringComparison.OrdinalIgnoreCase) ||
-				scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase))
-				throw new ArgumentException($"Authentication scheme '{scheme}' is not a valid custom scheme.");
-
-			this.authenticationScheme = scheme.ToLowerInvariant();
+		public IHotwireRequestBuilder Tenant(string tenantId) {
+			this.tenantId = tenantId;
 			return this;
 		}
 
 		public IHotwireRequestBuilder NoRetry() {
 			this.noRetry = true;
-			return this;
-		}
-
-		public IHotwireRequestBuilder Tenant(string tenantId) {
-			this.authenticationTenant = tenantId;
 			return this;
 		}
 
@@ -200,11 +191,11 @@ namespace EllipticBit.Hotwire.Client
 				response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
 				if ((int)response.StatusCode == 429) break; // Add 429 handling here
 				if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
-				if (response.StatusCode == HttpStatusCode.Unauthorized && await options.AuthenticationHandler.CanContinue(authenticationScheme, authenticationTenant) == false) break; // Cancel or continue the request as indicated by the failure handler.
+				if (response.StatusCode == HttpStatusCode.Unauthorized && await authentication.ContinueOnFailure(userId, tenantId) == false) break; // Cancel or continue the request as indicated by the failure handler.
 				retries++;
 			}
 
-			return new HotwireResponse(response, options);
+			return new HotwireResponse(response, options, serializers, authenticators);
 		}
 
 		private async Task<HttpRequestMessage> BuildRequest() {
@@ -231,7 +222,7 @@ namespace EllipticBit.Hotwire.Client
 				}
 			}
 
-			if (!string.IsNullOrWhiteSpace(authenticationScheme)) rm.Headers.Authorization = await GetAuthenticationHeader();
+			if (authentication != null) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get(userId, tenantId));
 
 			//Get multipart content from builder if any.
 			if (this.cachedContent == null) {
@@ -239,7 +230,7 @@ namespace EllipticBit.Hotwire.Client
 					this.cachedContent = rm.Content = await multipartContentBuilder.Build();
 				}
 				else if (content != null) {
-					this.cachedContent = rm.Content = await Build(content);
+					this.cachedContent = rm.Content = await content.Build(serializers);
 				}
 			}
 			else {
@@ -247,48 +238,6 @@ namespace EllipticBit.Hotwire.Client
 			}
 
 			return rm;
-		}
-
-		private async Task<AuthenticationHeaderValue> GetAuthenticationHeader() {
-			if (authenticationScheme.Equals("Basic", StringComparison.OrdinalIgnoreCase))
-			{
-				var basic = await options.AuthenticationHandler.Basic(authenticationTenant);
-				return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{basic.username}:{basic.password}")));
-			}
-			else if (authenticationScheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase)) {
-				return new AuthenticationHeaderValue(authenticationScheme, await options.AuthenticationHandler.Bearer(authenticationTenant));
-			}
-			else {
-				return new AuthenticationHeaderValue(authenticationScheme, await options.AuthenticationHandler.Custom(authenticationScheme, authenticationTenant));
-			}
-		}
-
-		private async Task<HttpContent> Build(HotwireContentItem contentItem)
-		{
-			if (contentItem.Content is HttpContent content) return content;
-
-			if (contentItem.Scheme == HttpContentScheme.Binary)
-			{
-				return new ByteArrayContent((byte[])contentItem.Content) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.ContentType ?? "application/octet-stream") } };
-			}
-			else if (contentItem.Scheme == HttpContentScheme.Stream)
-			{
-				return new StreamContent((Stream)contentItem.Content) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.ContentType ?? "application/octet-stream") } };
-			}
-			else if (contentItem.Scheme == HttpContentScheme.Text)
-			{
-				return new StringContent((string)contentItem.Content) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.ContentType ?? "text/plain") } };
-			}
-			else if (contentItem.Scheme == HttpContentScheme.Serialized)
-			{
-				return new StringContent(await sr.ReadToEndAsync()) { Headers = { ContentType = new MediaTypeHeaderValue(contentItem.Scheme.ToString()) } };
-			}
-			else if (contentItem.Scheme == HttpContentScheme.FormUrlEncoded)
-			{
-				return new FormUrlEncodedContent((Dictionary<string, string>)contentItem.Content);
-			}
-
-			return null;
 		}
 	}
 }

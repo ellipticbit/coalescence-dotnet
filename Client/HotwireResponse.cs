@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Text.Json;
 using System.Threading.Tasks;
+
+using EllipticBit.Hotwire.Shared;
 
 namespace EllipticBit.Hotwire.Client
 {
@@ -13,10 +13,14 @@ namespace EllipticBit.Hotwire.Client
 	{
 		private readonly HttpResponseMessage response;
 		private readonly HotwireRequestOptions options;
+		private readonly IEnumerable<IHotwireSerializer> serializers;
+		private readonly IEnumerable<IHotwireAuthentication> authenticators;
 
-		public HotwireResponse(HttpResponseMessage response, HotwireRequestOptions options) {
+		public HotwireResponse(HttpResponseMessage response, HotwireRequestOptions options, IEnumerable<IHotwireSerializer> serializers, IEnumerable<IHotwireAuthentication> authenticators) {
 			this.response = response;
 			this.options = options;
+			this.serializers = serializers;
+			this.authenticators = authenticators;
 		}
 
 		public IHotwireResponse ThrowOnFailureResponse() {
@@ -42,17 +46,8 @@ namespace EllipticBit.Hotwire.Client
 		}
 
 		public async Task<T> AsObject<T>() {
-			if (response.Content.Headers.ContentType?.MediaType == "application/json") {
-				using var stream = await response.Content.ReadAsStreamAsync();
-				return await JsonSerializer.DeserializeAsync<T>(stream, options.JsonSerializerOptions);
-			}
-			else if (response.Content.Headers.ContentType?.MediaType is "application/xml" or "text/xml") {
-				using var stream = await response.Content.ReadAsStreamAsync();
-				var xml = new XmlMediaTypeFormatter();
-				options.XmlSerializerOptions.ApplyOptions(xml);
-				return (T)await xml.ReadFromStreamAsync(typeof(T), stream, response.Content, null);
-			}
-			throw new NotImplementedException($"No deserializer has been implemented for Content-Type: {response.Content.Headers.ContentType?.MediaType}");
+			var serializer = serializers.GetHotwireSerializer(response.Content.Headers.ContentType?.MediaType);
+			return await serializer.Deserialize<T>(await response.Content.ReadAsStringAsync());
 		}
 
 		public Task<byte[]> AsByteArray() {

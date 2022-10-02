@@ -1,6 +1,4 @@
-﻿using EllipticBit.Hotwire.Shared;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -35,13 +33,12 @@ namespace EllipticBit.Hotwire.Client
 		IHotwireMultipartContentBuilder Multipart();
 		IHotwireMultipartContentBuilder MultipartForm();
 
-		IHotwireRequestBuilder BasicAuthentication();
-		IHotwireRequestBuilder BearerAuthentication();
-		IHotwireRequestBuilder CustomAuthentication(string scheme);
+		IHotwireRequestBuilder Authentication(string scheme);
+		IHotwireRequestBuilder Tenant(string tenantId);
+		IHotwireRequestBuilder User(string userId);
 
 		IHotwireRequestBuilder NoRetry();
 		IHotwireRequestBuilder Timeout(TimeSpan timeout);
-		IHotwireRequestBuilder Tenant(string tenantId);
 
 		Task<IHotwireResponse> Send();
 	}

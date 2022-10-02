@@ -1,6 +1,11 @@
-﻿using EllipticBit.Hotwire.Shared;
+﻿using System.Collections.Generic;
+using EllipticBit.Hotwire.Shared;
 
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
 
 namespace EllipticBit.Hotwire.Client
 {
@@ -26,6 +31,34 @@ namespace EllipticBit.Hotwire.Client
 			Content = content;
 			Name = name;
 			FileName = fileName;
+		}
+
+		internal async Task<HttpContent> Build(IEnumerable<IHotwireSerializer> serializers) {
+			if (Content is HttpContent content) return content;
+
+			if (Scheme == HttpContentScheme.Binary)
+			{
+				return new ByteArrayContent((byte[])Content) { Headers = { ContentType = new MediaTypeHeaderValue(ContentType ?? "application/octet-stream") } };
+			}
+			else if (Scheme == HttpContentScheme.Stream)
+			{
+				return new StreamContent((Stream)Content) { Headers = { ContentType = new MediaTypeHeaderValue(ContentType ?? "application/octet-stream") } };
+			}
+			else if (Scheme == HttpContentScheme.Text)
+			{
+				return new StringContent((string)Content) { Headers = { ContentType = new MediaTypeHeaderValue(ContentType ?? "text/plain") } };
+			}
+			else if (Scheme == HttpContentScheme.Serialized)
+			{
+				var serializer = string.IsNullOrWhiteSpace(ContentType) ? serializers.GetHotwireSerializer(ContentType) : serializers.GetDefaultHotwireSerializer();
+				return new StringContent(await serializer.Serialize(Content)) { Headers = { ContentType = new MediaTypeHeaderValue(serializer.ContentTypes.First()) } };
+			}
+			else if (Scheme == HttpContentScheme.FormUrlEncoded)
+			{
+				return new FormUrlEncodedContent((Dictionary<string, string>)Content);
+			}
+
+			return null;
 		}
 	}
 }

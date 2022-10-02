@@ -32,7 +32,7 @@ namespace EllipticBit.Hotwire.Client
 		public IHotwireMultipartContentBuilder Serialized<T>(MultipartContentItem<T> content)
 		{
 			if (_scheme == HttpContentScheme.MultipartForm && string.IsNullOrWhiteSpace(content.Name)) throw new ArgumentNullException(nameof(content.Name), "Must specify a name for Multipart Form Data content items.");
-			_content.Add(new HotwireContentItem(HttpContentScheme.Parse(content.ContentType), content.Content, content.ContentType, content.Name, content.FileName));
+			_content.Add(new HotwireContentItem(HttpContentScheme.Serialized, content.Content, content.ContentType, content.Name, content.FileName));
 			return this;
 		}
 
@@ -96,13 +96,13 @@ namespace EllipticBit.Hotwire.Client
 					new MultipartContent();
 				foreach (var ci in _content)
 				{
-					content.Add(await ci.Build(_options));
+					content.Add(await ci.Build(_serializers));
 				}
 			}
 			else if (_scheme == HttpContentScheme.MultipartForm) {
 				var content = string.IsNullOrWhiteSpace(_boundary) ? new MultipartFormDataContent() : new MultipartFormDataContent(_boundary);
 				foreach (var ci in _content) {
-					content.Add(await ci.Build(_options), null, ci.Name);
+					content.Add(await ci.Build(_serializers), null, ci.Name);
 				}
 			}
 			else {
