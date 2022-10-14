@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace EllipticBit.Hotwire.Shared
 {
@@ -14,8 +16,6 @@ namespace EllipticBit.Hotwire.Shared
 		/// <returns>Returns an <see cref="IHotwireServiceBuilder">IHotwireServiceBuilder</see> object.</returns>
 		public static IHotwireServiceBuilder AddHotwireServices(this IServiceCollection service)
 		{
-			service.AddTransient<IHotwireSerializer, HotwireJsonSerializer>();
-			service.AddTransient<IHotwireSerializer, HotwireXmlSerializer>();
 			return new HotwireServiceBuilder(service);
 		}
 	}

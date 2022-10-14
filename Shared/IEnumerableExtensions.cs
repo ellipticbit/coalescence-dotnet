@@ -22,7 +22,7 @@ namespace EllipticBit.Hotwire.Shared
 
 		public static IHotwireAuthentication GetHotwireAuthentication(this IEnumerable<IHotwireAuthentication> serializers, string scheme)
 		{
-			var auth = serializers.FirstOrDefault(a => a.Scheme.Equals(scheme, StringComparison.OrdinalIgnoreCase));
+			var auth = serializers.FirstOrDefault(a => a.Scheme.Equals(scheme, StringComparison.OrdinalIgnoreCase)) ?? serializers.FirstOrDefault(a => a.Scheme == null);
 			if (auth == null) throw new ArgumentOutOfRangeException(nameof(scheme), $"Unable to locate authentication handler for specified scheme: {scheme}");
 			return auth;
 		}

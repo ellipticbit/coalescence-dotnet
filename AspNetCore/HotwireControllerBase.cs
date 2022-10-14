@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
-using System.Net.Http;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,6 +70,10 @@ namespace EllipticBit.Hotwire.AspNetCore
 			await stream.CopyToAsync(reader);
 
 			return new MultipartContentItem<byte[]>(reader.ToArray(), file.ContentType, file.Name, file.FileName);
+		}
+
+		protected Task<ImmutableDictionary<string, string[]>> MultipartAsFormUrlEncoded() {
+			return Task.FromResult(this.Request.Form.Select(a =>  new KeyValuePair<string,string[]>(a.Key, a.Value.ToArray())).ToImmutableDictionary());
 		}
 	}
 }

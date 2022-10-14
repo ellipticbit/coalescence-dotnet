@@ -5,24 +5,34 @@ using System.Threading.Tasks;
 
 namespace EllipticBit.Hotwire.Shared
 {
-	internal class HotwireJsonSerializer : IHotwireSerializer
+	/// <inheritdoc />
+	public class HotwireJsonSerializer : IHotwireSerializer
 	{
 		private readonly JsonSerializerOptions settings;
 
+		/// <summary>
+		/// Creates a HotwireJsonSerializer
+		/// </summary>
+		/// <param name="settings">The System.Text.Json.JsonSerializerOptions used by this serializer.</param>
+		/// <param name="isDefault">Specifies that this is the default serializer to be used when no Content-Type is provided.</param>
 		public HotwireJsonSerializer(JsonSerializerOptions settings, bool isDefault) {
 			this.IsDefault = isDefault;
 			this.settings = settings;
 		}
 
+		/// <inheritdoc />
 		public string[] ContentTypes => new string[1] { "application/json" };
 
+		/// <inheritdoc />
 		public bool IsDefault { get; }
 
+		/// <inheritdoc />
 		public Task<T> Deserialize<T>(string input) {
 			using var ms = new MemoryStream(Encoding.UTF8.GetBytes(input));
 			return JsonSerializer.DeserializeAsync<T>(ms, settings).AsTask();
 		}
 
+		/// <inheritdoc />
 		public async Task<string> Serialize<T>(T input) {
 			using var ms = new MemoryStream();
 			await JsonSerializer.SerializeAsync(ms, input, settings);

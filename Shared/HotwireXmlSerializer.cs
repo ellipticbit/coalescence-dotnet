@@ -6,19 +6,28 @@ using System.Xml.Serialization;
 
 namespace EllipticBit.Hotwire.Shared
 {
-	internal class HotwireXmlSerializer : IHotwireSerializer
+	/// <inheritdoc />
+	public class HotwireXmlSerializer : IHotwireSerializer
 	{
 		private readonly XmlSerializationOptions settings;
 
+		/// <summary>
+		/// Creates a HotwireXmlSerializer
+		/// </summary>
+		/// <param name="settings">The <see cref="XmlSerializationOptions">XmlSerializationOptions</see> used by this serializer.</param>
+		/// <param name="isDefault">Specifies that this is the default serializer to be used when no Content-Type is provided.</param>
 		public HotwireXmlSerializer(XmlSerializationOptions settings, bool isDefault) {
 			this.IsDefault = isDefault;
 			this.settings = settings;
 		}
 
+		/// <inheritdoc />
 		public string[] ContentTypes => new string[] { "text/xml", "application/xml"};
 
+		/// <inheritdoc />
 		public bool IsDefault { get; }
 
+		/// <inheritdoc />
 		public Task<T> Deserialize<T>(string input) {
 			if (!settings.UseXmlSerializer) {
 				var dcs = new DataContractSerializer(typeof(T), settings.GetDataContractSerializerSettings());
@@ -34,6 +43,7 @@ namespace EllipticBit.Hotwire.Shared
 			}
 		}
 
+		/// <inheritdoc />
 		public Task<string> Serialize<T>(T input) {
 			if (!settings.UseXmlSerializer) {
 				var dcs = new DataContractSerializer(typeof(T), settings.GetDataContractSerializerSettings());
