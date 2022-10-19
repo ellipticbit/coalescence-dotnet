@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using EllipticBit.Hotwire.Shared;
-
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using EllipticBit.Hotwire.Shared;
 
-namespace EllipticBit.Hotwire.Client
+namespace EllipticBit.Hotwire.Request
 {
 	internal sealed class HotwireContentItem
 	{

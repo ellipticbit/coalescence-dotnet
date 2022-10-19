@@ -1,4 +1,4 @@
-﻿namespace EllipticBit.Hotwire.Client
+﻿namespace EllipticBit.Hotwire.Request
 {
 	public interface IHotwireRequest
 	{

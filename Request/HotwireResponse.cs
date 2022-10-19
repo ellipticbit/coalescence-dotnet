@@ -4,23 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using EllipticBit.Hotwire.Shared;
 
-namespace EllipticBit.Hotwire.Client
+namespace EllipticBit.Hotwire.Request
 {
 	internal sealed class HotwireResponse : IHotwireResponse
 	{
 		private readonly HttpResponseMessage response;
 		private readonly HotwireRequestOptions options;
-		private readonly IEnumerable<IHotwireSerializer> serializers;
-		private readonly IEnumerable<IHotwireAuthentication> authenticators;
 
-		public HotwireResponse(HttpResponseMessage response, HotwireRequestOptions options, IEnumerable<IHotwireSerializer> serializers, IEnumerable<IHotwireAuthentication> authenticators) {
+		public HotwireResponse(HttpResponseMessage response, HotwireRequestOptions options) {
 			this.response = response;
 			this.options = options;
-			this.serializers = serializers;
-			this.authenticators = authenticators;
 		}
 
 		public IHotwireResponse ThrowOnFailureResponse() {
@@ -46,7 +41,7 @@ namespace EllipticBit.Hotwire.Client
 		}
 
 		public async Task<T> AsObject<T>() {
-			var serializer = serializers.GetHotwireSerializer(response.Content.Headers.ContentType?.MediaType);
+			var serializer = options.Serializers.GetHotwireSerializer(response.Content.Headers.ContentType?.MediaType);
 			return await serializer.Deserialize<T>(await response.Content.ReadAsStringAsync());
 		}
 

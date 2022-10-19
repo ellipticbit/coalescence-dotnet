@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace EllipticBit.Hotwire.Client
+namespace EllipticBit.Hotwire.Request
 {
 	public sealed class HotwireResponseError : Exception
 	{

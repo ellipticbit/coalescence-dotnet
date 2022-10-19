@@ -1,13 +1,12 @@
-﻿using EllipticBit.Hotwire.Shared;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EllipticBit.Hotwire.Shared;
 
-namespace EllipticBit.Hotwire.Client
+namespace EllipticBit.Hotwire.Request
 {
 	internal sealed class HotwireMultipartContentBuilder : IHotwireMultipartContentBuilder
 	{
@@ -15,17 +14,15 @@ namespace EllipticBit.Hotwire.Client
 		private readonly HttpContentScheme _scheme;
 		private readonly List<HotwireContentItem> _content;
 		private readonly HotwireRequestOptions _options;
-		private readonly IEnumerable<IHotwireSerializer> _serializers;
 
 		private string _subtype = null;
 		private string _boundary = null;
 
-		public HotwireMultipartContentBuilder(bool useForm, IHotwireRequestBuilder builder, HotwireRequestOptions options, IEnumerable<IHotwireSerializer> serializers)
+		public HotwireMultipartContentBuilder(bool useForm, IHotwireRequestBuilder builder, HotwireRequestOptions options)
 		{
 			this._scheme = useForm ? HttpContentScheme.MultipartForm : HttpContentScheme.Multipart;
 			this._content = new List<HotwireContentItem>();
 			this._options = options;
-			this._serializers = serializers;
 			_builder = builder;
 		}
 
@@ -96,13 +93,13 @@ namespace EllipticBit.Hotwire.Client
 					new MultipartContent();
 				foreach (var ci in _content)
 				{
-					content.Add(await ci.Build(_serializers));
+					content.Add(await ci.Build(_options.Serializers));
 				}
 			}
 			else if (_scheme == HttpContentScheme.MultipartForm) {
 				var content = string.IsNullOrWhiteSpace(_boundary) ? new MultipartFormDataContent() : new MultipartFormDataContent(_boundary);
 				foreach (var ci in _content) {
-					content.Add(await ci.Build(_serializers), null, ci.Name);
+					content.Add(await ci.Build(_options.Serializers), null, ci.Name);
 				}
 			}
 			else {

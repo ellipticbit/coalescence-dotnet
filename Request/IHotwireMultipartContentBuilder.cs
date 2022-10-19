@@ -1,10 +1,9 @@
-﻿using EllipticBit.Hotwire.Shared;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using EllipticBit.Hotwire.Shared;
 
-namespace EllipticBit.Hotwire.Client
+namespace EllipticBit.Hotwire.Request
 {
 	public interface IHotwireMultipartContentBuilder
 	{

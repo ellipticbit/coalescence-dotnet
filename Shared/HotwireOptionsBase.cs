@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Text.Json;
 
 namespace EllipticBit.Hotwire.Shared
@@ -13,10 +12,12 @@ namespace EllipticBit.Hotwire.Shared
 		/// Name used to identify this options set.
 		/// </summary>
 		public string Name { get; }
+
 		/// <summary>
 		/// Read-only list of Serialization handlers.
 		/// </summary>
 		public IEnumerable<IHotwireSerializer> Serializers { get; }
+
 		/// <summary>
 		/// Read-only list of Authentication handlers.
 		/// </summary>
@@ -25,8 +26,8 @@ namespace EllipticBit.Hotwire.Shared
 		/// <summary>
 		/// Default constructor for Hotwire options classes.
 		/// </summary>
-		protected HotwireOptionsBase() {
-			Name = null;
+		protected HotwireOptionsBase(string name = null) {
+			Name = name;
 			Serializers = new IHotwireSerializer[] {
 				new HotwireJsonSerializer(new JsonSerializerOptions(), true),
 				new HotwireXmlSerializer(new XmlSerializationOptions(), false)

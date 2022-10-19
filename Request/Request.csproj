@@ -3,18 +3,18 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<AssemblyName>EllipticBit.Hotwire.Client</AssemblyName>
-		<RootNamespace>EllipticBit.Hotwire.Client</RootNamespace>
+		<AssemblyName>EllipticBit.Hotwire.Request</AssemblyName>
+		<RootNamespace>EllipticBit.Hotwire.Request</RootNamespace>
 		<Authors>EllipticBit LLC</Authors>
 		<Company>EllipticBit, LLC</Company>
 		<Product>Hotwire</Product>
-		<PackageId>EllipticBit.Hotwire.Client</PackageId>
+		<PackageId>EllipticBit.Hotwire.Request</PackageId>
 		<Version>0.0.0</Version>
 		<FileVersion>0.0.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<Copyright>Copyright © EllipticBit, LLC. 2022</Copyright>
-		<Description>Client support library for the Hotwire code generation system. Find it here: https://gitlab.com/EllipticBit/Hotwire</Description>
-		<RepositoryUrl>https://gitlab.com/EllipticBit/Hotwire-dotnet</RepositoryUrl>
+		<Description>Request support library for the Hotwire code generation system. Find it here: https://gitlab.com/EllipticBit/Hotwire</Description>
+		<RepositoryUrl>https://gitlab.com/EllipticBit/Hotwire-Dotnet</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>netcore;netstandard;code-generation,web-api;aspnet-core</PackageTags>
@@ -23,7 +23,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EllipticBit.Hotwire.Shared" Version="1.0.4" />
+		<PackageReference Include="EllipticBit.Hotwire.Shared" Version="1.0.5" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
