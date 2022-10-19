@@ -55,7 +55,7 @@ Client Test Deployment:
       - master
   only:
     changes:
-      - Client/**/*
+      - Request/**/*
 
   script:
     - "dotnet restore ./Request/Request.csproj"
@@ -73,7 +73,7 @@ Client Production Deployment:
     refs:
       - master
     changes:
-      - Client/**/*
+      - Request/**/*
 
   script:
     - "dotnet restore ./Request/Request.csproj"
