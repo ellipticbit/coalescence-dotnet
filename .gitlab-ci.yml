@@ -20,6 +20,7 @@ Shared Test Deployment:
   only:
     changes:
       - Shared/**/*
+      - .gitlab-ci.yml
 
   script:
     - "dotnet restore ./Shared/Shared.csproj"
@@ -36,6 +37,7 @@ Shared Production Deployment:
       - master
     changes:
       - Shared/**/*
+      - .gitlab-ci.yml
 
   script:
     - "dotnet restore ./Shared/Shared.csproj"
@@ -56,6 +58,7 @@ Client Test Deployment:
   only:
     changes:
       - Request/**/*
+      - .gitlab-ci.yml
 
   script:
     - "dotnet restore ./Request/Request.csproj"
@@ -74,6 +77,7 @@ Client Production Deployment:
       - master
     changes:
       - Request/**/*
+      - .gitlab-ci.yml
 
   script:
     - "dotnet restore ./Request/Request.csproj"
