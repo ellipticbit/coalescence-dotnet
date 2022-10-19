@@ -58,9 +58,9 @@ Client Test Deployment:
       - Client/**/*
 
   script:
-    - "dotnet restore ./Client/Client.csproj"
-    - "dotnet add ./Client/Client.csproj package EllipticBit.Hotwire.Shared"
-    - "dotnet pack -c Debug -o ./ ./Client/Client.csproj"
+    - "dotnet restore ./Request/Request.csproj"
+    - "dotnet add ./Request/Request.csproj package EllipticBit.Hotwire.Shared"
+    - "dotnet pack -c Debug -o ./ ./Request/Request.csproj"
 
 Client Production Deployment:
   stage: library
@@ -76,8 +76,8 @@ Client Production Deployment:
       - Client/**/*
 
   script:
-    - "dotnet restore ./Client/Client.csproj"
-    - "pwsh -f \"./ReplaceVersion-Client.ps1\""
-    - "dotnet add ./Client/Client.csproj package EllipticBit.Hotwire.Shared"
-    - "dotnet pack -c Release -o ./ ./Client/Client.csproj"
+    - "dotnet restore ./Request/Request.csproj"
+    - "pwsh -f \"./ReplaceVersion-Request.ps1\""
+    - "dotnet add ./Request/Request.csproj package EllipticBit.Hotwire.Shared"
+    - "dotnet pack -c Release -o ./ ./Request/Request.csproj"
     - "dotnet nuget push *.nupkg -k $NUGET_API_KEY -s \"https://www.nuget.org\""
