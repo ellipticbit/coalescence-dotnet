@@ -6,8 +6,6 @@ namespace EllipticBit.Hotwire.Request
 {
 	internal class HotwireRequestFactory : IHotwireRequestFactory
 	{
-		private static HotwireRequestOptions _defaultOptions;
-
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IHotwireOptionsRepository _repository;
 
