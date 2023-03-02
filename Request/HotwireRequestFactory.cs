@@ -23,7 +23,7 @@ namespace EllipticBit.Hotwire.Request
 				return new HotwireRequest(_httpClientFactory, result as HotwireRequestOptions);
 			}
 
-			throw new IndexOutOfRangeException($"No request available for name: {name}");
+			throw new IndexOutOfRangeException($"No HotWire Factory available for name: {name}");
 		}
 	}
 }

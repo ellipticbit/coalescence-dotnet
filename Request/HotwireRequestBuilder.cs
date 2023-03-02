@@ -52,12 +52,14 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path<T>(T parameter) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		{
 			path.Add(Convert.ToString(parameter));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path<T>(T? parameter) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		{
 			path.Add(parameter == null ? "null" : Convert.ToString(parameter));
 			return this;
 		}
@@ -72,13 +74,24 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		{
 			query.Add(key, values.Select(a => Convert.ToString(a)));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		{
 			query.Add(key, values.Select(a => a == null ? "null" : Convert.ToString(a)));
+			return this;
+		}
+
+		public IHotwireRequestBuilder Query<T>(T parameters) where T : class, IHotwireParameters {
+			var pl = parameters.GetParameters();
+			foreach (var p in pl) {
+				query.Add(p.Key, p.Value);
+			}
+
 			return this;
 		}
 
@@ -92,13 +105,25 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		{
 			headers.Add(key, values.Select(a => Convert.ToString(a)));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible {
+		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		{
 			headers.Add(key, values.Select(a => a == null ? "null" : Convert.ToString(a)));
+			return this;
+		}
+
+		public IHotwireRequestBuilder Header<T>(T parameters) where T : class, IHotwireParameters {
+			var pl = parameters.GetParameters();
+			foreach (var p in pl)
+			{
+				headers.Add(p.Key, p.Value);
+			}
+
 			return this;
 		}
 

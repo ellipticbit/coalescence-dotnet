@@ -11,18 +11,20 @@ namespace EllipticBit.Hotwire.Request
 		IHotwireRequestBuilder Path(params string[] parameter);
 		IHotwireRequestBuilder Path(string parameter);
 		IHotwireRequestBuilder Path(byte[] parameter);
-		IHotwireRequestBuilder Path<T>(T parameter) where T : struct, IConvertible;
-		IHotwireRequestBuilder Path<T>(T? parameter) where T : struct, IConvertible;
+		IHotwireRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>;
+		IHotwireRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>;
 
 		IHotwireRequestBuilder Query(string key, IEnumerable<string> values);
 		IHotwireRequestBuilder Query(string key, IEnumerable<byte[]> values);
-		IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : struct, IConvertible;
-		IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible;
+		IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>;
+		IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>;
+		IHotwireRequestBuilder Query<T>(T parameters) where T : class, IHotwireParameters;
 
 		IHotwireRequestBuilder Header(string key, IEnumerable<string> values);
 		IHotwireRequestBuilder Header(string key, IEnumerable<byte[]> values);
-		IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : struct, IConvertible;
-		IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : struct, IConvertible;
+		IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>;
+		IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>;
+		IHotwireRequestBuilder Header<T>(T parameters) where T : class, IHotwireParameters;
 
 		IHotwireRequestBuilder Serialized<T>(T content, string contentType = null);
 		IHotwireRequestBuilder ByteArray(byte[] content, string contentType = null);

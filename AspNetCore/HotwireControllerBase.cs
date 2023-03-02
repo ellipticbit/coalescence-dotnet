@@ -14,15 +14,11 @@ namespace EllipticBit.Hotwire.AspNetCore
 {
 	public abstract class HotwireControllerBase : ControllerBase
 	{
-		private readonly HotwireControllerOptions options;
 		private readonly IEnumerable<IHotwireSerializer> serializers;
-		private readonly IEnumerable<IHotwireAuthentication> authenticators;
 
-		protected HotwireControllerBase(HotwireControllerOptions options, IEnumerable<IHotwireSerializer> serializers, IEnumerable<IHotwireAuthentication> authenticators)
+		protected HotwireControllerBase(IEnumerable<IHotwireSerializer> serializers)
 		{
-			this.options = options;
 			this.serializers = serializers;
-			this.authenticators = authenticators;
 		}
 
 		protected async Task<T> MultipartAsSerialized<T>(string name)
