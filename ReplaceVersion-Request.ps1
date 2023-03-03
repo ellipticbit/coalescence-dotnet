@@ -6,8 +6,8 @@ param (
 $year = [System.DateTime]::Now.Year
 $BuildMajor = ([int]$env:BUILD_MAJOR)
 $BuildMinor = ([int]$env:BUILD_MINOR)
-$BuildNumber = ([int]$env:BUILD_NUMBER_CLIENT) + 1
-Invoke-WebRequest "https://gitlab.com/api/v4/projects/$($env:CI_PROJECT_ID)/variables/BUILD_NUMBER_CLIENT" -Headers @{"PRIVATE-TOKEN"=$env:CI_API_TOKEN} -Body @{value=$BuildNumber} -ContentType "application/x-www-form-urlencoded" -Method "PUT" -UseBasicParsing
+$BuildNumber = ([int]$env:BUILD_NUMBER_REQUEST) + 1
+Invoke-WebRequest "https://gitlab.com/api/v4/projects/$($env:CI_PROJECT_ID)/variables/BUILD_NUMBER_REQUEST" -Headers @{"PRIVATE-TOKEN"=$env:CI_API_TOKEN} -Body @{value=$BuildNumber} -ContentType "application/x-www-form-urlencoded" -Method "PUT" -UseBasicParsing
 
 $appVer = '{0}.{1}.{2}' -f $BuildMajor, $BuildMinor, $BuildNumber
 $copyright = 'Copyright © EllipticBit, LLC. {0}, All Rights Reserved.' -f $year

@@ -3,6 +3,7 @@ before_script:
   - "git submodule sync --recursive"
   - "git submodule foreach --recursive git reset --hard"
   - "git submodule update --init --recursive"
+  - "pwsh -f \"./SetEnvValues.ps1\""
 
 stages:
   - shared
@@ -40,14 +41,13 @@ Shared Production Deployment:
       - .gitlab-ci.yml
 
   script:
-    - "dotnet restore ./Shared/Shared.csproj"
     - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
-    - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj"
-    - "dotnet nuget push *.nupkg -k $NUGET_API_KEY -s \"https://www.nuget.org\""
+    - "dotnet restore ./Shared/Shared.csproj --configfile ./NuGet.config"
+    - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj --configfile ./NuGet.config"
+    - "dotnet nuget push *.nupkg -s \"EllipticBit\" --skip-duplicate"
 
 Client Test Deployment:
   stage: library
-  needs: ["Shared Test Deployment"]
   tags:
     - linux
     - dotnet
@@ -61,13 +61,11 @@ Client Test Deployment:
       - .gitlab-ci.yml
 
   script:
-    - "dotnet restore ./Request/Request.csproj"
-    - "dotnet add ./Request/Request.csproj package EllipticBit.Hotwire.Shared"
-    - "dotnet pack -c Debug -o ./ ./Request/Request.csproj"
+    - "dotnet restore ./Request/Request.csproj --configfile ./NuGet.config"
+    - "dotnet pack -c Debug -o ./ ./Request/Request.csproj --configfile ./NuGet.config"
 
 Client Production Deployment:
   stage: library
-  needs: ["Shared Production Deployment"]
   tags:
     - linux
     - dotnet
@@ -80,8 +78,44 @@ Client Production Deployment:
       - .gitlab-ci.yml
 
   script:
-    - "dotnet restore ./Request/Request.csproj"
     - "pwsh -f \"./ReplaceVersion-Request.ps1\""
-    - "dotnet add ./Request/Request.csproj package EllipticBit.Hotwire.Shared"
-    - "dotnet pack -c Release -o ./ ./Request/Request.csproj"
-    - "dotnet nuget push *.nupkg -k $NUGET_API_KEY -s \"https://www.nuget.org\""
+    - "dotnet restore ./Request/Request.csproj --configfile ./NuGet.config"
+    - "dotnet pack -c Release -o ./ ./Request/Request.csproj --configfile ./NuGet.config"
+    - "dotnet nuget push *.nupkg -s \"EllipticBit\" --skip-duplicate"
+
+AspNetCore Test Deployment:
+  stage: library
+  tags:
+    - linux
+    - dotnet
+
+  except:
+    refs:
+      - master
+  only:
+    changes:
+      - AspNetCore/**/*
+      - .gitlab-ci.yml
+
+  script:
+    - "dotnet restore ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
+    - "dotnet pack -c Debug -o ./ ./AspNetCore/AspNetCore.csproj"
+
+AspNetCore Production Deployment:
+  stage: library
+  tags:
+    - linux
+    - dotnet
+
+  only:
+    refs:
+      - master
+    changes:
+      - AspNetCore/**/*
+      - .gitlab-ci.yml
+
+  script:
+    - "pwsh -f \"./ReplaceVersion-AspNetCore.ps1\""
+    - "dotnet restore ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
+    - "dotnet pack -c Release -o ./ ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
+    - "dotnet nuget push *.nupkg -s \"EllipticBit\" --skip-duplicate"
