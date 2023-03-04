@@ -44,7 +44,7 @@ Shared Production Deployment:
     - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
     - "dotnet restore ./Shared/Shared.csproj --configfile ./NuGet.config"
     - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj --configfile ./NuGet.config"
-    - "dotnet nuget push *.nupkg -s \"EllipticBit\" -k HotWire --skip-duplicate"
+    - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 Client Test Deployment:
   stage: library
@@ -81,7 +81,7 @@ Client Production Deployment:
     - "pwsh -f \"./ReplaceVersion-Request.ps1\""
     - "dotnet restore ./Request/Request.csproj --configfile ./NuGet.config"
     - "dotnet pack -c Release -o ./ ./Request/Request.csproj --configfile ./NuGet.config"
-    - "dotnet nuget push *.nupkg -s \"EllipticBit\" -k HotWire --skip-duplicate"
+    - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 AspNetCore Test Deployment:
   stage: library
@@ -118,4 +118,4 @@ AspNetCore Production Deployment:
     - "pwsh -f \"./ReplaceVersion-AspNetCore.ps1\""
     - "dotnet restore ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
     - "dotnet pack -c Release -o ./ ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
-    - "dotnet nuget push *.nupkg -s \"EllipticBit\" -k HotWire --skip-duplicate"
+    - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"

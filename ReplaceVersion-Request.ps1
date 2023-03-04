@@ -12,7 +12,7 @@ Invoke-WebRequest "https://gitlab.com/api/v4/projects/$($env:CI_PROJECT_ID)/vari
 $appVer = '{0}.{1}.{2}' -f $BuildMajor, $BuildMinor, $BuildNumber
 $copyright = 'Copyright © EllipticBit, LLC. {0}, All Rights Reserved.' -f $year
 
-Get-ChildItem -Path .\Client\ -Filter *.csproj -Recurse -File | ForEach-Object {
+Get-ChildItem -Path .\Request\ -Filter *.csproj -Recurse -File | ForEach-Object {
     [string]$filename = $_.FullName
     [xml]$filexml = Get-Content -Path $_.FullName -Encoding UTF8
 
