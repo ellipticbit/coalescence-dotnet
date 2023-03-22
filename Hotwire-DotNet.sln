@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{8982B5EE
 		ReplaceVersion-AspNetCore.ps1 = ReplaceVersion-AspNetCore.ps1
 		ReplaceVersion-Request.ps1 = ReplaceVersion-Request.ps1
 		ReplaceVersion-Shared.ps1 = ReplaceVersion-Shared.ps1
+		ReplaceVersion-SignalR.ps1 = ReplaceVersion-SignalR.ps1
 		SetEnvValues.ps1 = SetEnvValues.ps1
 	EndProjectSection
 EndProject
@@ -26,6 +27,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore", "AspNetCore\AspNetCore.csproj", "{B50E469C-04CF-42DF-9DAD-7382427D2367}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{A636339B-CBC3-4215-AF2F-AA7404C0B4E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR", "SignalR\SignalR.csproj", "{52B442C5-C754-4F10-B4E1-472D998E55F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +52,10 @@ Global
 		{A636339B-CBC3-4215-AF2F-AA7404C0B4E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A636339B-CBC3-4215-AF2F-AA7404C0B4E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A636339B-CBC3-4215-AF2F-AA7404C0B4E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52B442C5-C754-4F10-B4E1-472D998E55F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52B442C5-C754-4F10-B4E1-472D998E55F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52B442C5-C754-4F10-B4E1-472D998E55F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52B442C5-C754-4F10-B4E1-472D998E55F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

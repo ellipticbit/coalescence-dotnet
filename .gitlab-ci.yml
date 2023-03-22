@@ -119,3 +119,40 @@ AspNetCore Production Deployment:
     - "dotnet restore ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
     - "dotnet pack -c Release -o ./ ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
+
+SignalR Test Deployment:
+  stage: library
+  tags:
+    - linux
+    - dotnet
+
+  except:
+    refs:
+      - master
+  only:
+    changes:
+      - SignalR/**/*
+      - .gitlab-ci.yml
+
+  script:
+    - "dotnet restore ./SignalR/SignalR.csproj --configfile ./NuGet.config"
+    - "dotnet pack -c Debug -o ./ ./SignalR/SignalR.csproj"
+
+SignalR Production Deployment:
+  stage: library
+  tags:
+    - linux
+    - dotnet
+
+  only:
+    refs:
+      - master
+    changes:
+      - SignalR/**/*
+      - .gitlab-ci.yml
+
+  script:
+    - "pwsh -f \"./ReplaceVersion-SignalR.ps1\""
+    - "dotnet restore ./SignalR/SignalR.csproj --configfile ./NuGet.config"
+    - "dotnet pack -c Release -o ./ ./SignalR/SignalR.csproj --configfile ./NuGet.config"
+    - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
