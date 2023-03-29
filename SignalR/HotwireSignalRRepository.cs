@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EllipticBit.Hotwire.SignalR
 {
@@ -8,6 +9,9 @@ namespace EllipticBit.Hotwire.SignalR
 	{
 		private static ImmutableDictionary<string, HubConnection> _hc = ImmutableDictionary<string, HubConnection>.Empty;
 		private static HubConnection _dhc = null;
+
+		[ActivatorUtilitiesConstructor]
+		public HotwireSignalRRepository() { }
 
 		internal HotwireSignalRRepository(HubConnection defaultConnection) {
 			_dhc = defaultConnection;
