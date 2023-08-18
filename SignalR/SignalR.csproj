@@ -12,8 +12,8 @@
 		<Version>0.0.0</Version>
 		<FileVersion>0.0.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<Copyright>Copyright © EllipticBit, LLC. 2022</Copyright>
-		<Description>WebSocket support library for the Hotwire code generation system. Find it here: https://gitlab.com/EllipticBit/hotwire-generator</Description>
+		<Copyright>Copyright © EllipticBit, LLC. 2022-2023</Copyright>
+		<Description>SignalR client support library for the Hotwire code generation system. Find it here: https://gitlab.com/EllipticBit/hotwire-generator</Description>
 		<RepositoryUrl>https://gitlab.com/EllipticBit/Hotwire-Dotnet</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -24,11 +24,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EllipticBit.Services.Extensions" Version="2023.2.25.87" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.15" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.10" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
 		<PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
-		<PackageReference Include="System.Text.Json" Version="6.0.7" />
+		<PackageReference Include="System.Text.Json" Version="7.0.3" />
 	</ItemGroup>
 
 </Project>

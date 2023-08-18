@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace EllipticBit.Hotwire.Request
 {
-	public interface IHotwireResponse
+	public interface IHotwireResponse : IAsyncDisposable
 	{
 		IHotwireResponse ThrowOnFailureResponse();
 		IHotwireResponse GetResponseError(out HotwireResponseError error);

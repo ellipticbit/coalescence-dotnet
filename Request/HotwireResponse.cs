@@ -8,7 +8,7 @@ using EllipticBit.Hotwire.Shared;
 
 namespace EllipticBit.Hotwire.Request
 {
-	internal sealed class HotwireResponse : IHotwireResponse, IAsyncDisposable
+	internal sealed class HotwireResponse : IHotwireResponse
 	{
 		private readonly HttpResponseMessage response;
 		private readonly HotwireRequestOptions options;
