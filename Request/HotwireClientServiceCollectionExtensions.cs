@@ -6,8 +6,12 @@ namespace EllipticBit.Hotwire.Request
 {
 	public static class HotwireClientServiceCollectionExtensions
 	{
-		public static IServiceCollection AddHotwireClientServices(this IServiceCollection service)
-		{
+		/// <summary>
+		/// Adds the necessary services to use the Hotwire Request client library services.
+		/// </summary>
+		/// <param name="service">The IServiceCollection to add the services.</param>
+		/// <returns>Returns the reference IServiceCollection that this method is called from.</returns>
+		public static IServiceCollection AddHotwireRequestServices(this IServiceCollection service) {
 			service.TryAddTransient<IHotwireRequestFactory, HotwireRequestFactory>();
 			return service;
 		}

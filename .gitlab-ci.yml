@@ -46,7 +46,7 @@ Shared Production Deployment:
     - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj --configfile ./NuGet.config"
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
-Client Test Deployment:
+Request Test Deployment:
   stage: library
   tags:
     - linux
@@ -64,7 +64,7 @@ Client Test Deployment:
     - "dotnet restore ./Request/Request.csproj --configfile ./NuGet.config"
     - "dotnet pack -c Debug -o ./ ./Request/Request.csproj --configfile ./NuGet.config"
 
-Client Production Deployment:
+Request Production Deployment:
   stage: library
   tags:
     - linux

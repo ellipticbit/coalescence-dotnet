@@ -230,7 +230,7 @@ namespace EllipticBit.Hotwire.Request
 						.Select(a => $"{a.Key}={a.Value}")));
 			}
 
-			using var rm = new HttpRequestMessage(method, uri.ToString());
+			var rm = new HttpRequestMessage(method, uri.ToString());
 
 			//Add any additional headers
 			if (headers.Any(a => a.Value != null && a.Value.Any(b => !string.IsNullOrWhiteSpace(b))))

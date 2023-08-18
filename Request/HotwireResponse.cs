@@ -8,7 +8,7 @@ using EllipticBit.Hotwire.Shared;
 
 namespace EllipticBit.Hotwire.Request
 {
-	internal sealed class HotwireResponse : IHotwireResponse
+	internal sealed class HotwireResponse : IHotwireResponse, IAsyncDisposable
 	{
 		private readonly HttpResponseMessage response;
 		private readonly HotwireRequestOptions options;
@@ -77,5 +77,12 @@ namespace EllipticBit.Hotwire.Request
 		//		throw new InvalidOperationException("Response content is not valid multi-part content");
 		//	}
 		//}
+
+		public async ValueTask DisposeAsync() {
+			if (response is IAsyncDisposable responseAsyncDisposable)
+				await responseAsyncDisposable.DisposeAsync();
+			else if (response != null)
+				response.Dispose();
+		}
 	}
 }
