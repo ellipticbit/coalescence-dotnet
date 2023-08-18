@@ -205,9 +205,10 @@ namespace EllipticBit.Hotwire.Request
 			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
 			http.Timeout = timeout;
 
-			while ((!noRetry && retries > 1) || retries > options.MaxRetryCount) {
+			while ((noRetry && retries < 1) || retries < options.MaxRetryCount) {
 				using var rm = await BuildRequest();
 				response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
+				if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400) break;
 				if ((int)response.StatusCode == 429) break; // Add 429 handling here
 				if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
 				if (response.StatusCode == HttpStatusCode.Unauthorized && await authentication.ContinueOnFailure(userId, tenantId) == false) break; // Cancel or continue the request as indicated by the failure handler.
