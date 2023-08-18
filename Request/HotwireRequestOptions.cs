@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using EllipticBit.Hotwire.Shared;
 
 namespace EllipticBit.Hotwire.Request
@@ -9,12 +10,7 @@ namespace EllipticBit.Hotwire.Request
 		public int MaxRetryCount { get; set; } = 3;
 		public string DateTimeFormatString { get; set; } = "O";
 
-		public HotwireRequestOptions() : base()
-		{
-			HttpClientId = null;
-		}
-
-		public HotwireRequestOptions(string name, string httpClientId = null) : base(name)
+		public HotwireRequestOptions(string name, string httpClientId = null, JsonSerializerOptions jsonOptions = null, XmlSerializationOptions xmlOptions = null) : base(name, jsonOptions, xmlOptions)
 		{
 			HttpClientId = httpClientId;
 		}
