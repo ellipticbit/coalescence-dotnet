@@ -41,6 +41,7 @@ namespace EllipticBit.Hotwire.Request
 		}
 
 		public async Task<T> AsObject<T>() {
+			if (!response.IsSuccessStatusCode) return default(T);
 			var serializer = options.Serializers.GetHotwireSerializer(response.Content.Headers.ContentType?.MediaType);
 			return await serializer.Deserialize<T>(await response.Content.ReadAsStringAsync());
 		}
@@ -58,6 +59,7 @@ namespace EllipticBit.Hotwire.Request
 		}
 
 		public async Task<Dictionary<string, string>> AsFormUrlEncoded() {
+			if (!response.IsSuccessStatusCode) return null;
 			if (response.Content is not FormUrlEncodedContent fuec) {
 				throw new InvalidOperationException("Content type is not FormUrlEncoded.");
 			}

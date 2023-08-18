@@ -7,6 +7,7 @@ namespace EllipticBit.Hotwire.Request
 	{
 		public string HttpClientId { get; }
 		public int MaxRetryCount { get; set; } = 3;
+		public string DateTimeFormatString { get; set; } = "O";
 
 		public HotwireRequestOptions() : base()
 		{
