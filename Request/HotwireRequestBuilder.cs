@@ -54,7 +54,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		public IHotwireRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				path.Add(WebUtility.UrlEncode(((DateTime)(object)parameter).ToString(options.DateTimeFormatString)));
@@ -69,7 +69,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		public IHotwireRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				path.Add(parameter == null ? "null" : WebUtility.UrlEncode(((DateTime?)(object)parameter)?.ToString(options.DateTimeFormatString)));
@@ -94,7 +94,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				query.Add(key, values.Select(a => WebUtility.UrlEncode(((DateTime)(object)a).ToString(options.DateTimeFormatString))));
@@ -109,7 +109,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				query.Add(key, values.Select(a => a == null ? "null" : WebUtility.UrlEncode(((DateTime?)(object)a)?.ToString(options.DateTimeFormatString))));
@@ -143,7 +143,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				headers.Add(key, values.Select(a => ((DateTime)(object)a).ToString(options.DateTimeFormatString)));
@@ -158,7 +158,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable, IComparable<T>, IEquatable<T>
+		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				headers.Add(key, values.Select(a => a == null ? "null" : ((DateTime?)(object)a)?.ToString(options.DateTimeFormatString)));

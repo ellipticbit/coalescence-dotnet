@@ -10,6 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTests
 {
+	public enum TestEnum
+	{
+		One,
+		Two,
+		Three
+	}
+
 	[TestClass]
 	public class RequestClient
 	{
@@ -30,7 +37,7 @@ namespace UnitTests
 		[TestMethod]
 		public async Task BasicGet() {
 			var factory = services.GetRequiredService<IHotwireRequestFactory>();
-			var response = await factory.CreateRequest("test").Get().Send();
+			var response = await factory.CreateRequest("test").Get().Path(TestEnum.One).Path(1).Send();
 			var text = await response.AsText();
 			Debug.WriteLine(text);
 		}
