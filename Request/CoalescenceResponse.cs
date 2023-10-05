@@ -4,30 +4,30 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EllipticBit.Hotwire.Shared;
+using EllipticBit.Coalescence.Shared;
 
-namespace EllipticBit.Hotwire.Request
+namespace EllipticBit.Coalescence.Request
 {
-	internal sealed class HotwireResponse : IHotwireResponse
+	internal sealed class CoalescenceResponse : ICoalescenceResponse
 	{
 		private readonly HttpResponseMessage response;
-		private readonly HotwireRequestOptions options;
+		private readonly CoalescenceRequestOptions options;
 
-		public HotwireResponse(HttpResponseMessage response, HotwireRequestOptions options) {
+		public CoalescenceResponse(HttpResponseMessage response, CoalescenceRequestOptions options) {
 			this.response = response;
 			this.options = options;
 		}
 
-		public IHotwireResponse ThrowOnFailureResponse() {
+		public ICoalescenceResponse ThrowOnFailureResponse() {
 			if (response.IsSuccessStatusCode) return this;
 
-			throw new HotwireResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
+			throw new CoalescenceResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
 		}
 
-		public IHotwireResponse GetResponseError(out HotwireResponseError error) {
+		public ICoalescenceResponse GetResponseError(out CoalescenceResponseError error) {
 			if (response.IsSuccessStatusCode) error = null;
 
-			error = new HotwireResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
+			error = new CoalescenceResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
 
 			return this;
 		}
@@ -42,7 +42,7 @@ namespace EllipticBit.Hotwire.Request
 
 		public async Task<T> AsObject<T>() {
 			if (!response.IsSuccessStatusCode) return default(T);
-			var serializer = options.Serializers.GetHotwireSerializer(response.Content.Headers.ContentType?.MediaType);
+			var serializer = options.Serializers.GetCoalescenceSerializer(response.Content.Headers.ContentType?.MediaType);
 			return await serializer.Deserialize<T>(await response.Content.ReadAsStringAsync());
 		}
 

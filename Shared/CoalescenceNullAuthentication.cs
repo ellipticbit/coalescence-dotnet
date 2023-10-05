@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace EllipticBit.Hotwire.Shared
+namespace EllipticBit.Coalescence.Shared
 {
 	/// <inheritdoc />
-	public class HotwireNullAuthentication : IHotwireAuthentication
+	public class CoalescenceNullAuthentication : ICoalescenceAuthentication
 	{
 		/// <inheritdoc />
 		public string Scheme => null;

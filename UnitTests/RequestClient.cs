@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EllipticBit.Hotwire.Request;
-using EllipticBit.Hotwire.Shared;
+using EllipticBit.Coalescence.Request;
+using EllipticBit.Coalescence.Shared;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTests
@@ -29,14 +29,14 @@ namespace UnitTests
 			sb.AddHttpClient("http-example-com", (http) => {
 				http.BaseAddress = new Uri("http://example.com");
 			});
-			sb.AddHotwireServices().AddHotwireRequestOptions("test", new HotwireRequestOptions("test", "http-example-com"));
-			sb.AddHotwireRequestServices();
+			sb.AddCoalescenceServices().AddCoalescenceRequestOptions("test", new CoalescenceRequestOptions("test", "http-example-com"));
+			sb.AddCoalescenceRequestServices();
 			services = sb.BuildServiceProvider();
 		}
 
 		[TestMethod]
 		public async Task BasicGet() {
-			var factory = services.GetRequiredService<IHotwireRequestFactory>();
+			var factory = services.GetRequiredService<ICoalescenceRequestFactory>();
 			var response = await factory.CreateRequest("test").Get().Path(TestEnum.One).Path(1).Send();
 			var text = await response.AsText();
 			Debug.WriteLine(text);

@@ -6,17 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using EllipticBit.Hotwire.Shared;
+using EllipticBit.Coalescence.Shared;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace EllipticBit.Hotwire.AspNetCore
+namespace EllipticBit.Coalescence.AspNetCore
 {
-	public abstract class HotwireControllerBase : ControllerBase
+	public abstract class CoalescenceControllerBase : ControllerBase
 	{
-		private readonly IEnumerable<IHotwireSerializer> serializers;
+		private readonly IEnumerable<ICoalescenceSerializer> serializers;
 
-		protected HotwireControllerBase(IEnumerable<IHotwireSerializer> serializers)
+		protected CoalescenceControllerBase(IEnumerable<ICoalescenceSerializer> serializers)
 		{
 			this.serializers = serializers;
 		}
@@ -26,7 +26,7 @@ namespace EllipticBit.Hotwire.AspNetCore
 			var file = this.Request.Form.Files.GetFile(name);
 			if (file == null) throw new ArgumentOutOfRangeException(nameof(name), $"Unable to locate multipart content item with name: {name}");
 
-			var serializer = serializers.GetHotwireSerializer(file.ContentType);
+			var serializer = serializers.GetCoalescenceSerializer(file.ContentType);
 
 			await using var stream = file.OpenReadStream();
 			using var reader = new StreamReader(stream, Encoding.UTF8, true);

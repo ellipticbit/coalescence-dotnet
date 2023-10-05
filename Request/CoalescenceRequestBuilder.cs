@@ -9,52 +9,52 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using EllipticBit.Hotwire.Shared;
+using EllipticBit.Coalescence.Shared;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace EllipticBit.Hotwire.Request
+namespace EllipticBit.Coalescence.Request
 {
-	internal sealed class HotwireRequestBuilder : IHotwireRequestBuilder
+	internal sealed class CoalescenceRequestBuilder : ICoalescenceRequestBuilder
 	{
 		private readonly IHttpClientFactory httpClientFactory;
-		private readonly HotwireRequestOptions options;
+		private readonly CoalescenceRequestOptions options;
 		private readonly HttpMethod method;
 
 		private readonly List<string> path = new();
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
-		private IHotwireAuthentication authentication = null;
+		private ICoalescenceAuthentication authentication = null;
 		private string tenantId = null;
 		private string userId = null;
 		private TimeSpan timeout = TimeSpan.FromSeconds(100);
 		private bool noRetry = false;
 
-		private HotwireContentItem content;
-		private HotwireMultipartContentBuilder multipartContentBuilder = null;
+		private CoalescenceContentItem content;
+		private CoalescenceMultipartContentBuilder multipartContentBuilder = null;
 		private HttpContent cachedContent = null;
 
-		public HotwireRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, HotwireRequestOptions options) {
+		public CoalescenceRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, CoalescenceRequestOptions options) {
 			this.httpClientFactory = httpClientFactory;
 			this.options = options;
 			this.method = method;
 		}
 
-		public IHotwireRequestBuilder Path(params string[] parameter) {
+		public ICoalescenceRequestBuilder Path(params string[] parameter) {
 			path.AddRange(parameter.Select(a => WebUtility.UrlEncode(a.Trim().Trim('/', '&'))));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path(string parameter) {
+		public ICoalescenceRequestBuilder Path(string parameter) {
 			path.Add(WebUtility.UrlEncode(parameter.Trim().Trim('/', '&')));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path(byte[] parameter) {
+		public ICoalescenceRequestBuilder Path(byte[] parameter) {
 			path.Add(WebEncoders.Base64UrlEncode(parameter));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				path.Add(WebUtility.UrlEncode(((DateTime)(object)parameter).ToString(options.DateTimeFormatString)));
@@ -69,7 +69,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				path.Add(parameter == null ? "null" : WebUtility.UrlEncode(((DateTime?)(object)parameter)?.ToString(options.DateTimeFormatString)));
@@ -84,17 +84,17 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query(string key, IEnumerable<string> values) {
+		public ICoalescenceRequestBuilder Query(string key, IEnumerable<string> values) {
 			query.Add(key, values.Select(a => WebUtility.UrlEncode(a.Trim())));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query(string key, IEnumerable<byte[]> values) {
+		public ICoalescenceRequestBuilder Query(string key, IEnumerable<byte[]> values) {
 			query.Add(key, values.Select(WebEncoders.Base64UrlEncode));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				query.Add(key, values.Select(a => WebUtility.UrlEncode(((DateTime)(object)a).ToString(options.DateTimeFormatString))));
@@ -109,7 +109,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				query.Add(key, values.Select(a => a == null ? "null" : WebUtility.UrlEncode(((DateTime?)(object)a)?.ToString(options.DateTimeFormatString))));
@@ -124,7 +124,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Query<T>(T parameters) where T : class, IHotwireParameters {
+		public ICoalescenceRequestBuilder Query<T>(T parameters) where T : class, ICoalescenceParameters {
 			var pl = parameters.GetParameters();
 			foreach (var p in pl) {
 				query.Add(p.Key, p.Value.Select(WebUtility.UrlEncode));
@@ -133,17 +133,17 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header(string key, IEnumerable<string> values) {
+		public ICoalescenceRequestBuilder Header(string key, IEnumerable<string> values) {
 			headers.Add(key, values.Select(a => a.Trim()));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header(string key, IEnumerable<byte[]> values) {
+		public ICoalescenceRequestBuilder Header(string key, IEnumerable<byte[]> values) {
 			headers.Add(key, values.Select(Convert.ToBase64String));
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				headers.Add(key, values.Select(a => ((DateTime)(object)a).ToString(options.DateTimeFormatString)));
@@ -158,7 +158,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				headers.Add(key, values.Select(a => a == null ? "null" : ((DateTime?)(object)a)?.ToString(options.DateTimeFormatString)));
@@ -173,7 +173,7 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Header<T>(T parameters) where T : class, IHotwireParameters {
+		public ICoalescenceRequestBuilder Header<T>(T parameters) where T : class, ICoalescenceParameters {
 			var pl = parameters.GetParameters();
 			foreach (var p in pl)
 			{
@@ -183,79 +183,79 @@ namespace EllipticBit.Hotwire.Request
 			return this;
 		}
 
-		public IHotwireRequestBuilder Serialized<T>(T content, string contentType = null)
+		public ICoalescenceRequestBuilder Serialized<T>(T content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.Serialized, content, contentType);
+			this.content = new CoalescenceContentItem(HttpContentScheme.Serialized, content, contentType);
 			return this;
 		}
 
-		public IHotwireRequestBuilder ByteArray(byte[] content, string contentType = null)
+		public ICoalescenceRequestBuilder ByteArray(byte[] content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.Binary, content, contentType);
+			this.content = new CoalescenceContentItem(HttpContentScheme.Binary, content, contentType);
 			return this;
 		}
 
-		public IHotwireRequestBuilder Stream(Stream content, string contentType = null)
+		public ICoalescenceRequestBuilder Stream(Stream content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.Stream, content, contentType);
+			this.content = new CoalescenceContentItem(HttpContentScheme.Stream, content, contentType);
 			return this;
 		}
 
-		public IHotwireRequestBuilder Text(string content, string contentType = null)
+		public ICoalescenceRequestBuilder Text(string content, string contentType = null)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.Text, content, contentType);
+			this.content = new CoalescenceContentItem(HttpContentScheme.Text, content, contentType);
 			return this;
 		}
 
-		public IHotwireRequestBuilder FormUrlEncoded(Dictionary<string, string> content)
+		public ICoalescenceRequestBuilder FormUrlEncoded(Dictionary<string, string> content)
 		{
-			this.content = new HotwireContentItem(HttpContentScheme.FormUrlEncoded, content, "application/x-www-form-urlencoded");
+			this.content = new CoalescenceContentItem(HttpContentScheme.FormUrlEncoded, content, "application/x-www-form-urlencoded");
 			return this;
 		}
 
-		public IHotwireRequestBuilder Content(HttpContent content) {
-			this.content = new HotwireContentItem(content);
+		public ICoalescenceRequestBuilder Content(HttpContent content) {
+			this.content = new CoalescenceContentItem(content);
 			return this;
 		}
 
-		public IHotwireMultipartContentBuilder Multipart()
+		public ICoalescenceMultipartContentBuilder Multipart()
 		{
-			this.multipartContentBuilder = new HotwireMultipartContentBuilder(false, this, options);
+			this.multipartContentBuilder = new CoalescenceMultipartContentBuilder(false, this, options);
 			return this.multipartContentBuilder;
 		}
 
-		public IHotwireMultipartContentBuilder MultipartForm()
+		public ICoalescenceMultipartContentBuilder MultipartForm()
 		{
-			this.multipartContentBuilder = new HotwireMultipartContentBuilder(true, this, options);
+			this.multipartContentBuilder = new CoalescenceMultipartContentBuilder(true, this, options);
 			return this.multipartContentBuilder;
 		}
 
-		public IHotwireRequestBuilder Authentication(string scheme) {
-			this.authentication = string.IsNullOrWhiteSpace(scheme) ? null : options.Authenticators.GetHotwireAuthentication(scheme);
+		public ICoalescenceRequestBuilder Authentication(string scheme) {
+			this.authentication = string.IsNullOrWhiteSpace(scheme) ? null : options.Authenticators.GetCoalescenceAuthentication(scheme);
 			return this;
 		}
 
-		public IHotwireRequestBuilder User(string userId) {
+		public ICoalescenceRequestBuilder User(string userId) {
 			this.userId = userId;
 			return this;
 		}
 
-		public IHotwireRequestBuilder Tenant(string tenantId) {
+		public ICoalescenceRequestBuilder Tenant(string tenantId) {
 			this.tenantId = tenantId;
 			return this;
 		}
 
-		public IHotwireRequestBuilder NoRetry() {
+		public ICoalescenceRequestBuilder NoRetry() {
 			this.noRetry = true;
 			return this;
 		}
 
-		public IHotwireRequestBuilder Timeout(TimeSpan timeout) {
+		public ICoalescenceRequestBuilder Timeout(TimeSpan timeout) {
 			this.timeout = timeout;
 			return this;
 		}
 
-		public async Task<IHotwireResponse> Send() {
+		public async Task<ICoalescenceResponse> Send() {
 			int retries = 0;
 			HttpResponseMessage response = null;
 			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
@@ -271,7 +271,7 @@ namespace EllipticBit.Hotwire.Request
 				retries++;
 			}
 
-			return new HotwireResponse(response, options);
+			return new CoalescenceResponse(response, options);
 		}
 
 		private async Task<HttpRequestMessage> BuildRequest() {

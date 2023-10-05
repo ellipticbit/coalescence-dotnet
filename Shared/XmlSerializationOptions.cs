@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace EllipticBit.Hotwire.Shared
+namespace EllipticBit.Coalescence.Shared
 {
 #pragma warning disable CS1591
 	public class XmlSerializationOptions

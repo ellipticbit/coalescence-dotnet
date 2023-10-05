@@ -4,19 +4,19 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace EllipticBit.Hotwire.Shared
+namespace EllipticBit.Coalescence.Shared
 {
 	/// <inheritdoc />
-	public class HotwireXmlSerializer : IHotwireSerializer
+	public class CoalescenceXmlSerializer : ICoalescenceSerializer
 	{
 		private readonly XmlSerializationOptions settings;
 
 		/// <summary>
-		/// Creates a HotwireXmlSerializer
+		/// Creates a CoalescenceXmlSerializer
 		/// </summary>
 		/// <param name="settings">The <see cref="XmlSerializationOptions">XmlSerializationOptions</see> used by this serializer.</param>
 		/// <param name="isDefault">Specifies that this is the default serializer to be used when no Content-Type is provided.</param>
-		public HotwireXmlSerializer(XmlSerializationOptions settings, bool isDefault) {
+		public CoalescenceXmlSerializer(XmlSerializationOptions settings, bool isDefault) {
 			this.IsDefault = isDefault;
 			this.settings = settings;
 		}

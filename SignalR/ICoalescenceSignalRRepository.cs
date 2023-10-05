@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 
-namespace EllipticBit.Hotwire.SignalR
+namespace EllipticBit.Coalescence.SignalR
 {
-	public interface IHotwireSignalRRepository
+	public interface ICoalescenceSignalRRepository
 	{
 		HubConnection Get();
 		HubConnection Get(string name);

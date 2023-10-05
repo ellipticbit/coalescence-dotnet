@@ -2,14 +2,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace EllipticBit.Hotwire.SignalR
+namespace EllipticBit.Coalescence.SignalR
 {
 	public static class ServiceCollectionExtensions
 	{
-		public static IHotwireSignalRServiceBuilder AddHotwireSignalRServices(this IServiceCollection builder, HubConnection defaultConnection) {
-			builder.TryAddTransient<IHotwireSignalRRepository, HotwireSignalRRepository>();
+		public static ICoalescenceSignalRServiceBuilder AddCoalescenceSignalRServices(this IServiceCollection builder, HubConnection defaultConnection) {
+			builder.TryAddTransient<ICoalescenceSignalRRepository, CoalescenceSignalRRepository>();
 
-			return new HotwireSignalRRepository(defaultConnection);
+			return new CoalescenceSignalRRepository(defaultConnection);
 		}
 	}
 }

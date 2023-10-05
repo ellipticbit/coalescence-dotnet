@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace EllipticBit.Hotwire.Request
+namespace EllipticBit.Coalescence.Request
 {
-	public interface IHotwireParameters
+	public interface ICoalescenceParameters
 	{
 		IDictionary<string, IEnumerable<string>> GetParameters();
 	}

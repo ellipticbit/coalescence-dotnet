@@ -3,19 +3,19 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace EllipticBit.Hotwire.Shared
+namespace EllipticBit.Coalescence.Shared
 {
 	/// <inheritdoc />
-	public class HotwireJsonSerializer : IHotwireSerializer
+	public class CoalescenceJsonSerializer : ICoalescenceSerializer
 	{
 		private readonly JsonSerializerOptions settings;
 
 		/// <summary>
-		/// Creates a HotwireJsonSerializer
+		/// Creates a CoalescenceJsonSerializer
 		/// </summary>
 		/// <param name="settings">The System.Text.Json.JsonSerializerOptions used by this serializer.</param>
 		/// <param name="isDefault">Specifies that this is the default serializer to be used when no Content-Type is provided.</param>
-		public HotwireJsonSerializer(JsonSerializerOptions settings, bool isDefault) {
+		public CoalescenceJsonSerializer(JsonSerializerOptions settings, bool isDefault) {
 			this.IsDefault = isDefault;
 			this.settings = settings;
 		}

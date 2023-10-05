@@ -3,18 +3,18 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<AssemblyName>EllipticBit.Hotwire.Shared</AssemblyName>
-		<RootNamespace>EllipticBit.Hotwire.Shared</RootNamespace>
+		<AssemblyName>EllipticBit.Coalescence.Shared</AssemblyName>
+		<RootNamespace>EllipticBit.Coalescence.Shared</RootNamespace>
 		<Authors>EllipticBit LLC</Authors>
 		<Company>EllipticBit, LLC</Company>
 		<Product>Hotwire</Product>
-		<PackageId>EllipticBit.Hotwire.Shared</PackageId>
+		<PackageId>EllipticBit.Coalescence.Shared</PackageId>
 		<Version>0.0.0</Version>
 		<FileVersion>0.0.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<Copyright>Copyright © EllipticBit, LLC. 2022-2023</Copyright>
-		<Description>Shared support library for the Hotwire code generation system. Find it here: https://gitlab.com/EllipticBit/hotwire-generator</Description>
-		<RepositoryUrl>https://gitlab.com/EllipticBit/Hotwire-dotnet</RepositoryUrl>
+		<Description>Shared support library for the Coalescence code generation system. Find it here: https://gitlab.com/EllipticBit/coalescence-generator</Description>
+		<RepositoryUrl>https://gitlab.com/EllipticBit/coalescence-dotnet</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>netcore;netstandard;code-generation,web-api;aspnet-core</PackageTags>

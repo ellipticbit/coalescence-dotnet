@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 
-namespace EllipticBit.Hotwire.Shared
+namespace EllipticBit.Coalescence.Shared
 {
 	/// <summary>
 	/// Interface defining a HTTP Authentication Scheme implementation.
 	/// </summary>
-	public interface IHotwireAuthentication
+	public interface ICoalescenceAuthentication
 	{
 		/// <summary>
 		///	The HTTP Authentication Scheme implemented.

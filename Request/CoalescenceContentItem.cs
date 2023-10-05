@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using EllipticBit.Hotwire.Shared;
+using EllipticBit.Coalescence.Shared;
 
-namespace EllipticBit.Hotwire.Request
+namespace EllipticBit.Coalescence.Request
 {
-	internal sealed class HotwireContentItem
+	internal sealed class CoalescenceContentItem
 	{
 		public HttpContentScheme Scheme { get; }
 		public object Content { get; }
@@ -16,7 +16,7 @@ namespace EllipticBit.Hotwire.Request
 		public string Name { get; }
 		public string FileName { get; }
 
-		public HotwireContentItem(HttpContentScheme scheme, object content, string contentType, string name = null, string fileName = null)
+		public CoalescenceContentItem(HttpContentScheme scheme, object content, string contentType, string name = null, string fileName = null)
 		{
 			Scheme = scheme;
 			Content = content;
@@ -25,14 +25,14 @@ namespace EllipticBit.Hotwire.Request
 			FileName = fileName;
 		}
 
-		public HotwireContentItem(HttpContent content, string name = null, string fileName = null) {
+		public CoalescenceContentItem(HttpContent content, string name = null, string fileName = null) {
 			Scheme = HttpContentScheme.Content;
 			Content = content;
 			Name = name;
 			FileName = fileName;
 		}
 
-		internal async Task<HttpContent> Build(IEnumerable<IHotwireSerializer> serializers) {
+		internal async Task<HttpContent> Build(IEnumerable<ICoalescenceSerializer> serializers) {
 			if (Content is HttpContent content) return content;
 
 			if (Scheme == HttpContentScheme.Binary)
@@ -49,7 +49,7 @@ namespace EllipticBit.Hotwire.Request
 			}
 			else if (Scheme == HttpContentScheme.Serialized)
 			{
-				var serializer = string.IsNullOrWhiteSpace(ContentType) ? serializers.GetHotwireSerializer(ContentType) : serializers.GetDefaultHotwireSerializer();
+				var serializer = string.IsNullOrWhiteSpace(ContentType) ? serializers.GetCoalescenceSerializer(ContentType) : serializers.GetDefaultCoalescenceSerializer();
 				return new StringContent(await serializer.Serialize(Content)) { Headers = { ContentType = new MediaTypeHeaderValue(serializer.ContentTypes.First()) } };
 			}
 			else if (Scheme == HttpContentScheme.FormUrlEncoded)

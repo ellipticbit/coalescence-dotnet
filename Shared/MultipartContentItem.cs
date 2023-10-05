@@ -1,4 +1,4 @@
-﻿namespace EllipticBit.Hotwire.Shared
+﻿namespace EllipticBit.Coalescence.Shared
 {
 #pragma warning disable CS1591
 	public readonly struct MultipartContentItem<T>

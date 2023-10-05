@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Net;
 
-namespace EllipticBit.Hotwire.Request
+namespace EllipticBit.Coalescence.Request
 {
-	public sealed class HotwireResponseError : Exception
+	public sealed class CoalescenceResponseError : Exception
 	{
 		public HttpStatusCode StatusCode { get; }
 		public string Content { get; }
 
-		internal HotwireResponseError(HttpStatusCode statusCode, string message, string content) : base(message)
+		internal CoalescenceResponseError(HttpStatusCode statusCode, string message, string content) : base(message)
 		{
 			StatusCode = statusCode;
 			Content = content;

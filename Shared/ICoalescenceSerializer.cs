@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 
-namespace EllipticBit.Hotwire.Shared
+namespace EllipticBit.Coalescence.Shared
 {
 	/// <summary>
 	/// Interface defining a serializer implementation.
 	/// </summary>
-	public interface IHotwireSerializer
+	public interface ICoalescenceSerializer
 	{
 		/// <summary>
 		/// List of MIME types that this serializer can serialize/deserialize.

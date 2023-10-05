@@ -3,18 +3,18 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<AssemblyName>EllipticBit.Hotwire.SignalR</AssemblyName>
-		<RootNamespace>EllipticBit.Hotwire.SignalR</RootNamespace>
+		<AssemblyName>EllipticBit.Coalescence.SignalR</AssemblyName>
+		<RootNamespace>EllipticBit.Coalescence.SignalR</RootNamespace>
 		<Authors>EllipticBit LLC</Authors>
 		<Company>EllipticBit, LLC</Company>
 		<Product>Hotwire</Product>
-		<PackageId>EllipticBit.Hotwire.SignalR</PackageId>
+		<PackageId>EllipticBit.Coalescence.SignalR</PackageId>
 		<Version>0.0.0</Version>
 		<FileVersion>0.0.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<Copyright>Copyright © EllipticBit, LLC. 2022-2023</Copyright>
-		<Description>SignalR client support library for the Hotwire code generation system. Find it here: https://gitlab.com/EllipticBit/hotwire-generator</Description>
-		<RepositoryUrl>https://gitlab.com/EllipticBit/Hotwire-Dotnet</RepositoryUrl>
+		<Description>Shared support library for the Coalescence code generation system. Find it here: https://gitlab.com/EllipticBit/coalescence-generator</Description>
+		<RepositoryUrl>https://gitlab.com/EllipticBit/coalescence-dotnet</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>netcore;netstandard;code-generation,web-api;aspnet-core</PackageTags>
