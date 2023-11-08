@@ -15,6 +15,6 @@
 			this.FileName = fileName;
 			this.ContentType = contentType;
 		}
-	};
+	}
 #pragma warning restore CS1591
 }
