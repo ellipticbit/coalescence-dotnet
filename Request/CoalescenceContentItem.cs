@@ -49,7 +49,7 @@ namespace EllipticBit.Coalescence.Request
 			}
 			else if (Scheme == HttpContentScheme.Serialized)
 			{
-				var serializer = string.IsNullOrWhiteSpace(ContentType) ? serializers.GetCoalescenceSerializer(ContentType) : serializers.GetDefaultCoalescenceSerializer();
+				var serializer = !string.IsNullOrWhiteSpace(ContentType) ? serializers.GetCoalescenceSerializer(ContentType) : serializers.GetDefaultCoalescenceSerializer();
 				return new StringContent(await serializer.Serialize(Content)) { Headers = { ContentType = new MediaTypeHeaderValue(serializer.ContentTypes.First()) } };
 			}
 			else if (Scheme == HttpContentScheme.FormUrlEncoded)

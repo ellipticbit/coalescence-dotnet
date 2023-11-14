@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EllipticBit.Coalescence.Request;
 using EllipticBit.Coalescence.Shared;
@@ -17,6 +18,19 @@ namespace UnitTests
 		Three
 	}
 
+	internal class TextContact
+	{
+
+		[JsonPropertyName("full_name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("email")]
+		public string Email { get; set; }
+
+		[JsonPropertyName("phone")]
+		public string Phone { get; set; }
+	}
+
 	[TestClass]
 	public class RequestClient
 	{
@@ -29,7 +43,12 @@ namespace UnitTests
 			sb.AddHttpClient("http-example-com", (http) => {
 				http.BaseAddress = new Uri("http://example.com");
 			});
-			sb.AddCoalescenceServices().AddCoalescenceRequestOptions("test", new CoalescenceRequestOptions("test", "http-example-com"));
+			sb.AddHttpClient("technique-texting-webhook", client => {
+				client.BaseAddress = new Uri("https://services.leadconnectorhq.com/");
+			});
+			sb.AddCoalescenceServices()
+				.AddCoalescenceRequestOptions("test", new CoalescenceRequestOptions("test", "http-example-com"))
+				.AddCoalescenceRequestOptions("technique-texting-webhook", new CoalescenceRequestOptions("technique-texting-webhook", "technique-texting-webhook"));
 			sb.AddCoalescenceRequestServices();
 			services = sb.BuildServiceProvider();
 		}
