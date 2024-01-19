@@ -20,10 +20,11 @@ namespace EllipticBit.Coalescence.Shared
 			return serializer;
 		}
 
-		public static ICoalescenceAuthentication GetCoalescenceAuthentication(this IEnumerable<ICoalescenceAuthentication> serializers, string scheme)
+		public static ICoalescenceAuthentication GetCoalescenceAuthentication(this IEnumerable<ICoalescenceAuthentication> serializers, string name)
 		{
-			var auth = serializers.FirstOrDefault(a => a.Scheme.Equals(scheme, StringComparison.OrdinalIgnoreCase)) ?? serializers.FirstOrDefault(a => a.Scheme == null);
-			if (auth == null) throw new ArgumentOutOfRangeException(nameof(scheme), $"Unable to locate authentication handler for specified scheme: {scheme}");
+			var authentications = serializers as ICoalescenceAuthentication[] ?? serializers.ToArray();
+			var auth = authentications.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) ?? authentications.FirstOrDefault(a => a.Name == null);
+			if (auth == null) throw new ArgumentOutOfRangeException(nameof(name), $"Unable to locate authentication handler: {name}");
 			return auth;
 		}
 	}

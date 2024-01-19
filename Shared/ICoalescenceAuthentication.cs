@@ -8,6 +8,11 @@ namespace EllipticBit.Coalescence.Shared
 	public interface ICoalescenceAuthentication
 	{
 		/// <summary>
+		/// The name of this authentication implementation.
+		/// </summary>
+		string Name { get; }
+
+		/// <summary>
 		///	The HTTP Authentication Scheme implemented.
 		/// </summary>
 		string Scheme { get; }

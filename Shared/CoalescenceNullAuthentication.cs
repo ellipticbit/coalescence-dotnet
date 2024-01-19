@@ -6,6 +6,9 @@ namespace EllipticBit.Coalescence.Shared
 	public class CoalescenceNullAuthentication : ICoalescenceAuthentication
 	{
 		/// <inheritdoc />
+		public string Name => null;
+
+		/// <inheritdoc />
 		public string Scheme => null;
 
 		/// <inheritdoc />
