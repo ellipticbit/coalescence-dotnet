@@ -3,7 +3,6 @@ before_script:
   - "git submodule sync --recursive"
   - "git submodule foreach --recursive git reset --hard"
   - "git submodule update --init --recursive"
-  - "pwsh -f \"./SetEnvValues.ps1\""
 
 stages:
   - shared
@@ -22,6 +21,7 @@ Shared Test Deployment:
     changes:
       - Shared/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-Shared.ps1
 
   script:
     - "dotnet restore ./Shared/Shared.csproj"
@@ -39,11 +39,12 @@ Shared Production Deployment:
     changes:
       - Shared/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-Shared.ps1
 
   script:
     - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
-    - "dotnet restore ./Shared/Shared.csproj --configfile ./NuGet.config"
-    - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj --configfile ./NuGet.config"
+    - "dotnet restore ./Shared/Shared.csproj"
+    - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj"
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 Request Test Deployment:
@@ -59,10 +60,11 @@ Request Test Deployment:
     changes:
       - Request/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-Request.ps1
 
   script:
-    - "dotnet restore ./Request/Request.csproj --configfile ./NuGet.config"
-    - "dotnet pack -c Debug -o ./ ./Request/Request.csproj --configfile ./NuGet.config"
+    - "dotnet restore ./Request/Request.csproj"
+    - "dotnet pack -c Debug -o ./ ./Request/Request.csproj"
 
 Request Production Deployment:
   stage: library
@@ -76,11 +78,12 @@ Request Production Deployment:
     changes:
       - Request/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-Request.ps1
 
   script:
     - "pwsh -f \"./ReplaceVersion-Request.ps1\""
-    - "dotnet restore ./Request/Request.csproj --configfile ./NuGet.config"
-    - "dotnet pack -c Release -o ./ ./Request/Request.csproj --configfile ./NuGet.config"
+    - "dotnet restore ./Request/Request.csproj"
+    - "dotnet pack -c Release -o ./ ./Request/Request.csproj"
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 AspNetCore Test Deployment:
@@ -96,9 +99,10 @@ AspNetCore Test Deployment:
     changes:
       - AspNetCore/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-AspNetCore.ps1
 
   script:
-    - "dotnet restore ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
+    - "dotnet restore ./AspNetCore/AspNetCore.csproj"
     - "dotnet pack -c Debug -o ./ ./AspNetCore/AspNetCore.csproj"
 
 AspNetCore Production Deployment:
@@ -113,11 +117,12 @@ AspNetCore Production Deployment:
     changes:
       - AspNetCore/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-AspNetCore.ps1
 
   script:
     - "pwsh -f \"./ReplaceVersion-AspNetCore.ps1\""
-    - "dotnet restore ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
-    - "dotnet pack -c Release -o ./ ./AspNetCore/AspNetCore.csproj --configfile ./NuGet.config"
+    - "dotnet restore ./AspNetCore/AspNetCore.csproj"
+    - "dotnet pack -c Release -o ./ ./AspNetCore/AspNetCore.csproj"
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 SignalR Test Deployment:
@@ -133,9 +138,10 @@ SignalR Test Deployment:
     changes:
       - SignalR/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-SignalR.ps1
 
   script:
-    - "dotnet restore ./SignalR/SignalR.csproj --configfile ./NuGet.config"
+    - "dotnet restore ./SignalR/SignalR.csproj"
     - "dotnet pack -c Debug -o ./ ./SignalR/SignalR.csproj"
 
 SignalR Production Deployment:
@@ -150,9 +156,10 @@ SignalR Production Deployment:
     changes:
       - SignalR/**/*
       - .gitlab-ci.yml
+      - ReplaceVersion-SignalR.ps1
 
   script:
     - "pwsh -f \"./ReplaceVersion-SignalR.ps1\""
-    - "dotnet restore ./SignalR/SignalR.csproj --configfile ./NuGet.config"
-    - "dotnet pack -c Release -o ./ ./SignalR/SignalR.csproj --configfile ./NuGet.config"
+    - "dotnet restore ./SignalR/SignalR.csproj"
+    - "dotnet pack -c Release -o ./ ./SignalR/SignalR.csproj"
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"

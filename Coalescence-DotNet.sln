@@ -8,12 +8,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{8982B5EE-590A-45B6-B1D3-FE0CDD502B80}"
 	ProjectSection(SolutionItems) = preProject
 		.gitlab-ci.yml = .gitlab-ci.yml
-		NuGet.config = NuGet.config
 		ReplaceVersion-AspNetCore.ps1 = ReplaceVersion-AspNetCore.ps1
 		ReplaceVersion-Request.ps1 = ReplaceVersion-Request.ps1
 		ReplaceVersion-Shared.ps1 = ReplaceVersion-Shared.ps1
 		ReplaceVersion-SignalR.ps1 = ReplaceVersion-SignalR.ps1
-		SetEnvValues.ps1 = SetEnvValues.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{5FB4E031-1A40-4868-8E2A-C0D003FF4EE5}"
