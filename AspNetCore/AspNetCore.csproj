@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<AssemblyName>EllipticBit.Coalescence.AspNetCore</AssemblyName>
 		<RootNamespace>EllipticBit.Coalescence.AspNetCore</RootNamespace>
 		<Authors>EllipticBit LLC</Authors>
@@ -23,12 +23,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.0.14" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-		<PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
-		<PackageReference Include="System.Text.Json" Version="7.0.3" />
+		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+		<PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+		<PackageReference Include="System.Text.Json" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
