@@ -19,11 +19,6 @@ namespace EllipticBit.Coalescence.Shared
 		public IEnumerable<ICoalescenceSerializer> Serializers { get; }
 
 		/// <summary>
-		/// Read-only list of Authentication handlers.
-		/// </summary>
-		public IEnumerable<ICoalescenceAuthentication> Authenticators { get; }
-
-		/// <summary>
 		/// Default constructor for Coalescence options classes.
 		/// </summary>
 		/// <param name="name">Name of the options class used with creating a request.</param>
@@ -35,9 +30,6 @@ namespace EllipticBit.Coalescence.Shared
 				new CoalescenceJsonSerializer(jsonOptions ?? new JsonSerializerOptions(), true),
 				new CoalescenceXmlSerializer(xmlOptions ?? new XmlSerializationOptions(), false)
 			};
-			Authenticators = new ICoalescenceAuthentication[] {
-				new CoalescenceNullAuthentication()
-			};
 		}
 
 		/// <summary>
@@ -45,15 +37,13 @@ namespace EllipticBit.Coalescence.Shared
 		/// </summary>
 		/// <param name="name">A name for this set options.</param>
 		/// <param name="serializers">Optional parameter to initialize a custom set of Serialization handlers.</param>
-		/// <param name="authenticators">Optional parameter to initialize a custom set of Authentication handlers.</param>
-		protected CoalescenceOptionsBase(string name, IEnumerable<ICoalescenceSerializer> serializers, IEnumerable<ICoalescenceAuthentication> authenticators)
+		protected CoalescenceOptionsBase(string name, IEnumerable<ICoalescenceSerializer> serializers)
 		{
 			Name = name;
 			Serializers = serializers ?? new ICoalescenceSerializer[] {
 				new CoalescenceJsonSerializer(new JsonSerializerOptions(), true),
 				new CoalescenceXmlSerializer(new XmlSerializationOptions(), false)
 			};
-			Authenticators = authenticators ?? new ICoalescenceAuthentication[] { new CoalescenceNullAuthentication() };
 		}
 	}
 }

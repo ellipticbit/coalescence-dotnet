@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace EllipticBit.Coalescence.Shared
 {
@@ -8,12 +9,13 @@ namespace EllipticBit.Coalescence.Shared
 	public static class CoalescenceServiceCollectionExtensions
 	{
 		/// <summary>
-		/// Adds the basic default Coalescence services to the service collection.
+		/// Adds the shared Coalescence services to the service collection.
 		/// </summary>
 		/// <param name="service">The ServiceCollection that the services will be registered into.</param>
 		/// <returns>Returns an <see cref="ICoalescenceServiceBuilder">ICoalescenceServiceBuilder</see> object.</returns>
 		public static ICoalescenceServiceBuilder AddCoalescenceServices(this IServiceCollection service) {
-			service.AddTransient<ICoalescenceOptionsRepository, CoalescenceServiceBuilder>();
+			service.AddTransient<ICoalescenceAuthentication, CoalescenceNullAuthentication>();
+			service.TryAddTransient<ICoalescenceOptionsRepository, CoalescenceServiceBuilder>();
 			return new CoalescenceServiceBuilder();
 		}
 	}
