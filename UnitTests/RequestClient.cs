@@ -56,7 +56,7 @@ namespace UnitTests
 		[TestMethod]
 		public async Task BasicGet() {
 			var factory = services.GetRequiredService<ICoalescenceRequestFactory>();
-			var response = await factory.CreateRequest("test").Get().Path(TestEnum.One).Path(1).Send();
+			var response = await factory.CreateRequest("test").Get().Path(TestEnum.One).Authentication(null).Path(1).Send();
 			var text = await response.AsText();
 			Debug.WriteLine(text);
 		}

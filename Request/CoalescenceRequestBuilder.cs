@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,6 +22,7 @@ namespace EllipticBit.Coalescence.Request
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
 		private ICoalescenceAuthentication authentication = null;
+		private IEnumerable<ICoalescenceAuthentication> authenticators;
 		private string tenantId = null;
 		private string userId = null;
 		private TimeSpan timeout = TimeSpan.FromSeconds(100);
@@ -33,10 +32,11 @@ namespace EllipticBit.Coalescence.Request
 		private CoalescenceMultipartContentBuilder multipartContentBuilder = null;
 		private HttpContent cachedContent = null;
 
-		public CoalescenceRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, CoalescenceRequestOptions options) {
+		public CoalescenceRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, IEnumerable<ICoalescenceAuthentication> authenticators, CoalescenceRequestOptions options) {
 			this.httpClientFactory = httpClientFactory;
 			this.options = options;
 			this.method = method;
+			this.authenticators = authenticators;
 		}
 
 		public ICoalescenceRequestBuilder Path(params string[] parameter) {
@@ -230,8 +230,8 @@ namespace EllipticBit.Coalescence.Request
 			return this.multipartContentBuilder;
 		}
 
-		public ICoalescenceRequestBuilder Authentication(string scheme) {
-			this.authentication = string.IsNullOrWhiteSpace(scheme) ? null : options.Authenticators.GetCoalescenceAuthentication(scheme);
+		public ICoalescenceRequestBuilder Authentication(string scheme = null) {
+			this.authentication = authenticators.GetCoalescenceAuthentication(scheme);
 			return this;
 		}
 

@@ -15,7 +15,7 @@ namespace EllipticBit.Coalescence.Request
 			HttpClientId = httpClientId;
 		}
 
-		public CoalescenceRequestOptions(string name, string httpClientId, IEnumerable<ICoalescenceSerializer> serializers, IEnumerable<ICoalescenceAuthentication> authenticators) : base(name, serializers, authenticators)
+		public CoalescenceRequestOptions(string name, string httpClientId, IEnumerable<ICoalescenceSerializer> serializers) : base(name, serializers)
 		{
 			HttpClientId = httpClientId;
 		}
