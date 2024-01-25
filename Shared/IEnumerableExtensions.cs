@@ -23,7 +23,8 @@ namespace EllipticBit.Coalescence.Shared
 		public static ICoalescenceAuthentication GetCoalescenceAuthentication(this IEnumerable<ICoalescenceAuthentication> serializers, string name)
 		{
 			var authentications = serializers as ICoalescenceAuthentication[] ?? serializers.ToArray();
-			var auth = authentications.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) ?? authentications.FirstOrDefault(a => a.Name == null);
+			if (string.IsNullOrEmpty(name)) return authentications.FirstOrDefault(a => a.Name == null);
+			var auth = authentications.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 			if (auth == null) throw new ArgumentOutOfRangeException(nameof(name), $"Unable to locate authentication handler: {name}");
 			return auth;
 		}
