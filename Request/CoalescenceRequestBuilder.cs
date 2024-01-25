@@ -298,7 +298,7 @@ namespace EllipticBit.Coalescence.Request
 				}
 			}
 
-			if (authentication != null) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get(userId, tenantId));
+			if (authentication != null && !string.IsNullOrEmpty(authentication?.Scheme)) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get(userId, tenantId));
 
 			//Get multipart content from builder if any.
 			if (this.cachedContent == null) {
