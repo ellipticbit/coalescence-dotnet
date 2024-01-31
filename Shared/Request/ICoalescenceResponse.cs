@@ -10,7 +10,7 @@ namespace EllipticBit.Coalescence.Shared.Request
 	{
 		ICoalescenceResponse ThrowOnFailureResponse();
 
-		CoalescenceResponseError AsError();
+		CoalescenceResponseException AsError();
 		IDictionary<string, string[]> AsHeaders();
 		Task<HttpContent> AsContent();
 		Task<T> AsDeserialized<T>();
