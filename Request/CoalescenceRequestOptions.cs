@@ -9,6 +9,7 @@ namespace EllipticBit.Coalescence.Request
 		public string HttpClientId { get; }
 		public int MaxRetryCount { get; set; } = 3;
 		public string DateTimeFormatString { get; set; } = "O";
+		public string DefaultAuthencationScheme { get; set; } = null;
 
 		public CoalescenceRequestOptions(string name, string httpClientId = null, JsonSerializerOptions jsonOptions = null, XmlSerializationOptions xmlOptions = null) : base(name, jsonOptions, xmlOptions)
 		{
