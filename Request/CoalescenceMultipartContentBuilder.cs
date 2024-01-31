@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EllipticBit.Coalescence.Shared;
+using EllipticBit.Coalescence.Shared.Request;
 
 namespace EllipticBit.Coalescence.Request
 {

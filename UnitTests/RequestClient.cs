@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EllipticBit.Coalescence.Request;
 using EllipticBit.Coalescence.Shared;
+using EllipticBit.Coalescence.Shared.Request;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace UnitTests
@@ -56,8 +57,8 @@ namespace UnitTests
 		[TestMethod]
 		public async Task BasicGet() {
 			var factory = services.GetRequiredService<ICoalescenceRequestFactory>();
-			var response = await factory.CreateRequest("test").Get().Path(TestEnum.One).Authentication(null).Path(1).Send();
-			var text = await response.AsText();
+			var response = await factory.CreateRequest("test").Get().Path(TestEnum.One).Authentication().Path(1).Send();
+			var text = await response.AsString();
 			Debug.WriteLine(text);
 		}
 	}

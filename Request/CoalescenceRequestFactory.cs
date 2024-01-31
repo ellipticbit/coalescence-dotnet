@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using EllipticBit.Coalescence.Shared;
+using EllipticBit.Coalescence.Shared.Request;
 
 namespace EllipticBit.Coalescence.Request
 {

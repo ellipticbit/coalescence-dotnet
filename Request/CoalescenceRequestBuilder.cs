@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using EllipticBit.Coalescence.Shared;
+using EllipticBit.Coalescence.Shared.Request;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace EllipticBit.Coalescence.Request
@@ -23,8 +24,6 @@ namespace EllipticBit.Coalescence.Request
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
 		private ICoalescenceAuthentication authentication = null;
 		private IEnumerable<ICoalescenceAuthentication> authenticators;
-		private string tenantId = null;
-		private string userId = null;
 		private TimeSpan timeout = TimeSpan.FromSeconds(100);
 		private bool noRetry = false;
 
@@ -235,16 +234,6 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder User(string userId) {
-			this.userId = userId;
-			return this;
-		}
-
-		public ICoalescenceRequestBuilder Tenant(string tenantId) {
-			this.tenantId = tenantId;
-			return this;
-		}
-
 		public ICoalescenceRequestBuilder NoRetry() {
 			this.noRetry = true;
 			return this;
@@ -267,7 +256,7 @@ namespace EllipticBit.Coalescence.Request
 				if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400) break;
 				if ((int)response.StatusCode == 429) break; // Add 429 handling here
 				if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
-				if (response.StatusCode == HttpStatusCode.Unauthorized && await authentication.ContinueOnFailure(userId, tenantId) == false) break; // Cancel or continue the request as indicated by the failure handler.
+				if (response.StatusCode == HttpStatusCode.Unauthorized && await authentication.ContinueOnFailure() == false) break; // Cancel or continue the request as indicated by the failure handler.
 				retries++;
 			}
 
@@ -298,7 +287,7 @@ namespace EllipticBit.Coalescence.Request
 				}
 			}
 
-			if (authentication != null && !string.IsNullOrEmpty(authentication?.Scheme)) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get(userId, tenantId));
+			if (authentication != null && !string.IsNullOrEmpty(authentication?.Scheme)) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get());
 
 			//Get multipart content from builder if any.
 			if (this.cachedContent == null) {

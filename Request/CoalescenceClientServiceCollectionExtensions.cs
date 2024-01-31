@@ -1,4 +1,5 @@
 ﻿using EllipticBit.Coalescence.Shared;
+using EllipticBit.Coalescence.Shared.Request;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

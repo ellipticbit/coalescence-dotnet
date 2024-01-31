@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EllipticBit.Coalescence.Shared;
+using EllipticBit.Coalescence.Shared.Request;
 
 namespace EllipticBit.Coalescence.Request
 {
@@ -21,18 +22,16 @@ namespace EllipticBit.Coalescence.Request
 		public ICoalescenceResponse ThrowOnFailureResponse() {
 			if (response.IsSuccessStatusCode) return this;
 
-			throw new CoalescenceResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
+			throw new CoalescenceResponseException(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
 		}
 
-		public ICoalescenceResponse GetResponseError(out CoalescenceResponseError error) {
-			if (response.IsSuccessStatusCode) error = null;
+		public CoalescenceResponseException AsError() {
+			if (response.IsSuccessStatusCode) return null;
 
-			error = new CoalescenceResponseError(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
-
-			return this;
+			return new CoalescenceResponseException(response.StatusCode, response.ReasonPhrase, response.Content.ReadAsStringAsync().Result);
 		}
 
-		public Dictionary<string, string[]> AsHeaders() {
+		public IDictionary<string, string[]> AsHeaders() {
 			return response.Headers.ToDictionary(k => k.Key, v => v.Value.ToArray());
 		}
 
@@ -40,7 +39,7 @@ namespace EllipticBit.Coalescence.Request
 			return Task.FromResult(response.Content);
 		}
 
-		public async Task<T> AsObject<T>() {
+		public async Task<T> AsDeserialized<T>() {
 			if (!response.IsSuccessStatusCode) return default(T);
 			var serializer = options.Serializers.GetCoalescenceSerializer(response.Content.Headers.ContentType?.MediaType);
 			return await serializer.Deserialize<T>(await response.Content.ReadAsStringAsync());
@@ -54,11 +53,11 @@ namespace EllipticBit.Coalescence.Request
 			return response.Content.ReadAsStreamAsync();
 		}
 
-		public Task<string> AsText() {
+		public Task<string> AsString() {
 			return response.Content.ReadAsStringAsync();
 		}
 
-		public async Task<Dictionary<string, string>> AsFormUrlEncoded() {
+		public async Task<IDictionary<string, string>> AsFormUrlEncoded() {
 			if (!response.IsSuccessStatusCode) return null;
 			if (response.Content is not FormUrlEncodedContent fuec) {
 				throw new InvalidOperationException("Content type is not FormUrlEncoded.");
