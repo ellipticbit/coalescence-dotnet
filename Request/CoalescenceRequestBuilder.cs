@@ -230,7 +230,7 @@ namespace EllipticBit.Coalescence.Request
 		}
 
 		public ICoalescenceRequestBuilder Authentication(string scheme = null) {
-			this.authentication = authenticators.GetCoalescenceAuthentication(scheme);
+			this.authentication = authenticators.GetCoalescenceAuthentication(scheme ?? options.DefaultAuthencationScheme);
 			return this;
 		}
 
