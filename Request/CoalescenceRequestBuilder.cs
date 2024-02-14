@@ -84,25 +84,36 @@ namespace EllipticBit.Coalescence.Request
 		}
 
 		public ICoalescenceRequestBuilder Query(string key, IEnumerable<string> values) {
-			query.Add(key, values.Select(a => WebUtility.UrlEncode(a.Trim())));
+			var ev = values as string[] ?? values.ToArray();
+			if (!ev.Any()) return this;
+			if (ev.All(string.IsNullOrEmpty)) return this;
+
+			query.Add(key, ev.Select(a => WebUtility.UrlEncode(a.Trim())));
 			return this;
 		}
 
 		public ICoalescenceRequestBuilder Query(string key, IEnumerable<byte[]> values) {
-			query.Add(key, values.Select(WebEncoders.Base64UrlEncode));
+			var ev = values as byte[][] ?? values.ToArray();
+			if (!ev.Any()) return this;
+			if (ev.All(a => a == null)) return this;
+
+			query.Add(key, ev.Select(WebEncoders.Base64UrlEncode));
 			return this;
 		}
 
 		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
 		{
+			var ev = values as T[] ?? values.ToArray();
+			if (!ev.Any()) return this;
+
 			if (typeof(T) == typeof(DateTime)) {
-				query.Add(key, values.Select(a => WebUtility.UrlEncode(((DateTime)(object)a).ToString(options.DateTimeFormatString))));
+				query.Add(key, ev.Select(a => WebUtility.UrlEncode(((DateTime)(object)a).ToString(options.DateTimeFormatString))));
 			}
 			else if (typeof(T) == typeof(DateTimeOffset)) {
-				query.Add(key, values.Select(a => WebUtility.UrlEncode(((DateTimeOffset)(object)a).ToString(options.DateTimeFormatString))));
+				query.Add(key, ev.Select(a => WebUtility.UrlEncode(((DateTimeOffset)(object)a).ToString(options.DateTimeFormatString))));
 			}
 			else {
-				query.Add(key, values.Select(a => WebUtility.UrlEncode(Convert.ToString(a))));
+				query.Add(key, ev.Select(a => WebUtility.UrlEncode(Convert.ToString(a))));
 			}
 
 			return this;
@@ -110,14 +121,18 @@ namespace EllipticBit.Coalescence.Request
 
 		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
 		{
+			var ev = values as T?[] ?? values.ToArray();
+			if (!ev.Any()) return this;
+			if (ev.All(a => a == null)) return this;
+
 			if (typeof(T) == typeof(DateTime)) {
-				query.Add(key, values.Select(a => a == null ? "null" : WebUtility.UrlEncode(((DateTime?)(object)a)?.ToString(options.DateTimeFormatString))));
+				query.Add(key, ev.Select(a => a == null ? "null" : WebUtility.UrlEncode(((DateTime?)(object)a)?.ToString(options.DateTimeFormatString))));
 			}
 			else if (typeof(T) == typeof(DateTimeOffset)) {
-				query.Add(key, values.Select(a => a == null ? "null" : WebUtility.UrlEncode(((DateTimeOffset?)(object)a)?.ToString(options.DateTimeFormatString))));
+				query.Add(key, ev.Select(a => a == null ? "null" : WebUtility.UrlEncode(((DateTimeOffset?)(object)a)?.ToString(options.DateTimeFormatString))));
 			}
 			else {
-				query.Add(key, values.Select(a => a == null ? "null" : WebUtility.UrlEncode(Convert.ToString(a))));
+				query.Add(key, ev.Select(a => a == null ? "null" : WebUtility.UrlEncode(Convert.ToString(a))));
 			}
 
 			return this;
@@ -133,25 +148,35 @@ namespace EllipticBit.Coalescence.Request
 		}
 
 		public ICoalescenceRequestBuilder Header(string key, IEnumerable<string> values) {
-			headers.Add(key, values.Select(a => a.Trim()));
+			var ev = values as string[] ?? values.ToArray();
+			if (!ev.Any()) return this;
+			if (ev.All(string.IsNullOrEmpty)) return this;
+
+			headers.Add(key, ev.Select(a => a.Trim()));
 			return this;
 		}
 
 		public ICoalescenceRequestBuilder Header(string key, IEnumerable<byte[]> values) {
-			headers.Add(key, values.Select(Convert.ToBase64String));
+			var ev = values as byte[][] ?? values.ToArray();
+			if (!ev.Any()) return this;
+			if (ev.All(a => a == null)) return this;
+
+			headers.Add(key, ev.Select(Convert.ToBase64String));
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
-		{
+		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable {
+			var ev = values as T[] ?? values.ToArray();
+			if (!ev.Any()) return this;
+
 			if (typeof(T) == typeof(DateTime)) {
-				headers.Add(key, values.Select(a => ((DateTime)(object)a).ToString(options.DateTimeFormatString)));
+				headers.Add(key, ev.Select(a => ((DateTime)(object)a).ToString(options.DateTimeFormatString)));
 			}
 			else if (typeof(T) == typeof(DateTimeOffset)) {
-				headers.Add(key, values.Select(a => ((DateTimeOffset)(object)a).ToString(options.DateTimeFormatString)));
+				headers.Add(key, ev.Select(a => ((DateTimeOffset)(object)a).ToString(options.DateTimeFormatString)));
 			}
 			else {
-				headers.Add(key, values.Select(a => Convert.ToString(a)));
+				headers.Add(key, ev.Select(a => Convert.ToString(a)));
 			}
 
 			return this;
@@ -159,14 +184,18 @@ namespace EllipticBit.Coalescence.Request
 
 		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
 		{
+			var ev = values as T?[] ?? values.ToArray();
+			if (!ev.Any()) return this;
+			if (ev.All(a => a == null)) return this;
+
 			if (typeof(T) == typeof(DateTime)) {
-				headers.Add(key, values.Select(a => a == null ? "null" : ((DateTime?)(object)a)?.ToString(options.DateTimeFormatString)));
+				headers.Add(key, ev.Select(a => a == null ? "null" : ((DateTime?)(object)a)?.ToString(options.DateTimeFormatString)));
 			}
 			else if (typeof(T) == typeof(DateTimeOffset)) {
-				headers.Add(key, values.Select(a => a == null ? "null" : ((DateTimeOffset?)(object)a)?.ToString(options.DateTimeFormatString)));
+				headers.Add(key, ev.Select(a => a == null ? "null" : ((DateTimeOffset?)(object)a)?.ToString(options.DateTimeFormatString)));
 			}
 			else {
-				headers.Add(key, values.Select(a => a == null ? "null" : Convert.ToString(a)));
+				headers.Add(key, ev.Select(a => a == null ? "null" : Convert.ToString(a)));
 			}
 
 			return this;
