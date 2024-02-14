@@ -7,17 +7,17 @@
 		<RootNamespace>EllipticBit.Coalescence.Shared</RootNamespace>
 		<Authors>EllipticBit LLC</Authors>
 		<Company>EllipticBit, LLC</Company>
-		<Product>Hotwire</Product>
+		<Product>EllipticBit Coalescence</Product>
 		<PackageId>EllipticBit.Coalescence.Shared</PackageId>
 		<Version>0.0.0</Version>
 		<FileVersion>0.0.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<Copyright>Copyright © EllipticBit, LLC. 2022-2023</Copyright>
+		<Copyright>Copyright © EllipticBit, LLC. 2022-2024</Copyright>
 		<Description>Shared support library for the Coalescence code generation system. Find it here: https://gitlab.com/EllipticBit/coalescence-generator</Description>
 		<RepositoryUrl>https://gitlab.com/EllipticBit/coalescence-dotnet</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageTags>netcore;netstandard;code-generation,web-api;aspnet-core</PackageTags>
+		<PackageTags>netcore;netstandard;code-generation;web-api;aspnet-core</PackageTags>
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>latest</LangVersion>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -26,7 +26,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
 		<PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
-		<PackageReference Include="System.Text.Json" Version="8.0.1" />
+		<PackageReference Include="System.Text.Json" Version="8.0.2" />
 	</ItemGroup>
 
 </Project>
