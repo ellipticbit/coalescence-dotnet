@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using EllipticBit.Coalescence.Shared;
 using EllipticBit.Coalescence.Shared.Request;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace EllipticBit.Coalescence.Request
 {
@@ -49,7 +48,7 @@ namespace EllipticBit.Coalescence.Request
 		}
 
 		public ICoalescenceRequestBuilder Path(byte[] parameter) {
-			path.Add(WebEncoders.Base64UrlEncode(parameter));
+			path.Add(parameter.ArrayToUrlBase64());
 			return this;
 		}
 
@@ -97,7 +96,7 @@ namespace EllipticBit.Coalescence.Request
 			if (!ev.Any()) return this;
 			if (ev.All(a => a == null)) return this;
 
-			query.Add(key, ev.Select(WebEncoders.Base64UrlEncode));
+			query.Add(key, ev.Select(a => a.ArrayToUrlBase64()));
 			return this;
 		}
 
