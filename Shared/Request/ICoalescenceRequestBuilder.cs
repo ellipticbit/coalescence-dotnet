@@ -42,4 +42,17 @@ namespace EllipticBit.Coalescence.Shared.Request
 
 		Task<ICoalescenceResponse> Send();
 	}
+
+	public static class CoalescenceRequestBuilderExtensions
+	{
+		public static ICoalescenceRequestBuilder Query<T>(this ICoalescenceRequestBuilder builder, string key, T value) where T : unmanaged, IComparable, IFormattable
+		{
+			return builder.Query(key, new[] { value });
+		}
+
+		public static ICoalescenceRequestBuilder Query<T>(this ICoalescenceRequestBuilder builder, string key, T? value) where T : unmanaged, IComparable, IFormattable
+		{
+			return builder.Query(key, new[] { value });
+		}
+	}
 }
