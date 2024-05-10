@@ -52,7 +52,7 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				path.Add(WebUtility.UrlEncode(((DateTime)(object)parameter).ToString(options.DateTimeFormatString)));
@@ -67,7 +67,7 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable
 		{
 			if (typeof(T) == typeof(DateTime)) {
 				path.Add(parameter == null ? "null" : WebUtility.UrlEncode(((DateTime?)(object)parameter)?.ToString(options.DateTimeFormatString)));
@@ -100,7 +100,7 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable
 		{
 			var ev = values as T[] ?? values.ToArray();
 			if (!ev.Any()) return this;
@@ -118,7 +118,7 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable
 		{
 			var ev = values as T?[] ?? values.ToArray();
 			if (!ev.Any()) return this;
@@ -164,7 +164,7 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable {
+		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable {
 			var ev = values as T[] ?? values.ToArray();
 			if (!ev.Any()) return this;
 
@@ -181,7 +181,7 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable
+		public ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable
 		{
 			var ev = values as T?[] ?? values.ToArray();
 			if (!ev.Any()) return this;
