@@ -54,5 +54,14 @@ namespace EllipticBit.Coalescence.Shared.Request
 		{
 			return builder.Query(key, new[] { value });
 		}
+		public static ICoalescenceRequestBuilder Header<T>(this ICoalescenceRequestBuilder builder, string key, T value) where T : unmanaged, IComparable, IFormattable
+		{
+			return builder.Header(key, new[] { value });
+		}
+
+		public static ICoalescenceRequestBuilder Header<T>(this ICoalescenceRequestBuilder builder, string key, T? value) where T : unmanaged, IComparable, IFormattable
+		{
+			return builder.Header(key, new[] { value });
+		}
 	}
 }
