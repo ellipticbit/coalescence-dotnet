@@ -11,19 +11,19 @@ namespace EllipticBit.Coalescence.Shared.Request
 		ICoalescenceRequestBuilder Path(params string[] parameter);
 		ICoalescenceRequestBuilder Path(string parameter);
 		ICoalescenceRequestBuilder Path(byte[] parameter);
-		ICoalescenceRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable, IFormattable;
-		ICoalescenceRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable, IFormattable;
+		ICoalescenceRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable;
+		ICoalescenceRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable;
 
 		ICoalescenceRequestBuilder Query(string key, IEnumerable<string> values);
 		ICoalescenceRequestBuilder Query(string key, IEnumerable<byte[]> values);
-		ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable;
-		ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable;
+		ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable;
+		ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable;
 		ICoalescenceRequestBuilder Query<T>(T parameters) where T : class, ICoalescenceParameters;
 
 		ICoalescenceRequestBuilder Header(string key, IEnumerable<string> values);
 		ICoalescenceRequestBuilder Header(string key, IEnumerable<byte[]> values);
-		ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable, IFormattable;
-		ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable, IFormattable;
+		ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable;
+		ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable;
 		ICoalescenceRequestBuilder Header<T>(T parameters) where T : class, ICoalescenceParameters;
 
 		ICoalescenceRequestBuilder Serialized<T>(T content, string contentType = null);
