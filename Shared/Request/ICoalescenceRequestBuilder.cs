@@ -34,6 +34,8 @@ namespace EllipticBit.Coalescence.Shared.Request
 		ICoalescenceRequestBuilder Content(HttpContent content);
 		ICoalescenceMultipartContentBuilder Multipart();
 		ICoalescenceMultipartContentBuilder MultipartForm();
+		ICoalescenceRequestBuilder RequestContentEncoding(string encoding);
+		ICoalescenceRequestBuilder ResponseContentEncoding(string encoding);
 
 		ICoalescenceRequestBuilder Authentication(string scheme = null);
 
