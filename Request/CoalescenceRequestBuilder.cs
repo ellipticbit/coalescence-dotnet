@@ -21,6 +21,8 @@ namespace EllipticBit.Coalescence.Request
 		private readonly List<string> path = new();
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
 		private readonly Dictionary<string, IEnumerable<string>> headers = new();
+		private string requestContentEncoding = null;
+		private string responseContentEncoding = null;
 		private ICoalescenceAuthentication authentication = null;
 		private IEnumerable<ICoalescenceAuthentication> authenticators;
 		private TimeSpan timeout = TimeSpan.FromSeconds(100);
@@ -257,6 +259,16 @@ namespace EllipticBit.Coalescence.Request
 			return this.multipartContentBuilder;
 		}
 
+		public ICoalescenceRequestBuilder RequestContentEncoding(string encoding) {
+			this.requestContentEncoding = encoding;
+			return this;
+		}
+
+		public ICoalescenceRequestBuilder ResponseContentEncoding(string encoding) {
+			this.responseContentEncoding = encoding;
+			return this;
+		}
+
 		public ICoalescenceRequestBuilder Authentication(string scheme = null) {
 			this.authentication = authenticators.GetCoalescenceAuthentication(scheme ?? options.DefaultAuthencationScheme);
 			return this;
@@ -328,6 +340,16 @@ namespace EllipticBit.Coalescence.Request
 			}
 			else {
 				rm.Content = this.cachedContent;
+			}
+
+			if (!string.IsNullOrWhiteSpace(this.requestContentEncoding))
+			{
+				rm.Content.Headers.ContentEncoding.Add(this.requestContentEncoding);
+			}
+
+			if (!string.IsNullOrWhiteSpace(this.responseContentEncoding))
+			{
+				rm.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue(this.responseContentEncoding));
 			}
 
 			return rm;

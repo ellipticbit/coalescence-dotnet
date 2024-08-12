@@ -24,12 +24,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.2.9" />
+		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.3.3" />
 		<PackageReference Include="EllipticBit.Extensions" Version="1.0.11" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 		<PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+		<PackageReference Include="ZstdSharp.Port" Version="0.8.1" />
 	</ItemGroup>
 
 </Project>

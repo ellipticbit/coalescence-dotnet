@@ -35,14 +35,14 @@ namespace EllipticBit.Coalescence.AspNetCore
 			return await serializer.Deserialize<T>(serialized);
 		}
 
-		protected Task<string> MultipartAsText(string name)
+		protected async Task<string> MultipartAsText(string name)
 		{
 			var file = this.Request.Form.Files.GetFile(name);
 			if (file == null) throw new ArgumentOutOfRangeException(nameof(name), $"Unable to locate multipart content item with name: {name}");
 
 			using var stream = file.OpenReadStream();
 			using var reader = new StreamReader(stream, Encoding.UTF8, true);
-			return reader.ReadToEndAsync();
+			return await reader.ReadToEndAsync();
 		}
 
 		protected MultipartContentItem<Stream> MultipartAsStream(string name)
