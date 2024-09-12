@@ -11,11 +11,13 @@ namespace EllipticBit.Coalescence.Request
 {
 	internal sealed class CoalescenceResponse : ICoalescenceResponse
 	{
+		private readonly HttpClient client;
 		private readonly HttpResponseMessage response;
 		private readonly CoalescenceRequestOptions options;
 
-		public CoalescenceResponse(HttpResponseMessage response, CoalescenceRequestOptions options) {
+		public CoalescenceResponse(HttpResponseMessage response, HttpClient client, CoalescenceRequestOptions options) {
 			this.response = response;
+			this.client = client;
 			this.options = options;
 		}
 
@@ -79,11 +81,23 @@ namespace EllipticBit.Coalescence.Request
 		//	}
 		//}
 
+		public void Dispose() {
+			client?.Dispose();
+			response?.Dispose();
+		}
+
 		public async ValueTask DisposeAsync() {
-			if (response is IAsyncDisposable responseAsyncDisposable)
-				await responseAsyncDisposable.DisposeAsync();
-			else if (response != null)
-				response.Dispose();
+			if (client != null) await CastAndDispose(client);
+			if (response != null) await CastAndDispose(response);
+
+			return;
+
+			static async ValueTask CastAndDispose(IDisposable resource) {
+				if (resource is IAsyncDisposable resourceAsyncDisposable)
+					await resourceAsyncDisposable.DisposeAsync();
+				else
+					resource.Dispose();
+			}
 		}
 	}
 }

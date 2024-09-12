@@ -300,7 +300,13 @@ namespace EllipticBit.Coalescence.Request
 				retries++;
 			}
 
-			return new CoalescenceResponse(response, options);
+			if (cachedContent is IAsyncDisposable cachedContentAsyncDisposable) {
+				await cachedContentAsyncDisposable.DisposeAsync();
+			} else if (cachedContent != null) {
+				cachedContent.Dispose();
+			}
+
+			return new CoalescenceResponse(response, http, options);
 		}
 
 		private async Task<HttpRequestMessage> BuildRequest() {
