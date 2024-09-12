@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EllipticBit.Coalescence.Shared.Request
 {
-	public interface ICoalescenceResponse : IAsyncDisposable
+	public interface ICoalescenceResponse : IDisposable, IAsyncDisposable
 	{
 		ICoalescenceResponse ThrowOnFailureResponse();
 
