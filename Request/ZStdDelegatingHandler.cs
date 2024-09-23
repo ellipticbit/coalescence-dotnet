@@ -20,11 +20,14 @@ namespace EllipticBit.Coalescence.Request
 
 		/// <inheritdoc />
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
-			if (request.Content.Headers.ContentEncoding.Any(a => a.Equals("zstd", StringComparison.OrdinalIgnoreCase))) {
-				request.Content = new StreamContent(new CompressionStream(await request.Content.ReadAsStreamAsync(), (int)options.Level));
+			if (request.Content != null && request.Content.Headers.ContentEncoding.Any(a => a.Equals("zstd", StringComparison.OrdinalIgnoreCase))) {
+				var rs = await request.Content.ReadAsStreamAsync();
+				request.Content = new StreamContent(new CompressionStream(rs, (int)options.Level));
 			}
 
 			var response = await base.SendAsync(request, cancellationToken);
+
+			if (response.Content == null) return response;
 
 			if (!response.Content.Headers.ContentEncoding.Any(a => a.Equals("zstd", StringComparison.OrdinalIgnoreCase))) return response;
 
