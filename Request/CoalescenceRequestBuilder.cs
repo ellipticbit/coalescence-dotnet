@@ -354,14 +354,19 @@ namespace EllipticBit.Coalescence.Request
 				rm.Content = this.cachedContent;
 			}
 
-			if (!string.IsNullOrWhiteSpace(this.requestContentEncoding))
-			{
-				rm.Content.Headers.ContentEncoding.Add(this.requestContentEncoding);
+			if (!string.IsNullOrWhiteSpace(this.requestContentEncoding)) {
+				var rcel = this.requestContentEncoding.Split([','], StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
+				foreach (var rce in rcel) {
+					rm.Content.Headers.ContentEncoding.Add(rce);
+				}
 			}
 
 			if (!string.IsNullOrWhiteSpace(this.responseContentEncoding))
 			{
-				rm.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue(this.responseContentEncoding));
+				var rcel = this.responseContentEncoding.Split([','], StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
+				foreach (var rce in rcel) {
+					rm.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue(rce));
+				}
 			}
 
 			return rm;
