@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace EllipticBit.Coalescence.Shared
+﻿namespace EllipticBit.Coalescence.Shared
 {
 	public enum ZStdCompressionLevel
 	{
@@ -13,11 +11,8 @@ namespace EllipticBit.Coalescence.Shared
 		Slowest = 19
 	}
 
-	public class ZStdCompressionOptions : IOptions<ZStdCompressionOptions>
+	public class ZStdCompressionOptions
 	{
 		public ZStdCompressionLevel Level { get; set; } = ZStdCompressionLevel.Balanced;
-
-		/// <inheritdoc />
-		ZStdCompressionOptions IOptions<ZStdCompressionOptions>.Value => this;
 	}
 }

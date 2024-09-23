@@ -11,9 +11,9 @@ namespace EllipticBit.Coalescence.AspNetCore
 	{
 		private readonly ZStdCompressionOptions options;
 
-		public ZStdCompressionProvider(IOptions<ZStdCompressionOptions> options)
+		public ZStdCompressionProvider(ZStdCompressionOptions options)
 		{
-			this.options = options.Value;
+			this.options = options;
 		}
 
 		public Stream CreateStream(Stream outputStream)

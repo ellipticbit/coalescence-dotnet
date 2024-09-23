@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -15,9 +13,9 @@ namespace EllipticBit.Coalescence.Request
 	{
 		private readonly ZStdCompressionOptions options;
 
-		public ZStdDelegatingHandler(IOptions<ZStdCompressionOptions> options)
+		public ZStdDelegatingHandler(ZStdCompressionOptions options)
 		{
-			this.options = options.Value;
+			this.options = options;
 		}
 
 		/// <inheritdoc />
