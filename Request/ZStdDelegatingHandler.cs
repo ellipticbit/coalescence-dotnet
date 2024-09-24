@@ -28,10 +28,14 @@ namespace EllipticBit.Coalescence.Request
 			var response = await base.SendAsync(request, cancellationToken);
 
 			if (response.Content == null) return response;
-
 			if (!response.Content.Headers.ContentEncoding.Any(a => a.Equals("zstd", StringComparison.OrdinalIgnoreCase))) return response;
 
-			response.Content = new StreamContent(new DecompressionStream(await response.Content.ReadAsStreamAsync()));
+			var tc = response.Content;
+			response.Content = new StreamContent(new DecompressionStream(await tc.ReadAsStreamAsync()));
+			foreach (var h in tc.Headers) {
+				response.Content.Headers.Add(h.Key, h.Value);
+			}
+
 			return response;
 		}
 	}
