@@ -8,6 +8,7 @@ namespace EllipticBit.Coalescence.Request
 	{
 		public string HttpClientId { get; }
 		public int MaxRetryCount { get; set; } = 3;
+		public int RetryDelay { get; set; } = 0;
 		public string DateTimeFormatString { get; set; } = "O";
 		public string DefaultAuthencationScheme { get; set; } = null;
 

@@ -287,14 +287,29 @@ namespace EllipticBit.Coalescence.Request
 		public async Task<ICoalescenceResponse> Send() {
 			int retries = 0;
 			HttpResponseMessage response = null;
-			using var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
+			var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
 			http.Timeout = timeout;
 
-			using (var rm = await BuildRequest())
-			{
-				while ((noRetry && retries < 1) || retries < options.MaxRetryCount)
-				{
-					response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
+			try {
+
+				while ((noRetry && retries < 1) || retries < options.MaxRetryCount) {
+					using var rm = await BuildRequest();
+					try {
+						response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
+					}
+					catch (Exception ex) {
+						retries++;
+						if (retries < options.MaxRetryCount) {
+							throw;
+						}
+
+						if (options.RetryDelay > 0) {
+							await Task.Delay(options.RetryDelay * retries);
+						}
+
+						continue;
+					}
+
 					if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400) break;
 					if ((int)response.StatusCode == 429) break; // Add 429 handling here
 					if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
@@ -302,17 +317,28 @@ namespace EllipticBit.Coalescence.Request
 					retries++;
 				}
 
-				if (cachedContent is IAsyncDisposable cachedContentAsyncDisposable)
+				return new CoalescenceResponse(response, http, options);
+			}
+			catch (Exception ex) {
+				if (http is IAsyncDisposable httpAsyncDisposable)
 				{
+					await httpAsyncDisposable.DisposeAsync();
+				}
+				else if (http != null)
+				{
+					http.Dispose();
+				}
+
+				throw;
+			}
+			finally {
+				if (cachedContent is IAsyncDisposable cachedContentAsyncDisposable) {
 					await cachedContentAsyncDisposable.DisposeAsync();
 				}
-				else if (cachedContent != null)
-				{
+				else if (cachedContent != null) {
 					cachedContent.Dispose();
 				}
 			}
-
-			return new CoalescenceResponse(response, http, options);
 		}
 
 		private async Task<HttpRequestMessage> BuildRequest() {
