@@ -44,12 +44,8 @@ namespace UnitTests
 			sb.AddHttpClient("http-example-com", (http) => {
 				http.BaseAddress = new Uri("http://example.com");
 			});
-			sb.AddHttpClient("technique-texting-webhook", client => {
-				client.BaseAddress = new Uri("https://services.leadconnectorhq.com/");
-			});
 			sb.AddCoalescenceServices()
-				.AddCoalescenceRequestOptions("test", new CoalescenceRequestOptions("test", "http-example-com"))
-				.AddCoalescenceRequestOptions("technique-texting-webhook", new CoalescenceRequestOptions("technique-texting-webhook", "technique-texting-webhook"));
+				.AddCoalescenceRequestOptions("test", new CoalescenceRequestOptions("test", "http-example-com"));
 			sb.AddCoalescenceRequestServices();
 			services = sb.BuildServiceProvider();
 		}
