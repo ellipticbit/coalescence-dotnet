@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<AssemblyName>EllipticBit.Coalescence.Windows</AssemblyName>
+		<RootNamespace>EllipticBit.Coalescence.Windows</RootNamespace>
+		<Authors>EllipticBit LLC</Authors>
+		<Company>EllipticBit, LLC</Company>
+		<Product>EllipticBit Coalescence</Product>
+		<PackageId>EllipticBit.Coalescence.Windows</PackageId>
+		<Version>0.0.0</Version>
+		<FileVersion>0.0.0.0</FileVersion>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<Copyright>Copyright © EllipticBit, LLC. 2025</Copyright>
+		<Description>Provides WPF and WinForms specific utilities. Find it here: https://gitlab.com/EllipticBit/coalescence-generator</Description>
+		<RepositoryUrl>https://gitlab.com/EllipticBit/coalescence-dotnet</RepositoryUrl>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>netcore;netstandard;code-generation,web-api;aspnet-core</PackageTags>
+		<NeutralLanguage>en</NeutralLanguage>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Collections.Immutable" Version="9.0.0" />
+		<PackageReference Include="System.IO.Hashing" Version="9.0.0" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
+	</ItemGroup>
+
+</Project>

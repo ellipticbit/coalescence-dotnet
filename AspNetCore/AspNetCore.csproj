@@ -7,7 +7,7 @@
 		<RootNamespace>EllipticBit.Coalescence.AspNetCore</RootNamespace>
 		<Authors>EllipticBit LLC</Authors>
 		<Company>EllipticBit, LLC</Company>
-		<Product>Hotwire</Product>
+		<Product>EllipticBit Coalescence</Product>
 		<PackageId>EllipticBit.Coalescence.AspNetCore</PackageId>
 		<Version>0.0.0</Version>
 		<FileVersion>0.0.0.0</FileVersion>

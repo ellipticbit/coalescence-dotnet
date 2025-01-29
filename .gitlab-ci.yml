@@ -5,18 +5,16 @@ before_script:
   - "git submodule update --init --recursive"
 
 stages:
+  - test
   - shared
   - library
 
 Shared Test Deployment:
-  stage: shared
+  stage: test
   tags:
     - linux
     - dotnet
 
-  except:
-    refs:
-      - master
   only:
     changes:
       - Shared/**/*
@@ -48,14 +46,11 @@ Shared Production Deployment:
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 Request Test Deployment:
-  stage: library
+  stage: test
   tags:
     - linux
     - dotnet
 
-  except:
-    refs:
-      - master
   only:
     changes:
       - Request/**/*
@@ -64,6 +59,7 @@ Request Test Deployment:
 
   script:
     - "dotnet restore ./Request/Request.csproj"
+    - "dotnet test -c Debug"
     - "dotnet pack -c Debug -o ./ ./Request/Request.csproj"
 
 Request Production Deployment:
@@ -87,14 +83,11 @@ Request Production Deployment:
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 AspNetCore Test Deployment:
-  stage: library
+  stage: test
   tags:
     - linux
     - dotnet
 
-  except:
-    refs:
-      - master
   only:
     changes:
       - AspNetCore/**/*
@@ -126,14 +119,11 @@ AspNetCore Production Deployment:
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 SignalR Test Deployment:
-  stage: library
+  stage: test
   tags:
     - linux
     - dotnet
 
-  except:
-    refs:
-      - master
   only:
     changes:
       - SignalR/**/*
@@ -142,6 +132,7 @@ SignalR Test Deployment:
 
   script:
     - "dotnet restore ./SignalR/SignalR.csproj"
+    - "dotnet test -c Debug"
     - "dotnet pack -c Debug -o ./ ./SignalR/SignalR.csproj"
 
 SignalR Production Deployment:
@@ -162,4 +153,41 @@ SignalR Production Deployment:
     - "pwsh -f \"./ReplaceVersion-SignalR.ps1\""
     - "dotnet restore ./SignalR/SignalR.csproj"
     - "dotnet pack -c Release -o ./ ./SignalR/SignalR.csproj"
+    - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
+
+Windows Test Deployment:
+  stage: test
+  tags:
+    - windows
+    - dotnet
+
+  only:
+    changes:
+      - Windows/**/*
+      - .gitlab-ci.yml
+      - ReplaceVersion-Windows.ps1
+
+  script:
+    - "dotnet restore ./Windows/Windows.csproj"
+    - "dotnet test -c Debug"
+    - "dotnet pack -c Debug -o ./ ./Windows/Windows.csproj"
+
+Windows Production Deployment:
+  stage: library
+  tags:
+    - windows
+    - dotnet
+
+  only:
+    refs:
+      - master
+    changes:
+      - Windows/**/*
+      - .gitlab-ci.yml
+      - ReplaceVersion-Windows.ps1
+
+  script:
+    - "pwsh -f \"./ReplaceVersion-Windows.ps1\""
+    - "dotnet restore ./Windows/Windows.csproj"
+    - "dotnet pack -c Release -o ./ ./Windows/Windows.csproj"
     - "dotnet nuget push *.nupkg -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
