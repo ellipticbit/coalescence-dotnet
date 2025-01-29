@@ -19,7 +19,6 @@ Shared Test Deployment:
     changes:
       - Shared/**/*
       - .gitlab-ci.yml
-      - ReplaceVersion-Shared.ps1
 
   script:
     - "dotnet restore ./Shared/Shared.csproj"
@@ -55,7 +54,6 @@ Request Test Deployment:
     changes:
       - Request/**/*
       - .gitlab-ci.yml
-      - ReplaceVersion-Request.ps1
 
   script:
     - "dotnet restore ./Request/Request.csproj"
@@ -92,7 +90,6 @@ AspNetCore Test Deployment:
     changes:
       - AspNetCore/**/*
       - .gitlab-ci.yml
-      - ReplaceVersion-AspNetCore.ps1
 
   script:
     - "dotnet restore ./AspNetCore/AspNetCore.csproj"
@@ -128,7 +125,6 @@ SignalR Test Deployment:
     changes:
       - SignalR/**/*
       - .gitlab-ci.yml
-      - ReplaceVersion-SignalR.ps1
 
   script:
     - "dotnet restore ./SignalR/SignalR.csproj"
@@ -165,7 +161,6 @@ Windows Test Deployment:
     changes:
       - Windows/**/*
       - .gitlab-ci.yml
-      - ReplaceVersion-Windows.ps1
 
   script:
     - "dotnet restore ./Windows/Windows.csproj"
