@@ -48,7 +48,7 @@ Shared Production Deployment:
 Request Test Deployment:
   stage: test
   tags:
-    - linux
+    - windows
     - dotnet
 
   only:
@@ -121,7 +121,7 @@ AspNetCore Production Deployment:
 SignalR Test Deployment:
   stage: test
   tags:
-    - linux
+    - windows
     - dotnet
 
   only:
