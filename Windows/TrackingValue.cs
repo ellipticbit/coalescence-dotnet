@@ -61,7 +61,7 @@ namespace EllipticBit.Coalescence.Windows
 							 this.ValueType == typeof(TimeSpan) || this.ValueType == typeof(string) || this.ValueType == typeof(byte[]);
 			}
 
-			this.IsValueTrackingObject = this.ValueType.IsSubclassOf(typeof(TrackingObject));
+			this.IsValueTrackingObject = this.ValueType.IsSubclassOf(typeof(TrackingObjectBase));
 			this.PropertyName = propertyName;
 			this.Original = defaultValue;
 			this._value = defaultValue;
@@ -106,7 +106,7 @@ namespace EllipticBit.Coalescence.Windows
 	{
 		internal TrackingCollection(string propertyName) : base(propertyName, new ObservableCollection<T>()) {
 			this.ValueType = typeof(T);
-			this.IsValueTrackingObject = this.ValueType.IsSubclassOf(typeof(TrackingObject));
+			this.IsValueTrackingObject = this.ValueType.IsSubclassOf(typeof(TrackingObjectBase));
 			this.IsCollection = true;
 		}
 
@@ -135,7 +135,7 @@ namespace EllipticBit.Coalescence.Windows
 				}
 
 				ValueChanged = (adds.Length + rems.Length) > 0;
-				RemoteChanged = _value.OfType<TrackingObject>().Any(a => a.HasRemoteChanges);
+				RemoteChanged = _value.OfType<TrackingObjectBase>().Any(a => a.HasRemoteChanges);
 			}
 			else {
 				Remote = value;

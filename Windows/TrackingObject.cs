@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +20,7 @@ namespace EllipticBit.Coalescence.Windows
 		ulong ObjectTrackingKey { get; }
 	}
 
-	public abstract class TrackingObject : INotifyPropertyChanged, IJsonOnDeserialized
+	public abstract class TrackingObjectBase : INotifyPropertyChanged, IJsonOnDeserialized
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -135,11 +134,11 @@ namespace EllipticBit.Coalescence.Windows
 				throw new InvalidOperationException($"The property '{trackingValue.PropertyName}' can only be changed from the UI thread.");
 			}
 
-			if (value is TrackingObject to) {
+			if (value is TrackingObjectBase to) {
 				to.PropertyChanged += TrackingObjectChanged;
 			}
 
-			if (trackingValue.Value is TrackingObject co) {
+			if (trackingValue.Value is TrackingObjectBase co) {
 				co.PropertyChanged -= TrackingObjectChanged;
 			}
 
@@ -173,11 +172,11 @@ namespace EllipticBit.Coalescence.Windows
 			}
 
 			IEnumerable<T> vl = values.ToList();
-			foreach (var to in vl.OfType<TrackingObject>()) {
+			foreach (var to in vl.OfType<TrackingObjectBase>()) {
 				to.PropertyChanged += TrackingObjectChanged;
 			}
 
-			foreach (var to in trackingCollection.Value.OfType<TrackingObject>()) {
+			foreach (var to in trackingCollection.Value.OfType<TrackingObjectBase>()) {
 				to.PropertyChanged -= TrackingObjectChanged;
 			}
 
@@ -301,7 +300,12 @@ namespace EllipticBit.Coalescence.Windows
 		}
 	}
 
-	public abstract class TrackingObject<T> : TrackingObject, IJsonOnDeserialized, ILocatableTrackingObject
+	public abstract class TrackingObject : TrackingObjectBase
+	{
+		private protected override void RehashKey() { }
+	}
+
+	public abstract class TrackingObject<T> : TrackingObjectBase, IJsonOnDeserialized, ILocatableTrackingObject
 		where T : TrackingObject<T>
 	{
 		private static readonly TrackingCache<T> TrackedObjects = new();
