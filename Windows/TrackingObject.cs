@@ -20,9 +20,13 @@ namespace EllipticBit.Coalescence.Windows
 		ulong ObjectTrackingKey { get; }
 	}
 
-	public abstract class TrackingObjectBase : INotifyPropertyChanged, IJsonOnDeserialized
+	public abstract class TrackingObjectBase : INotifyPropertyChanged, IJsonOnDeserializing, IJsonOnDeserialized
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		[JsonIgnore]
+		[IgnoreDataMember]
+		private bool _isDeserializing = false;
 
 		[JsonIgnore]
 		[IgnoreDataMember]
@@ -130,7 +134,7 @@ namespace EllipticBit.Coalescence.Windows
 				throw new ArgumentNullException(nameof(trackingValue), $"The property requested has not been registered with the RegisterProperty method.");
 			}
 
-			if (!Application.Current?.Dispatcher.CheckAccess() ?? false) {
+			if (!_isDeserializing || (!Application.Current?.Dispatcher.CheckAccess() ?? false)) {
 				throw new InvalidOperationException($"The property '{trackingValue.PropertyName}' can only be changed from the UI thread.");
 			}
 
@@ -167,7 +171,7 @@ namespace EllipticBit.Coalescence.Windows
 
 		// ReSharper disable once MemberCanBePrivate.Global
 		protected void SetCollection<T>(TrackingCollection<T> trackingCollection, IEnumerable<T> values) {
-			if (!Application.Current?.Dispatcher.CheckAccess() ?? false) {
+			if (!_isDeserializing || (!Application.Current?.Dispatcher.CheckAccess() ?? false)) {
 				throw new InvalidOperationException($"The property '{trackingCollection.PropertyName}' can only be changed from the UI thread.");
 			}
 
@@ -200,8 +204,7 @@ namespace EllipticBit.Coalescence.Windows
 		public Task SetCollection<T>(string propertyName, IEnumerable<T> values) {
 			var tc = GetTrackingCollection<T>(propertyName);
 
-			if (Application.Current?.Dispatcher.CheckAccess() ?? true)
-			{
+			if (Application.Current?.Dispatcher.CheckAccess() ?? true) {
 				SetCollection(tc, values);
 				return Task.CompletedTask;
 			}
@@ -290,19 +293,29 @@ namespace EllipticBit.Coalescence.Windows
 
 		private protected abstract void RehashKey();
 
+		private protected void OnPropertyChanged(string name) {
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+		}
+
 		private protected void OnDeserializedBase() {
 			_hasChanges = false;
 			_hasTrackingChanges = false;
 			_hasRemoteChanges = false;
-		}
-
-		private protected void OnPropertyChanged(string name) {
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+			_isDeserializing = false;
 		}
 
 		[OnDeserialized]
 		void IJsonOnDeserialized.OnDeserialized() {
 			OnDeserializedBase();
+		}
+
+		private protected void OnDeserializingBase() {
+			_isDeserializing = true;
+		}
+
+		[OnDeserializing]
+		void IJsonOnDeserializing.OnDeserializing() {
+			OnDeserializingBase();
 		}
 	}
 
@@ -315,7 +328,7 @@ namespace EllipticBit.Coalescence.Windows
 		}
 	}
 
-	public abstract class TrackingObject<T> : TrackingObjectBase, IJsonOnDeserialized, ILocatableTrackingObject
+	public abstract class TrackingObject<T> : TrackingObjectBase, IJsonOnDeserializing, IJsonOnDeserialized, ILocatableTrackingObject
 		where T : TrackingObject<T>
 	{
 		private static readonly TrackingCache<T> TrackedObjects = new();
@@ -388,6 +401,11 @@ namespace EllipticBit.Coalescence.Windows
 			RegisterTrackingObject();
 
 			base.OnDeserializedBase();
+		}
+
+		[OnDeserializing]
+		void IJsonOnDeserializing.OnDeserializing() {
+			base.OnDeserializingBase();
 		}
 
 		private protected override void RehashKey() {
