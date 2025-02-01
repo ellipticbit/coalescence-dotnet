@@ -104,7 +104,7 @@ namespace EllipticBit.Coalescence.Windows
 
 	public sealed class TrackingCollection<T> : TrackingValue<ObservableCollection<T>>
 	{
-		internal TrackingCollection(string propertyName) : base(propertyName, new ObservableCollection<T>()) {
+		internal TrackingCollection(string propertyName) : base(propertyName, null) {
 			this.ValueType = typeof(T);
 			this.IsValueTrackingObject = this.ValueType.IsSubclassOf(typeof(TrackingObjectBase));
 			this.IsCollection = true;

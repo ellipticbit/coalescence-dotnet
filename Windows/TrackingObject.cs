@@ -171,16 +171,21 @@ namespace EllipticBit.Coalescence.Windows
 				throw new InvalidOperationException($"The property '{trackingCollection.PropertyName}' can only be changed from the UI thread.");
 			}
 
-			IEnumerable<T> vl = values.ToList();
-			foreach (var to in vl.OfType<TrackingObjectBase>()) {
-				to.PropertyChanged += TrackingObjectChanged;
-			}
+			if (values != null) {
+				IEnumerable<T> vl = values.ToList();
+				foreach (var to in vl.OfType<TrackingObjectBase>()) {
+					to.PropertyChanged += TrackingObjectChanged;
+				}
 
-			foreach (var to in trackingCollection.Value.OfType<TrackingObjectBase>()) {
-				to.PropertyChanged -= TrackingObjectChanged;
-			}
+				foreach (var to in trackingCollection.Value.OfType<TrackingObjectBase>()) {
+					to.PropertyChanged -= TrackingObjectChanged;
+				}
 
-			trackingCollection.Value = new ObservableCollection<T>(vl);
+				trackingCollection.Value = new ObservableCollection<T>(vl);
+			}
+			else {
+				trackingCollection.Value = null;
+			}
 
 			_hasChanges = true;
 			_hasTrackingChanges = true;
@@ -190,8 +195,7 @@ namespace EllipticBit.Coalescence.Windows
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasTrackingChanges)));
 		}
 
-		public Task SetCollection<T>(string propertyName, IEnumerable<T> values)
-		{
+		public Task SetCollection<T>(string propertyName, IEnumerable<T> values) {
 			var tc = GetTrackingCollection<T>(propertyName);
 
 			if (Application.Current?.Dispatcher.CheckAccess() ?? true)
@@ -303,6 +307,10 @@ namespace EllipticBit.Coalescence.Windows
 	public abstract class TrackingObject : TrackingObjectBase
 	{
 		private protected override void RehashKey() { }
+
+		protected sealed override void RegistrationCompleted() {
+			base.RegistrationCompleted();
+		}
 	}
 
 	public abstract class TrackingObject<T> : TrackingObjectBase, IJsonOnDeserialized, ILocatableTrackingObject
