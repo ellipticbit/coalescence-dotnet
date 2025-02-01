@@ -177,8 +177,10 @@ namespace EllipticBit.Coalescence.Windows
 					to.PropertyChanged += TrackingObjectChanged;
 				}
 
-				foreach (var to in trackingCollection.Value.OfType<TrackingObjectBase>()) {
-					to.PropertyChanged -= TrackingObjectChanged;
+				if (trackingCollection.Value != null) {
+					foreach (var to in trackingCollection.Value.OfType<TrackingObjectBase>()) {
+						to.PropertyChanged -= TrackingObjectChanged;
+					}
 				}
 
 				trackingCollection.Value = new ObservableCollection<T>(vl);
