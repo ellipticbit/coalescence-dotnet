@@ -134,8 +134,10 @@ namespace EllipticBit.Coalescence.Windows
 				throw new ArgumentNullException(nameof(trackingValue), $"The property requested has not been registered with the RegisterProperty method.");
 			}
 
-			if (!_isDeserializing || (!Application.Current?.Dispatcher.CheckAccess() ?? false)) {
-				throw new InvalidOperationException($"The property '{trackingValue.PropertyName}' can only be changed from the UI thread.");
+			if (!Application.Current?.Dispatcher.CheckAccess() ?? false) {
+				if (!_isDeserializing) {
+					throw new InvalidOperationException($"The property '{trackingValue.PropertyName}' can only be changed from the UI thread.");
+				}
 			}
 
 			if (value is TrackingObjectBase to) {
@@ -171,8 +173,10 @@ namespace EllipticBit.Coalescence.Windows
 
 		// ReSharper disable once MemberCanBePrivate.Global
 		protected void SetCollection<T>(TrackingCollection<T> trackingCollection, IEnumerable<T> values) {
-			if (!_isDeserializing || (!Application.Current?.Dispatcher.CheckAccess() ?? false)) {
-				throw new InvalidOperationException($"The property '{trackingCollection.PropertyName}' can only be changed from the UI thread.");
+			if (!Application.Current?.Dispatcher.CheckAccess() ?? false) {
+				if (!_isDeserializing) {
+					throw new InvalidOperationException($"The property '{trackingCollection.PropertyName}' can only be changed from the UI thread.");
+				}
 			}
 
 			if (values != null) {
