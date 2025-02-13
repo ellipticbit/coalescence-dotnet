@@ -70,9 +70,12 @@ namespace UnitTests
 			test.Reset();
 			Assert.AreEqual(1, test.IntCollection[0]);
 
-			//We cannot track adds/removes to the ObservableCollection due to the INotifyCollectionChanged being a delegate and not an event.
-			test.Collection.Add(new Tracking2() {Test = "Add Test"});
+			//This tests object graph loops.
+			var nt = new Tracking2() { Test = "Add Test" };
+			test.Collection.Add(nt);
+			nt.Collection = new ObservableCollection<Tracking1>([test]);
 
+			//We cannot track adds/removes to the ObservableCollection due to the INotifyCollectionChanged being a delegate and not an event.
 			Assert.AreEqual(false, test.HasChanges, "HasChanges incorrectly set.");
 			Assert.AreEqual(false, test.HasTrackingChanges, "HasTrackingChanges incorrectly set.");
 			test.Reset();
@@ -124,10 +127,14 @@ namespace UnitTests
 	{
 		public Tracking2() {
 			_test = RegisterProperty<string>(nameof(Test), true);
+			_collection = RegisterCollectionProperty<Tracking1>(nameof(Collection));
 			RegistrationCompleted();
 		}
 
 		private readonly TrackingValue<string> _test;
 		public string Test { get => _test.Value; set => SetValue(_test, value); }
+
+		private readonly TrackingCollection<Tracking1> _collection;
+		public ObservableCollection<Tracking1> Collection { get => _collection.Value; set => SetCollection(_collection, value); }
 	}
 }

@@ -83,16 +83,10 @@ namespace EllipticBit.Coalescence.Windows
 
 		private void TrackingObjectChanged(object sender, PropertyChangedEventArgs args)
 		{
-			if (args.PropertyName == nameof(HasTrackingChanges))
+			if (args.PropertyName == nameof(HasTrackingChanges) && !_hasTrackingChanges)
 			{
 				_hasTrackingChanges = true;
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasTrackingChanges)));
-			}
-
-			if (args.PropertyName == nameof(HasRemoteChanges))
-			{
-				_hasRemoteChanges = true;
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasRemoteChanges)));
 			}
 		}
 
@@ -128,6 +122,9 @@ namespace EllipticBit.Coalescence.Windows
 		public T GetValue<T>(string propertyName) => GetTrackingValue<T>(propertyName).Value;
 		public T GetRemoteValue<T>(string propertyName) => GetTrackingValue<T>(propertyName).Remote;
 
+		public ObservableCollection<T> GetCollection<T>(string propertyName) => GetTrackingCollection<T>(propertyName).Value;
+		public ObservableCollection<T> GetRemoteCollection<T>(string propertyName) => GetTrackingCollection<T>(propertyName).Remote;
+
 		// ReSharper disable once MemberCanBePrivate.Global
 		protected void SetValue<T>(TrackingValue<T> trackingValue, T value) {
 			if (trackingValue == null) {
@@ -140,7 +137,7 @@ namespace EllipticBit.Coalescence.Windows
 				}
 			}
 
-			if (value is TrackingObjectBase to) {
+			if (!ReferenceEquals(value, this) && value is TrackingObjectBase to) {
 				to.PropertyChanged += TrackingObjectChanged;
 			}
 
@@ -181,7 +178,7 @@ namespace EllipticBit.Coalescence.Windows
 
 			if (values != null) {
 				IEnumerable<T> vl = values.ToList();
-				foreach (var to in vl.OfType<TrackingObjectBase>()) {
+				foreach (var to in vl.OfType<TrackingObjectBase>().Where(a => !ReferenceEquals(a, this))) {
 					to.PropertyChanged += TrackingObjectChanged;
 				}
 
