@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -310,10 +310,10 @@ namespace EllipticBit.Coalescence.Request
 						continue;
 					}
 
-					if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400) break;
-					if ((int)response.StatusCode == 429) break; // Add 429 handling here
-					if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
 					if (response.StatusCode == HttpStatusCode.Unauthorized && await authentication.ContinueOnFailure() == false) break; // Cancel or continue the request as indicated by the failure handler.
+					if ((int)response.StatusCode < 400) break; //These are not errors.
+					if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && options.ClientErrorHandler != null) options.ClientErrorHandler(response);
+					if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
 					retries++;
 				}
 
