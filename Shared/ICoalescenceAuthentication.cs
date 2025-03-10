@@ -27,6 +27,6 @@ namespace EllipticBit.Coalescence.Shared
 		///	Retrieves a complete credential to send to the server.
 		/// </summary>
 		/// <returns>The complete credential string.</returns>
-		Task<string> Get();
+		Task<string> Get(string tenantId = null);
 	}
 }

@@ -1,8 +1,7 @@
-﻿namespace EllipticBit.Coalescence.Shared.Request
+namespace EllipticBit.Coalescence.Shared.Request
 {
 	public interface ICoalescenceRequestFactory
 	{
-		ICoalescenceRequest CreateRequest();
-		ICoalescenceRequest CreateRequest(string name);
+		ICoalescenceRequest CreateRequest(string name = null, string tenantId = null);
 	}
 }

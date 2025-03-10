@@ -15,7 +15,7 @@ namespace EllipticBit.Coalescence.Shared
 		public bool ContinueOnFailure => true;
 
 		/// <inheritdoc />
-		public Task<string> Get() {
+		public Task<string> Get(string tenantId = null) {
 			return Task.FromResult<string>(null);
 		}
 	}
