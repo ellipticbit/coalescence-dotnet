@@ -17,6 +17,7 @@ namespace EllipticBit.Coalescence.Request
 		private readonly IHttpClientFactory httpClientFactory;
 		private readonly CoalescenceRequestOptions options;
 		private readonly HttpMethod method;
+		private readonly string tenantId;
 
 		private readonly List<string> path = new();
 		private readonly Dictionary<string, IEnumerable<string>> query = new();
@@ -32,11 +33,12 @@ namespace EllipticBit.Coalescence.Request
 		private CoalescenceMultipartContentBuilder multipartContentBuilder = null;
 		private HttpContent cachedContent = null;
 
-		public CoalescenceRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, IEnumerable<ICoalescenceAuthentication> authenticators, CoalescenceRequestOptions options) {
+		public CoalescenceRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, IEnumerable<ICoalescenceAuthentication> authenticators, CoalescenceRequestOptions options, string tenantId) {
 			this.httpClientFactory = httpClientFactory;
 			this.options = options;
 			this.method = method;
 			this.authenticators = authenticators;
+			this.tenantId = tenantId;
 		}
 
 		public ICoalescenceRequestBuilder Path(params string[] parameter) {
@@ -269,8 +271,8 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
-		public ICoalescenceRequestBuilder Authentication(string scheme = null) {
-			this.authentication = authenticators.GetCoalescenceAuthentication(scheme ?? options.DefaultAuthencationScheme);
+		public ICoalescenceRequestBuilder Authentication(string name = null) {
+			this.authentication = authenticators.GetCoalescenceAuthentication(name ?? options.DefaultAuthencationScheme);
 			return this;
 		}
 
@@ -310,7 +312,7 @@ namespace EllipticBit.Coalescence.Request
 						continue;
 					}
 
-					if (response.StatusCode == HttpStatusCode.Unauthorized && await authentication.ContinueOnFailure() == false) break; // Cancel or continue the request as indicated by the failure handler.
+					if (response.StatusCode == HttpStatusCode.Unauthorized && authentication.ContinueOnFailure == false) break; // Cancel or continue the request as indicated by the failure handler.
 					if ((int)response.StatusCode < 400) break; //These are not errors.
 					if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && options.ClientErrorHandler != null) options.ClientErrorHandler(response);
 					if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
@@ -365,7 +367,7 @@ namespace EllipticBit.Coalescence.Request
 				}
 			}
 
-			if (authentication != null && !string.IsNullOrEmpty(authentication?.Scheme)) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get());
+			if (authentication != null && !string.IsNullOrEmpty(authentication?.Scheme)) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get(tenantId));
 
 			//Get multipart content from builder if any.
 			if (this.cachedContent == null) {

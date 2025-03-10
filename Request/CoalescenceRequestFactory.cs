@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using EllipticBit.Coalescence.Shared;
@@ -18,13 +18,13 @@ namespace EllipticBit.Coalescence.Request
 			this._repository = repository;
 		}
 
-		public ICoalescenceRequest CreateRequest() {
-			return new CoalescenceRequest(_httpClientFactory, authenticators, _repository.DefaultRequestOptions as CoalescenceRequestOptions);
-		}
-
-		public ICoalescenceRequest CreateRequest(string name) {
+		public ICoalescenceRequest CreateRequest(string name = null, string tenantId = null) {
+			if (name == null) {
+				return new CoalescenceRequest(_httpClientFactory, authenticators, _repository.DefaultRequestOptions as CoalescenceRequestOptions, tenantId);
+			}
+			
 			if (_repository.RequestOptions.TryGetValue(name, out CoalescenceOptionsBase result)) {
-				return new CoalescenceRequest(_httpClientFactory, authenticators, result as CoalescenceRequestOptions);
+				return new CoalescenceRequest(_httpClientFactory, authenticators, result as CoalescenceRequestOptions, tenantId);
 			}
 
 			throw new IndexOutOfRangeException($"No Coalescence Factory available for name: {name}");
