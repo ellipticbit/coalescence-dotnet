@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -37,7 +37,7 @@ namespace EllipticBit.Coalescence.Shared.Request
 		ICoalescenceRequestBuilder RequestContentEncoding(string encoding);
 		ICoalescenceRequestBuilder ResponseContentEncoding(string encoding);
 
-		ICoalescenceRequestBuilder Authentication(string scheme = null);
+		ICoalescenceRequestBuilder Authentication(string name = null);
 
 		ICoalescenceRequestBuilder NoRetry();
 		ICoalescenceRequestBuilder Timeout(TimeSpan timeout);

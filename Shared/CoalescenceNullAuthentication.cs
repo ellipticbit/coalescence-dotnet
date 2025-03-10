@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace EllipticBit.Coalescence.Shared
 {
@@ -12,23 +12,11 @@ namespace EllipticBit.Coalescence.Shared
 		public string Scheme => null;
 
 		/// <inheritdoc />
-		public Task<bool> ContinueOnFailure() {
-			return Task.FromResult(true);
-		}
+		public bool ContinueOnFailure => true;
 
 		/// <inheritdoc />
 		public Task<string> Get() {
 			return Task.FromResult<string>(null);
-		}
-
-		/// <inheritdoc />
-		public Task<bool> Validate(string header) {
-			return Task.FromResult(true);
-		}
-
-		/// <inheritdoc />
-		public async Task<T> Decode<T>(string header) where T : class {
-			return await Task.FromResult<T>(null);
 		}
 	}
 }
