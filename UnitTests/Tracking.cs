@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text.Json;
 using EllipticBit.Coalescence.Windows;
@@ -44,7 +44,7 @@ namespace UnitTests
 
 		[TestMethod]
 		public void TestBasicTracking() {
-			var test = Tracking1.GetTrackingObject(new HashKeyHelper().AddKey(1000).HashKey);
+			var test = Tracking1.GetTrackingObject(new HashKeyBuilder().AddKey(1000).HashKey);
 
 			test.Nullable = 1000;
 			Assert.AreEqual(true, test.HasChanges, "HasChanges incorrectly set.");
@@ -83,7 +83,7 @@ namespace UnitTests
 
 		[TestMethod]
 		public void TestRemoteTracking() {
-			var test = Tracking1.GetTrackingObject(new HashKeyHelper().AddKey(1000).HashKey);
+			var test = Tracking1.GetTrackingObject(new HashKeyBuilder().AddKey(1000).HashKey);
 
 			var json = System.Text.Encoding.UTF8.GetString(JsonSerializer.SerializeToUtf8Bytes(test));
 
