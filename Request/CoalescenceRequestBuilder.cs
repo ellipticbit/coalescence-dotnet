@@ -86,6 +86,22 @@ namespace EllipticBit.Coalescence.Request
 			return this;
 		}
 
+		public ICoalescenceRequestBuilder Query(string key, string value) {
+			return value == null ? this : this.Query(key, [value]);
+		}
+
+		public ICoalescenceRequestBuilder Query(string key, byte[] value) {
+			return value == null ? this : this.Query(key, [value]);
+		}
+
+		public ICoalescenceRequestBuilder Query<T>(string key, T value) where T : unmanaged, IComparable {
+			return this.Query(key, [value]);
+		}
+
+		public ICoalescenceRequestBuilder Query<T>(string key, T? value) where T : unmanaged, IComparable {
+			return value == null ? this : this.Query(key, [value]);
+		}
+
 		public ICoalescenceRequestBuilder Query(string key, IEnumerable<string> values) {
 			var ev = values as string[] ?? values.ToArray();
 			if (!ev.Any()) return this;
@@ -148,6 +164,22 @@ namespace EllipticBit.Coalescence.Request
 			}
 
 			return this;
+		}
+
+		public ICoalescenceRequestBuilder Header(string key, string value) {
+			return value == null ? this : this.Header(key, [value]);
+		}
+
+		public ICoalescenceRequestBuilder Header(string key, byte[] value) {
+			return value == null ? this : this.Header(key, [value]);
+		}
+
+		public ICoalescenceRequestBuilder Header<T>(string key, T value) where T : unmanaged, IComparable {
+			return this.Header(key, [value]);
+		}
+
+		public ICoalescenceRequestBuilder Header<T>(string key, T? value) where T : unmanaged, IComparable {
+			return value == null ? this : this.Header(key, [value]);
 		}
 
 		public ICoalescenceRequestBuilder Header(string key, IEnumerable<string> values) {

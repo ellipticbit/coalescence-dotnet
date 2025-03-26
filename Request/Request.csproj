@@ -24,8 +24,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.5.1" />
-		<PackageReference Include="EllipticBit.Extensions" Version="1.0.24" />
+		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.5.2" />
+		<PackageReference Include="EllipticBit.Extensions" Version="1.0.27" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.2" />
