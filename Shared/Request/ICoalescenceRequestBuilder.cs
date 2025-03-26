@@ -14,12 +14,20 @@ namespace EllipticBit.Coalescence.Shared.Request
 		ICoalescenceRequestBuilder Path<T>(T parameter) where T : unmanaged, IComparable;
 		ICoalescenceRequestBuilder Path<T>(T? parameter) where T : unmanaged, IComparable;
 
+		ICoalescenceRequestBuilder Query(string key, string value);
+		ICoalescenceRequestBuilder Query(string key, byte[] value);
+		ICoalescenceRequestBuilder Query<T>(string key, T value) where T : unmanaged, IComparable;
+		ICoalescenceRequestBuilder Query<T>(string key, T? value) where T : unmanaged, IComparable;
 		ICoalescenceRequestBuilder Query(string key, IEnumerable<string> values);
 		ICoalescenceRequestBuilder Query(string key, IEnumerable<byte[]> values);
 		ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable;
 		ICoalescenceRequestBuilder Query<T>(string key, IEnumerable<T?> values) where T : unmanaged, IComparable;
 		ICoalescenceRequestBuilder Query<T>(T parameters) where T : class, ICoalescenceParameters;
 
+		ICoalescenceRequestBuilder Header(string key, string value);
+		ICoalescenceRequestBuilder Header(string key, byte[] value);
+		ICoalescenceRequestBuilder Header<T>(string key, T value) where T : unmanaged, IComparable;
+		ICoalescenceRequestBuilder Header<T>(string key, T? value) where T : unmanaged, IComparable;
 		ICoalescenceRequestBuilder Header(string key, IEnumerable<string> values);
 		ICoalescenceRequestBuilder Header(string key, IEnumerable<byte[]> values);
 		ICoalescenceRequestBuilder Header<T>(string key, IEnumerable<T> values) where T : unmanaged, IComparable;
