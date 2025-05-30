@@ -31,7 +31,6 @@ namespace EllipticBit.Coalescence.Request
 
 		private CoalescenceContentItem content;
 		private CoalescenceMultipartContentBuilder multipartContentBuilder = null;
-		private HttpContent cachedContent = null;
 
 		public CoalescenceRequestBuilder(HttpMethod method, IHttpClientFactory httpClientFactory, IEnumerable<ICoalescenceAuthentication> authenticators, CoalescenceRequestOptions options, string tenantId) {
 			this.httpClientFactory = httpClientFactory;
@@ -324,55 +323,32 @@ namespace EllipticBit.Coalescence.Request
 			var http = string.IsNullOrWhiteSpace(options.HttpClientId) ? httpClientFactory.CreateClient() : httpClientFactory.CreateClient(options.HttpClientId);
 			http.Timeout = timeout;
 
-			try {
-
-				while ((noRetry && retries < 1) || retries < options.MaxRetryCount) {
-					using var rm = await BuildRequest();
-					try {
-						response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
-					}
-					catch (Exception ex) {
-						retries++;
-						if (retries < options.MaxRetryCount) {
-							throw;
-						}
-
-						if (options.RetryDelay > 0) {
-							await Task.Delay(options.RetryDelay * retries);
-						}
-
-						continue;
-					}
-
-					if (response.StatusCode == HttpStatusCode.Unauthorized && authentication.ContinueOnFailure == false) break; // Cancel or continue the request as indicated by the failure handler.
-					if ((int)response.StatusCode < 400) break; //These are not errors.
-					if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && options.ClientErrorHandler != null) options.ClientErrorHandler(response);
-					if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
+			while ((noRetry && retries < 1) || retries < options.MaxRetryCount) {
+				using var rm = await BuildRequest();
+				try {
+					response = await http.SendAsync(rm, HttpCompletionOption.ResponseHeadersRead);
+				}
+				catch (Exception ex) {
 					retries++;
+					if (retries < options.MaxRetryCount) {
+						throw;
+					}
+
+					if (options.RetryDelay > 0) {
+						await Task.Delay(options.RetryDelay * retries);
+					}
+
+					continue;
 				}
 
-				return new CoalescenceResponse(response, http, options);
+				if (response.StatusCode == HttpStatusCode.Unauthorized && authentication.ContinueOnFailure == false) break; // Cancel or continue the request as indicated by the failure handler.
+				if ((int)response.StatusCode < 400) break; //These are not errors.
+				if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && options.ClientErrorHandler != null) options.ClientErrorHandler(response);
+				if ((int)response.StatusCode >= 500) break; // 5xx Errors on not recoverable on the client, so exit early.
+				retries++;
 			}
-			catch (Exception ex) {
-				if (http is IAsyncDisposable httpAsyncDisposable)
-				{
-					await httpAsyncDisposable.DisposeAsync();
-				}
-				else if (http != null)
-				{
-					http.Dispose();
-				}
 
-				throw;
-			}
-			finally {
-				if (cachedContent is IAsyncDisposable cachedContentAsyncDisposable) {
-					await cachedContentAsyncDisposable.DisposeAsync();
-				}
-				else if (cachedContent != null) {
-					cachedContent.Dispose();
-				}
-			}
+			return new CoalescenceResponse(response, http, options);
 		}
 
 		private async Task<HttpRequestMessage> BuildRequest() {
@@ -402,16 +378,11 @@ namespace EllipticBit.Coalescence.Request
 			if (authentication != null && !string.IsNullOrEmpty(authentication?.Scheme)) rm.Headers.Authorization = new AuthenticationHeaderValue(authentication.Scheme, await authentication.Get(tenantId));
 
 			//Get multipart content from builder if any.
-			if (this.cachedContent == null) {
-				if (multipartContentBuilder != null) {
-					this.cachedContent = rm.Content = await multipartContentBuilder.Build();
-				}
-				else if (content != null) {
-					this.cachedContent = rm.Content = await content.Build(options.Serializers);
-				}
+			if (multipartContentBuilder != null) {
+				rm.Content = await multipartContentBuilder.Build();
 			}
-			else {
-				rm.Content = this.cachedContent;
+			else if (content != null) {
+				rm.Content = await content.Build(options.Serializers);
 			}
 
 			if (!string.IsNullOrWhiteSpace(this.requestContentEncoding)) {

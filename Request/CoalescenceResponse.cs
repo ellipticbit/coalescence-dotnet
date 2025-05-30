@@ -11,6 +11,7 @@ namespace EllipticBit.Coalescence.Request
 {
 	internal sealed class CoalescenceResponse : ICoalescenceResponse
 	{
+		//We need to hold on to this reference until the request has finished processing the response.
 		private readonly HttpClient client;
 		private readonly HttpResponseMessage response;
 		private readonly CoalescenceRequestOptions options;
@@ -82,12 +83,10 @@ namespace EllipticBit.Coalescence.Request
 		//}
 
 		public void Dispose() {
-			client?.Dispose();
 			response?.Dispose();
 		}
 
 		public async ValueTask DisposeAsync() {
-			if (client != null) await CastAndDispose(client);
 			if (response != null) await CastAndDispose(response);
 
 			return;

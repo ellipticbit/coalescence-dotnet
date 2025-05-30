@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -35,10 +35,12 @@ namespace UnitTests
 	[TestClass]
 	public class RequestClient
 	{
-		private IServiceProvider services;
+		private static IServiceProvider services = null;
 
 		[TestInitialize]
 		public async Task Initialize() {
+			if (services != null) return;
+
 			var sb = new ServiceCollection();
 			sb.AddHttpClient();
 			sb.AddHttpClient("http-example-com", (http) => {
@@ -51,9 +53,23 @@ namespace UnitTests
 		}
 
 		[TestMethod]
-		public async Task BasicGet() {
+		public async Task BasicGet()
+		{
 			var factory = services.GetRequiredService<ICoalescenceRequestFactory>();
-			var response = await factory.CreateRequest("test").Get().Authentication().Send();
+			await using var response = await factory.CreateRequest("test").Get().Authentication().Send();
+			var text = await response.AsString();
+			Debug.WriteLine(text);
+		}
+
+		[TestMethod]
+		public async Task BasicDelete()
+		{
+			var factory = services.GetRequiredService<ICoalescenceRequestFactory>();
+			var request = factory.CreateRequest("test").Delete()
+				.Path("api", "test", "c")
+				.Path("old", "a", "delete")
+				.Serialized(new TextContact() { Email = "test@test.com", Name = "Test", Phone = "(111) 111-1111" });
+			await using var response = await request.Send();
 			var text = await response.AsString();
 			Debug.WriteLine(text);
 		}
