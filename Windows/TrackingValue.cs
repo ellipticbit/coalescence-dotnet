@@ -123,7 +123,7 @@ namespace EllipticBit.Coalescence.Windows
 		}
 
 		internal override void UpdateRemote(ObservableCollection<T> value) {
-			if (IsValueTrackingObject) {
+			if (IsValueTrackingObject && value != null) {
 				var adds = value.OfType<ILocatableTrackingObject>().Where(a => !_value.OfType<ILocatableTrackingObject>().Select(b => b.ObjectTrackingKey).Contains(a.ObjectTrackingKey)).ToArray();
 				foreach (var to in adds) {
 					_value.Add((T)to);
