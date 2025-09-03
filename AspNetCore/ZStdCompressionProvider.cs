@@ -2,7 +2,6 @@
 using EllipticBit.Coalescence.Shared;
 using Microsoft.AspNetCore.RequestDecompression;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.Options;
 using ZstdSharp;
 
 namespace EllipticBit.Coalescence.AspNetCore
