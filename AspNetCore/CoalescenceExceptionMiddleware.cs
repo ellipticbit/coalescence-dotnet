@@ -164,46 +164,81 @@ namespace EllipticBit.Coalescence.AspNetCore
 		public HttpNotImplementedException(string message) : base(message, StatusCodes.Status501NotImplemented) { }
 	}
 
-}
-
-namespace Microsoft.AspNetCore.Mvc
-{
-	public static class CoalescenceExceptionExtensions
+	public static class CoalescenceHttpExceptionExtensions
 	{
-		public static void BadRequest(this CoalescenceControllerBase controller) => throw new HttpBadRequestException();
-		public static void BadRequest(this CoalescenceControllerBase controller, string message) => throw new HttpBadRequestException(message);
-		public static void BadRequest(this CoalescenceControllerBase controller, object data) => throw new HttpBadRequestException(data);
-		public static void Unauthorized(this CoalescenceControllerBase controller) => throw new HttpUnauthorizedException();
-		public static void Unauthorized(this CoalescenceControllerBase controller, string message) => throw new HttpUnauthorizedException(message);
-		public static void Forbidden(this CoalescenceControllerBase controller) => throw new HttpForbiddenException();
-		public static void Forbidden(this CoalescenceControllerBase controller, string message) => throw new HttpForbiddenException(message);
-		public static void NotFound(this CoalescenceControllerBase controller) => throw new HttpNotFoundException();
-		public static void NotFound(this CoalescenceControllerBase controller, string message) => throw new HttpNotFoundException(message);
-		public static void NotFound(this CoalescenceControllerBase controller, object data) => throw new HttpNotFoundException(data);
-		public static void Conflict(this CoalescenceControllerBase controller) => throw new HttpConflictException();
-		public static void Conflict(this CoalescenceControllerBase controller, string message) => throw new HttpConflictException(message);
-		public static void Conflict(this CoalescenceControllerBase controller, object data) => throw new HttpConflictException(data);
-		public static void Gone(this CoalescenceControllerBase controller) => throw new HttpGoneException();
-		public static void Gone(this CoalescenceControllerBase controller, string message) => throw new HttpGoneException(message);
-		public static void Length(this CoalescenceControllerBase controller) => throw new HttpLengthException();
-		public static void Length(this CoalescenceControllerBase controller, string message) => throw new HttpLengthException(message);
-		public static void PreconditionFailed(this CoalescenceControllerBase controller) => throw new HttpPreconditionFailedException();
-		public static void PreconditionFailed(this CoalescenceControllerBase controller, string message) => throw new HttpPreconditionFailedException(message);
-		public static void PreconditionFailed(this CoalescenceControllerBase controller, object data) => throw new HttpPreconditionFailedException(data);
-		public static void PayloadSize(this CoalescenceControllerBase controller) => throw new HttpPayloadSizeException();
-		public static void PayloadSize(this CoalescenceControllerBase controller, string message) => throw new HttpPayloadSizeException(message);
-		public static void Unsupported(this CoalescenceControllerBase controller) => throw new HttpUnsupportedException();
-		public static void Unsupported(this CoalescenceControllerBase controller, string message) => throw new HttpUnsupportedException(message);
-		public static void ExpectationFailed(this CoalescenceControllerBase controller) => throw new HttpExpectationFailedException();
-		public static void ExpectationFailed(this CoalescenceControllerBase controller, string message) => throw new HttpExpectationFailedException(message);
-		public static void Misdirected(this CoalescenceControllerBase controller) => throw new HttpMisdirectedException();
-		public static void Misdirected(this CoalescenceControllerBase controller, string message) => throw new HttpMisdirectedException(message);
-		public static void Unprocessable(this CoalescenceControllerBase controller) => throw new HttpUnprocessableException();
-		public static void Unprocessable(this CoalescenceControllerBase controller, string message) => throw new HttpUnprocessableException(message);
-		public static void PreconditionRequired(this CoalescenceControllerBase controller) => throw new HttpPreconditionRequiredException();
-		public static void PreconditionRequired(this CoalescenceControllerBase controller, string message) => throw new HttpPreconditionRequiredException(message);
-		public static void PreconditionRequired(this CoalescenceControllerBase controller, object data) => throw new HttpPreconditionRequiredException(data);
-		public static void NotImplemented(this CoalescenceControllerBase controller) => throw new HttpNotImplementedException();
-		public static void NotImplemented(this CoalescenceControllerBase controller, string message) => throw new HttpNotImplementedException(message);
+		public static void BadRequest(this ICoalescenceWebApiService controller) => throw new HttpBadRequestException();
+		public static void BadRequest(this ICoalescenceWebApiService controller, string message) => throw new HttpBadRequestException(message);
+		public static void BadRequest(this ICoalescenceWebApiService controller, object data) => throw new HttpBadRequestException(data);
+		public static void Unauthorized(this ICoalescenceWebApiService controller) => throw new HttpUnauthorizedException();
+		public static void Unauthorized(this ICoalescenceWebApiService controller, string message) => throw new HttpUnauthorizedException(message);
+		public static void Forbidden(this ICoalescenceWebApiService controller) => throw new HttpForbiddenException();
+		public static void Forbidden(this ICoalescenceWebApiService controller, string message) => throw new HttpForbiddenException(message);
+		public static void NotFound(this ICoalescenceWebApiService controller) => throw new HttpNotFoundException();
+		public static void NotFound(this ICoalescenceWebApiService controller, string message) => throw new HttpNotFoundException(message);
+		public static void NotFound(this ICoalescenceWebApiService controller, object data) => throw new HttpNotFoundException(data);
+		public static void Conflict(this ICoalescenceWebApiService controller) => throw new HttpConflictException();
+		public static void Conflict(this ICoalescenceWebApiService controller, string message) => throw new HttpConflictException(message);
+		public static void Conflict(this ICoalescenceWebApiService controller, object data) => throw new HttpConflictException(data);
+		public static void Gone(this ICoalescenceWebApiService controller) => throw new HttpGoneException();
+		public static void Gone(this ICoalescenceWebApiService controller, string message) => throw new HttpGoneException(message);
+		public static void Length(this ICoalescenceWebApiService controller) => throw new HttpLengthException();
+		public static void Length(this ICoalescenceWebApiService controller, string message) => throw new HttpLengthException(message);
+		public static void PreconditionFailed(this ICoalescenceWebApiService controller) => throw new HttpPreconditionFailedException();
+		public static void PreconditionFailed(this ICoalescenceWebApiService controller, string message) => throw new HttpPreconditionFailedException(message);
+		public static void PreconditionFailed(this ICoalescenceWebApiService controller, object data) => throw new HttpPreconditionFailedException(data);
+		public static void PayloadSize(this ICoalescenceWebApiService controller) => throw new HttpPayloadSizeException();
+		public static void PayloadSize(this ICoalescenceWebApiService controller, string message) => throw new HttpPayloadSizeException(message);
+		public static void Unsupported(this ICoalescenceWebApiService controller) => throw new HttpUnsupportedException();
+		public static void Unsupported(this ICoalescenceWebApiService controller, string message) => throw new HttpUnsupportedException(message);
+		public static void ExpectationFailed(this ICoalescenceWebApiService controller) => throw new HttpExpectationFailedException();
+		public static void ExpectationFailed(this ICoalescenceWebApiService controller, string message) => throw new HttpExpectationFailedException(message);
+		public static void Misdirected(this ICoalescenceWebApiService controller) => throw new HttpMisdirectedException();
+		public static void Misdirected(this ICoalescenceWebApiService controller, string message) => throw new HttpMisdirectedException(message);
+		public static void Unprocessable(this ICoalescenceWebApiService controller) => throw new HttpUnprocessableException();
+		public static void Unprocessable(this ICoalescenceWebApiService controller, string message) => throw new HttpUnprocessableException(message);
+		public static void PreconditionRequired(this ICoalescenceWebApiService controller) => throw new HttpPreconditionRequiredException();
+		public static void PreconditionRequired(this ICoalescenceWebApiService controller, string message) => throw new HttpPreconditionRequiredException(message);
+		public static void PreconditionRequired(this ICoalescenceWebApiService controller, object data) => throw new HttpPreconditionRequiredException(data);
+		public static void NotImplemented(this ICoalescenceWebApiService controller) => throw new HttpNotImplementedException();
+		public static void NotImplemented(this ICoalescenceWebApiService controller, string message) => throw new HttpNotImplementedException(message);
+	}
+
+	public static class HttpErrors
+	{
+		public static void BadRequest() => throw new HttpBadRequestException();
+		public static void BadRequest(string message) => throw new HttpBadRequestException(message);
+		public static void BadRequest(object data) => throw new HttpBadRequestException(data);
+		public static void Unauthorized() => throw new HttpUnauthorizedException();
+		public static void Unauthorized(string message) => throw new HttpUnauthorizedException(message);
+		public static void Forbidden() => throw new HttpForbiddenException();
+		public static void Forbidden(string message) => throw new HttpForbiddenException(message);
+		public static void NotFound() => throw new HttpNotFoundException();
+		public static void NotFound(string message) => throw new HttpNotFoundException(message);
+		public static void NotFound(object data) => throw new HttpNotFoundException(data);
+		public static void Conflict() => throw new HttpConflictException();
+		public static void Conflict(string message) => throw new HttpConflictException(message);
+		public static void Conflict(object data) => throw new HttpConflictException(data);
+		public static void Gone() => throw new HttpGoneException();
+		public static void Gone(string message) => throw new HttpGoneException(message);
+		public static void Length() => throw new HttpLengthException();
+		public static void Length(string message) => throw new HttpLengthException(message);
+		public static void PreconditionFailed() => throw new HttpPreconditionFailedException();
+		public static void PreconditionFailed(string message) => throw new HttpPreconditionFailedException(message);
+		public static void PreconditionFailed(object data) => throw new HttpPreconditionFailedException(data);
+		public static void PayloadSize() => throw new HttpPayloadSizeException();
+		public static void PayloadSize(string message) => throw new HttpPayloadSizeException(message);
+		public static void Unsupported() => throw new HttpUnsupportedException();
+		public static void Unsupported(string message) => throw new HttpUnsupportedException(message);
+		public static void ExpectationFailed() => throw new HttpExpectationFailedException();
+		public static void ExpectationFailed(string message) => throw new HttpExpectationFailedException(message);
+		public static void Misdirected() => throw new HttpMisdirectedException();
+		public static void Misdirected(string message) => throw new HttpMisdirectedException(message);
+		public static void Unprocessable() => throw new HttpUnprocessableException();
+		public static void Unprocessable(string message) => throw new HttpUnprocessableException(message);
+		public static void PreconditionRequired() => throw new HttpPreconditionRequiredException();
+		public static void PreconditionRequired(string message) => throw new HttpPreconditionRequiredException(message);
+		public static void PreconditionRequired(object data) => throw new HttpPreconditionRequiredException(data);
+		public static void NotImplemented() => throw new HttpNotImplementedException();
+		public static void NotImplemented(string message) => throw new HttpNotImplementedException(message);
 	}
 }
