@@ -23,12 +23,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.5.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.10" />
-		<PackageReference Include="System.Collections.Immutable" Version="9.0.10" />
-		<PackageReference Include="System.Text.Json" Version="9.0.10" />
-		<PackageReference Include="ZstdSharp.Port" Version="0.8.6" />
+		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.5.4" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.7" />
+		<PackageReference Include="System.Collections.Immutable" Version="10.0.7" />
+		<PackageReference Include="System.Text.Json" Version="10.0.7" />
+		<PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
 	</ItemGroup>
 
 	<ItemGroup>
