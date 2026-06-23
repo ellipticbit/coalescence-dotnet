@@ -132,7 +132,7 @@ SignalR Test Deployment:
   extends: .build_template
   stage: test
   tags:
-    - linux
+    - windows
     - dotnet
 
   only:
