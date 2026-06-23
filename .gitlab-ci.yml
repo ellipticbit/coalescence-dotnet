@@ -55,7 +55,7 @@ Shared Production Deployment:
     - "pwsh -f \"./ReplaceVersion-Shared.ps1\""
     - "dotnet restore ./Shared/Shared.csproj"
     - "dotnet pack -c Release -o ./ ./Shared/Shared.csproj"
-    - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
+    - "dotnet nuget push '.\\*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 Request Test Deployment:
   extends: .build_template
@@ -91,7 +91,7 @@ Request Production Deployment:
     - "pwsh -f \"./ReplaceVersion-Request.ps1\""
     - "dotnet restore ./Request/Request.csproj"
     - "dotnet pack -c Release -o ./ ./Request/Request.csproj"
-    - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
+    - "dotnet nuget push '.\\*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 AspNetCore Test Deployment:
   extends: .build_template
@@ -126,7 +126,7 @@ AspNetCore Production Deployment:
     - "pwsh -f \"./ReplaceVersion-AspNetCore.ps1\""
     - "dotnet restore ./AspNetCore/AspNetCore.csproj"
     - "dotnet pack -c Release -o ./ ./AspNetCore/AspNetCore.csproj"
-    - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
+    - "dotnet nuget push '.\\*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 SignalR Test Deployment:
   extends: .build_template
@@ -162,7 +162,7 @@ SignalR Production Deployment:
     - "pwsh -f \"./ReplaceVersion-SignalR.ps1\""
     - "dotnet restore ./SignalR/SignalR.csproj"
     - "dotnet pack -c Release -o ./ ./SignalR/SignalR.csproj"
-    - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
+    - "dotnet nuget push '.\\*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 Windows Test Deployment:
   extends: .build_template
@@ -198,4 +198,4 @@ Windows Production Deployment:
     - "pwsh -f \"./ReplaceVersion-Windows.ps1\""
     - "dotnet restore ./Windows/Windows.csproj"
     - "dotnet pack -c Release -o ./ ./Windows/Windows.csproj"
-    - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
+    - "dotnet nuget push '.\\*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
