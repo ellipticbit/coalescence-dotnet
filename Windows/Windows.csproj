@@ -14,18 +14,34 @@
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<Copyright>Copyright © EllipticBit, LLC. 2025</Copyright>
 		<Description>Provides WPF and WinForms specific utilities. Find it here: https://gitlab.com/EllipticBit/coalescence-generator</Description>
-		<RepositoryUrl>https://gitlab.com/EllipticBit/coalescence-dotnet</RepositoryUrl>
+		<RepositoryUrl>https://github.com/ellipticbit/coalescence-dotnet</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://ellipticbit.com/</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>netcore;netstandard;code-generation,web-api;aspnet-core</PackageTags>
+		<DebugType>embedded</DebugType>
 		<NeutralLanguage>en</NeutralLanguage>
 		<LangVersion>latest</LangVersion>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Collections.Immutable" Version="10.0.7" />
-		<PackageReference Include="System.IO.Hashing" Version="10.0.7" />
-		<PackageReference Include="System.Text.Json" Version="10.0.7" />
+		<None Include="..\icon.png" Pack="true" PackagePath="\" Visible="false" />
+		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Collections.Immutable" Version="10.0.9" />
+		<PackageReference Include="System.IO.Hashing" Version="10.0.9" />
+		<PackageReference Include="System.Text.Json" Version="10.0.9" />
+	</ItemGroup>
+
+	<Target Name="SignAssembly" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release' And '$(TargetFramework)' != '' And '$(AZURE_SIGNING_ENDPOINT)' != ''">
+		<Message Importance="high" Text="Signing assembly '$(TargetPath)' with Azure Trusted Signing." />
+		<Exec Command="sign code trusted-signing &quot;$(TargetPath)&quot; --trusted-signing-endpoint &quot;$(AZURE_SIGNING_ENDPOINT)&quot; --trusted-signing-account &quot;$(AZURE_SIGNING_ACCOUNT)&quot; --trusted-signing-certificate-profile &quot;$(AZURE_SIGNING_PROFILE)&quot; --description &quot;$(Product)&quot; --description-url &quot;$(PackageProjectUrl)&quot;" />
+	</Target>
 
 </Project>
