@@ -12,8 +12,8 @@
 		<Version>0.0.0</Version>
 		<FileVersion>0.0.0.0</FileVersion>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<Copyright>Copyright © EllipticBit, LLC. 2022-2024</Copyright>
-		<Description>HTTP support library for the Coalescence code generation system. Find it here: https://gitlab.com/EllipticBit/coalescence-generator</Description>
+		<Copyright>Copyright © EllipticBit, LLC. 2022-2026</Copyright>
+		<Description>HTTP support library for the Coalescence code generation system. Find it here: https://github.com/ellipticbit/coalescence-generator</Description>
 		<RepositoryUrl>https://github.com/ellipticbit/coalescence-dotnet</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageProjectUrl>https://ellipticbit.com/</PackageProjectUrl>
