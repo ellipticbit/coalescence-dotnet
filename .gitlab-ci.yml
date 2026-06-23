@@ -1,13 +1,21 @@
-before_script:
-  - "git clean -fdxq"
-  - "git submodule sync --recursive"
-  - "git submodule foreach --recursive git reset --hard"
-  - "git submodule update --init --recursive"
-  - "dotnet tool install --global --prerelease sign"
-  - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-  - "az account set --subscription $AZURE_SUBSCRIPTION"
-after_script:
-  - "az logout"
+.publish_template:
+  before_script:
+    - "git clean -fdxq"
+    - "git submodule sync --recursive"
+    - "git submodule foreach --recursive git reset --hard"
+    - "git submodule update --init --recursive"
+    - "dotnet tool install --global --prerelease sign"
+    - "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
+    - "az account set --subscription $AZURE_SUBSCRIPTION"
+  after_script:
+    - "az logout"
+
+.build_template:
+  before_script:
+    - "git clean -fdxq"
+    - "git submodule sync --recursive"
+    - "git submodule foreach --recursive git reset --hard"
+    - "git submodule update --init --recursive"
 
 stages:
   - test
@@ -15,6 +23,7 @@ stages:
   - library
 
 Shared Test Deployment:
+  extends: .build_template
   stage: test
   tags:
     - linux
@@ -29,6 +38,7 @@ Shared Test Deployment:
     - "dotnet pack -c Debug -o ./ ./Shared/Shared.csproj"
 
 Shared Production Deployment:
+  extends: .publish_template
   stage: shared
   tags:
     - windows
@@ -48,6 +58,7 @@ Shared Production Deployment:
     - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 Request Test Deployment:
+  extends: .build_template
   stage: test
   tags:
     - windows
@@ -63,6 +74,7 @@ Request Test Deployment:
     - "dotnet pack -c Debug -o ./ ./Request/Request.csproj"
 
 Request Production Deployment:
+  extends: .publish_template
   stage: library
   tags:
     - windows
@@ -82,6 +94,7 @@ Request Production Deployment:
     - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 AspNetCore Test Deployment:
+  extends: .build_template
   stage: test
   tags:
     - linux
@@ -96,6 +109,7 @@ AspNetCore Test Deployment:
     - "dotnet pack -c Debug -o ./ ./AspNetCore/AspNetCore.csproj"
 
 AspNetCore Production Deployment:
+  extends: .publish_template
   stage: library
   tags:
     - windows
@@ -115,6 +129,7 @@ AspNetCore Production Deployment:
     - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 SignalR Test Deployment:
+  extends: .build_template
   stage: test
   tags:
     - linux
@@ -130,6 +145,7 @@ SignalR Test Deployment:
     - "dotnet pack -c Debug -o ./ ./SignalR/SignalR.csproj"
 
 SignalR Production Deployment:
+  extends: .publish_template
   stage: library
   tags:
     - windows
@@ -149,6 +165,7 @@ SignalR Production Deployment:
     - "dotnet nuget push './*.nupkg' -s \"https://api.nuget.org/v3/index.json\" -k $NUGET_TOKEN --skip-duplicate"
 
 Windows Test Deployment:
+  extends: .build_template
   stage: test
   tags:
     - windows
@@ -164,6 +181,7 @@ Windows Test Deployment:
     - "dotnet pack -c Debug -o ./ ./Windows/Windows.csproj"
 
 Windows Production Deployment:
+  extends: .publish_template
   stage: library
   tags:
     - windows
