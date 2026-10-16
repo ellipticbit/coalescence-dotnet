@@ -34,11 +34,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.5.6" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.9" />
-		<PackageReference Include="System.Collections.Immutable" Version="10.0.9" />
-		<PackageReference Include="System.Text.Json" Version="10.0.9" />
+		<PackageReference Include="EllipticBit.Coalescence.Shared" Version="1.5.7" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.13" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.13" />
+		<PackageReference Include="System.Collections.Immutable" Version="10.0.13" />
+		<PackageReference Include="System.Text.Json" Version="10.0.13" />
 		<PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
 	</ItemGroup>
 
